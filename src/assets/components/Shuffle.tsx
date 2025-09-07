@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText as GSAPSplitText } from "gsap/SplitText";
@@ -249,7 +249,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
           onRepeat: () => {
             if (scrambleCharset) randomizeScrambles();
             gsap.set(strips, {
-              x: (i, t: HTMLElement) =>
+              x: (_i, t: HTMLElement) =>
                 parseFloat(t.getAttribute("data-start-x") || "0"),
             });
             onShuffleComplete?.();
@@ -269,7 +269,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
           tl.to(
             targets,
             {
-              x: (i, t: HTMLElement) =>
+              x: (_i, t: HTMLElement) =>
                 parseFloat(t.getAttribute("data-final-x") || "0"),
               duration,
               ease,
@@ -386,7 +386,6 @@ const Shuffle: React.FC<ShuffleProps> = ({
   const classes = `${baseTw} ${
     ready ? "visible" : "invisible"
   } ${className}`.trim();
-  const Tag = tag as keyof JSX.IntrinsicElements;
 
   return React.createElement(
     tag as keyof JSX.IntrinsicElements,
