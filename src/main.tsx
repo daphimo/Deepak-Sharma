@@ -1,10 +1,13 @@
 import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
+import "./App.css";
+// import App from "./App.tsx";
 import Space from "./backgrounds/Space.tsx";
 import Header from "../src/assets/components/header.tsx";
 import Dock from "../src/assets/components/dock.tsx";
+import Scroll from "../src/assets/components/scroll.tsx";
+import StylishBackToTop from "../src/assets/components/backtotop.tsx";
 import Projects from "./Projects.tsx";
 import About from "./About.tsx";
 import Contact from "./Contact.tsx";
@@ -32,7 +35,7 @@ const useSmoothScroll = () => {
         const targetId = (link as HTMLAnchorElement)
           .getAttribute("href")!
           .substring(1);
-        scrollToSection(targetId, 100);
+        scrollToSection(targetId, -20);
       });
     });
     return () => {
@@ -51,7 +54,10 @@ const Main = () => {
       <Space />
       <Header />
       <div className="main-container w-full min-h-screen">
-        <App />
+        <div id="intro">
+          {/* <App /> */}
+          <Scroll />
+        </div>
         <div id="projects">
           <Projects />
         </div>
@@ -63,6 +69,7 @@ const Main = () => {
         </div>
       </div>
       <Dock />
+      <StylishBackToTop />
     </>
   );
 };

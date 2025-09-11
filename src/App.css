@@ -40,3 +40,76 @@
 .read-the-docs {
   color: #888;
 }
+
+.button{
+  cursor: pointer;
+}
+
+/* 🚫 Remove default outlines, focus rings, and tap highlights */
+
+/* Buttons, inputs, links, etc. */
+button,
+input,
+select,
+textarea,
+a {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  /* Remove blue tap effect in iOS Safari */
+  -webkit-touch-callout: none;
+  /* Prevent callout menu on long press */
+  -webkit-user-select: none;
+  /* Prevent text selection */
+  user-select: none;
+}
+
+/* Prevent Firefox dotted outline */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0 !important;
+}
+
+/* Remove focus styles completely */
+*:focus,
+*:focus-visible,
+*:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove default active states */
+button:active,
+a:active,
+input:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* iOS Safari form controls reset */
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  /* Optional: remove rounded corners */
+}
+
+::selection{
+  background: #000;
+  color: #fff;
+}
+
+.no-cursor{
+  cursor: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+:root {
+  --brand-dark: #000000;
+  --brand-steel: #415a77;
+  --brand-sky: #778da9;
+  --brand-light: #e0e1dd;
+}
+

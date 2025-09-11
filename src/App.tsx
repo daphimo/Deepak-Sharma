@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-// import AuroraBackground from "../src/backgrounds/AuroraBackground";
-// import StarfieldBackground from "../src/backgrounds/StarfieldBackground";
 
 function App() {
   return (

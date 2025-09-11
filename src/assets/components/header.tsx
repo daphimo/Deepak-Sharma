@@ -28,17 +28,19 @@ export default function Header(): React.ReactElement {
     >
       <div className="max-w-7xl mx-auto flex items-center px-6 py-4 justify-between">
         {/* Logo with Shuffle */}
-        <Shuffle
-          text="Deepak Sharma"
-          shuffleDirection="right"
-          duration={0.35}
-          className="text-m font-bold tracking-wide"
-          colorFrom={brandColors.sky}
-          colorTo={brandColors.light}
-          triggerOnHover={true}
-          triggerOnce={true}
-          shuffleTimes={9}
-        />
+        <a href="/">
+          <Shuffle
+            text="Deepak Sharma"
+            shuffleDirection="right"
+            duration={0.35}
+            className="text-m font-bold tracking-wide"
+            colorFrom={brandColors.sky}
+            colorTo={brandColors.light}
+            triggerOnHover={true}
+            triggerOnce={true}
+            shuffleTimes={9}
+          />
+        </a>
 
         {/* Nav Items with Scramble */}
         <nav className="hidden md:flex gap-6 items-center">
