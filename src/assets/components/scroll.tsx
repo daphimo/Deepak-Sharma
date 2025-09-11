@@ -2,15 +2,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import WhatIDo from "./whatrrado.tsx";
+import MoreAbout from "./moreabout.tsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const DESKTOP_MIN_WIDTH = 768;
 
 const images = [
-  "/src/assets/files/bird.png",
-  "/src/assets/files/image.png",
-  "/src/assets/files/train.png",
+  "/public/files/my_profile.png",
+  "/public/files/what_i_do.jpg",
+  "/public/files/more_about_me.jpg",
 ];
 
 const App: React.FC = () => {
@@ -181,7 +183,7 @@ const App: React.FC = () => {
                 ref={imgRef}
                 src={images[currentImage]}
                 alt="moving"
-                className="w-[400px] h-[400px] object-cover rounded-2xl transition-all duration-500"
+                className="w-[300px] h-[400px] object-cover rounded-2xl transition-all duration-500"
                 draggable={false}
               />
             </div>
@@ -211,36 +213,15 @@ const App: React.FC = () => {
           {/* Row 2 */}
           <section className=" py-20 grid grid-cols-2">
             <div className="flex flex-col justify-start px-12">
-              <h2 className="text-4xl font-semibold mb-4">What I Can Do</h2>
-              <p className="text-lg">
+              <h2 className="text-4xl font-semibold mb-4 text-left">
+                What I Can Do For You
+              </h2>
+              <p className="text-lg text-left">
                 I build interactive websites, scalable Shopify stores, and
                 modern web apps with React, TypeScript, and GSAP. I specialize
                 in smooth transitions and premium UX.
               </p>
-              <h2 className="text-4xl font-semibold mb-4">What I Can Do</h2>
-              <p className="text-lg">
-                I build interactive websites, scalable Shopify stores, and
-                modern web apps with React, TypeScript, and GSAP. I specialize
-                in smooth transitions and premium UX.
-              </p>
-              <h2 className="text-4xl font-semibold mb-4">What I Can Do</h2>
-              <p className="text-lg">
-                I build interactive websites, scalable Shopify stores, and
-                modern web apps with React, TypeScript, and GSAP. I specialize
-                in smooth transitions and premium UX.
-              </p>
-              <h2 className="text-4xl font-semibold mb-4">What I Can Do</h2>
-              <p className="text-lg">
-                I build interactive websites, scalable Shopify stores, and
-                modern web apps with React, TypeScript, and GSAP. I specialize
-                in smooth transitions and premium UX.
-              </p>
-              <h2 className="text-4xl font-semibold mb-4">What I Can Do</h2>
-              <p className="text-lg">
-                I build interactive websites, scalable Shopify stores, and
-                modern web apps with React, TypeScript, and GSAP. I specialize
-                in smooth transitions and premium UX.
-              </p>
+              <WhatIDo />
             </div>
             <div
               ref={(el) => setCellRef(el, 1)}
@@ -264,21 +245,7 @@ const App: React.FC = () => {
                 Education, work experience, and projects — e-commerce stores,
                 headless Shopify builds, UI/animation experiments, and more.
               </p>
-              <h2 className="text-4xl font-semibold mb-4">More About Me</h2>
-              <p className="text-lg">
-                Education, work experience, and projects — e-commerce stores,
-                headless Shopify builds, UI/animation experiments, and more.
-              </p>
-              <h2 className="text-4xl font-semibold mb-4">More About Me</h2>
-              <p className="text-lg">
-                Education, work experience, and projects — e-commerce stores,
-                headless Shopify builds, UI/animation experiments, and more.
-              </p>
-              <h2 className="text-4xl font-semibold mb-4">More About Me</h2>
-              <p className="text-lg">
-                Education, work experience, and projects — e-commerce stores,
-                headless Shopify builds, UI/animation experiments, and more.
-              </p>
+              <MoreAbout />
             </div>
           </section>
         </>
@@ -288,7 +255,7 @@ const App: React.FC = () => {
       {isMobile && (
         <div className="flex flex-col gap-16 px-6 py-12">
           {/* Row 1 */}
-          <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center text-left gap-4">
             <img
               src={images[0]}
               alt="row1"
@@ -301,24 +268,27 @@ const App: React.FC = () => {
           </div>
 
           {/* Row 2 */}
-          <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center text-left gap-4">
             <img
               src={images[1]}
               alt="row2"
               className="w-full max-w-[350px] rounded-2xl object-cover"
             />
             <div>
-              <h2 className="text-3xl font-semibold mb-2">What I Can Do</h2>
-              <p className="text-base">
+              <h2 className="text-3xl font-semibold mb-2 text-left">
+                What I Can Do
+              </h2>
+              <p className="text-base text-left">
                 I build interactive websites, scalable Shopify stores, and
                 modern web apps with React, TypeScript, and GSAP. I specialize
                 in smooth transitions and premium UX.
               </p>
+              <WhatIDo />
             </div>
           </div>
 
           {/* Row 3 */}
-          <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center text-left gap-4">
             <img
               src={images[2]}
               alt="row3"
@@ -330,6 +300,7 @@ const App: React.FC = () => {
                 Education, work experience, and projects — e-commerce stores,
                 headless Shopify builds, UI/animation experiments, and more.
               </p>
+              <MoreAbout />
             </div>
           </div>
         </div>

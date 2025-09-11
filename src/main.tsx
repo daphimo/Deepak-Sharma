@@ -9,7 +9,6 @@ import Dock from "../src/assets/components/dock.tsx";
 import Scroll from "../src/assets/components/scroll.tsx";
 import StylishBackToTop from "../src/assets/components/backtotop.tsx";
 import Projects from "./Projects.tsx";
-import About from "./About.tsx";
 import Contact from "./Contact.tsx";
 
 // Smooth scroll function with offset
@@ -60,9 +59,6 @@ const Main = () => {
         </div>
         <div id="projects">
           <Projects />
-        </div>
-        <div id="about">
-          <About />
         </div>
         <div id="contact">
           <Contact />

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Home, User, FolderGit2, Mail } from "lucide-react";
+import { Home, FolderGit2, Mail } from "lucide-react";
 import GlassSurface from "./GlassSurface.tsx";
 
 const dockItems = [
   { id: "Home", icon: <Home size={22} />, href: "/" },
   { id: "Projects", icon: <FolderGit2 size={22} />, href: "#projects" },
-  { id: "About", icon: <User size={22} />, href: "#about" },
   { id: "Contact", icon: <Mail size={22} />, href: "#contact" },
 ];
 

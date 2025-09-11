@@ -7,7 +7,7 @@ function App() {
 
       {/* Content */}
       <motion.div
-        className="relative z-10 max-w-2xl text-center"
+        className="relative z-10 max-w-2xl text-left"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
