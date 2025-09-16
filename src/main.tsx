@@ -4,10 +4,13 @@ import "./index.css";
 import "./App.css";
 // import App from "./App.tsx";
 import Space from "./backgrounds/Space.tsx";
+// import Starfield from "./backgrounds/StarfieldBackground.tsx";
+// import Noise from "./backgrounds/NoiseBackground.tsx";
 import Header from "../src/assets/components/header.tsx";
 import Dock from "../src/assets/components/dock.tsx";
 import Scroll from "../src/assets/components/scroll.tsx";
 import StylishBackToTop from "../src/assets/components/backtotop.tsx";
+import Tech from "../src/assets/components/technologies.tsx";
 import Projects from "./Projects.tsx";
 import Contact from "./Contact.tsx";
 
@@ -57,6 +60,7 @@ const Main = () => {
           {/* <App /> */}
           <Scroll />
         </div>
+        <Tech />
         <div id="projects">
           <Projects />
         </div>
