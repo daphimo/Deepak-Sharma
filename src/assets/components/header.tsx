@@ -25,7 +25,7 @@ export default function Header(): React.ReactElement {
         WebkitBackdropFilter: "blur(2px)",
       }}
     >
-      <div className="max-w-7xl mx-auto flex items-center px-6 py-4 justify-between">
+      <div className="max-w-7xl mx-auto px-4 flex items-center py-4 justify-between">
         {/* Logo with Shuffle */}
         <a href="/">
           <Shuffle

@@ -64,7 +64,7 @@ const Counter: React.FC<CounterProps> = ({ end, delay = 300 }) => {
 
 const MoreAboutMe = () => {
   return (
-    <section className="bg-transparent text-white py-12">
+    <section className="bg-transparent text-white pt-12">
       {/* Stats Section */}
       <div className="flex flex-col md:flex-row gap-10 mb-10">
         <div>

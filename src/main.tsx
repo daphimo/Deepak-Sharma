@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "./App.css";
 // import App from "./App.tsx";
-import Space from "./backgrounds/Space.tsx";
+// import Space from "./backgrounds/Space.tsx";
 // import Starfield from "./backgrounds/StarfieldBackground.tsx";
 // import Noise from "./backgrounds/NoiseBackground.tsx";
 import Header from "../src/assets/components/header.tsx";
@@ -13,6 +13,7 @@ import StylishBackToTop from "../src/assets/components/backtotop.tsx";
 import Tech from "../src/assets/components/technologies.tsx";
 import Projects from "./Projects.tsx";
 import Contact from "./Contact.tsx";
+import Galaxy from "./components/Galaxy.tsx";
 
 // Smooth scroll function with offset
 const scrollToSection = (id: string, offset = 100) => {
@@ -53,7 +54,23 @@ const Main = () => {
 
   return (
     <>
-      <Space />
+      {/* <Space /> */}
+      <div className="fixed inset-0 -z-10 w-full pointer-events-none h-full">
+        <Galaxy
+          mouseRepulsion={true}
+          mouseInteraction={true}
+          density={1.2}
+          glowIntensity={0.15}
+          saturation={0.0}
+          hueShift={100}
+          transparent={false}
+          speed={0.3}
+          starSpeed={0.8}
+          rotationSpeed={0.05}
+          repulsionStrength={0.5}
+          autoCenterRepulsion={0}
+        />
+      </div>
       <Header />
       <div className="main-container w-full min-h-screen">
         <div id="intro">

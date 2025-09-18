@@ -173,7 +173,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <main ref={containerRef} className="w-full min-h-screen text-white">
+    <main
+      ref={containerRef}
+      className="w-full min-h-screen text-white max-w-7xl mx-auto px-4"
+    >
       {!isMobile && (
         <>
           {/* floating animated image */}
@@ -197,7 +200,13 @@ const App: React.FC = () => {
             >
               <div className="w-[400px] h-[400px]" />
             </div>
-            <div className="flex flex-col justify-center px-12">
+            <div
+              className="flex flex-col justify-center p-6 bg-white/10 
+             backdrop-blur-md 
+             border border-white/20 
+             shadow-lg 
+             rounded-2xl"
+            >
               <h1 className="text-7xl font-bold mb-3 text-left">
                 Deepak Sharma
               </h1>
@@ -212,7 +221,13 @@ const App: React.FC = () => {
 
           {/* Row 2 */}
           <section className=" py-20 grid grid-cols-2">
-            <div className="flex flex-col justify-start px-12">
+            <div
+              className="flex flex-col justify-start p-6 bg-white/10 
+             backdrop-blur-md 
+             border border-white/20 
+             shadow-lg 
+             rounded-2xl"
+            >
               <h2 className="text-4xl font-semibold mb-4 text-left">
                 What I Can Do For You
               </h2>
@@ -239,7 +254,13 @@ const App: React.FC = () => {
             >
               <div className="w-[400px] h-[400px]" />
             </div>
-            <div className="flex flex-col justify-start px-12">
+            <div
+              className="flex flex-col justify-start p-6 bg-white/10 
+             backdrop-blur-md 
+             border border-white/20 
+             shadow-lg 
+             rounded-2xl"
+            >
               <h2 className="text-4xl font-semibold mb-4">More About Me</h2>
               <p className="text-lg">
                 Education, work experience, and projects — e-commerce stores,

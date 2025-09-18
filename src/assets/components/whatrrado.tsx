@@ -91,7 +91,7 @@ export default function ServicesCollapsible() {
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full rounded-lg mb-3"
+                  className="w-full rounded-lg mb-3 "
                 />
               </div>
 
@@ -117,7 +117,7 @@ export default function ServicesCollapsible() {
             key={hovered.id}
             src={hovered.image}
             alt={hovered.title}
-            className="hidden md:block fixed w-36 h-24 object-cover pointer-events-none rounded-xl shadow-lg"
+            className="hidden md:block fixed w-50 h-36 object-cover pointer-events-none rounded-xl shadow-lg"
             style={{
               top: cursor.y + 20,
               left: cursor.x + 20,
