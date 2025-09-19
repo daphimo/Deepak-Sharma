@@ -12,23 +12,44 @@ const brandColors = {
 export default function Infinite() {
   const projects = [
     {
-      title: "Project One",
-      img: "https://via.placeholder.com/600x400",
+      title: "Amara Beauty",
+      img: "../public/files/project/amara-beauty.jpg",
       desc: "A creative project showcasing design and innovation.",
-      link: "#",
-      caseStudy: "#",
+      link: "https://amarabeautycare.com/",
+      caseStudy: "https://amarabeautycare.com/",
     },
     {
-      title: "Project Two",
-      img: "https://via.placeholder.com/600x400",
-      desc: "An innovative solution blending creativity and technology.",
-      link: "#",
-      caseStudy: "#",
+      title: "Eywa Beauty",
+      img: "../public/files/project/eywa.png",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://www.eywabeauty.com/en-in",
+      caseStudy: "https://www.eywabeauty.com/en-in",
+    },
+    {
+      title: "Bellanomi",
+      img: "../public/files/project/bellanomi.jpg",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://bellanomi.com/",
+      caseStudy: "https://bellanomi.com/",
+    },
+    {
+      title: "Apres Cookie",
+      img: "../public/files/project/aprescookie.png",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://aprescookies.com/",
+      caseStudy: "https://aprescookies.com/s",
+    },
+    {
+      title: "Arzley",
+      img: "../public/files/project/arzley.jpg",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://www.arzley.com/",
+      caseStudy: "https://www.arzley.com/",
     },
   ];
 
   return (
-    <div className="my-20">
+    <div className="mt-20">
       <div className="w-full min-h-screen text-white max-w-7xl mx-auto px-4">
         <div
           className="p-6 bg-white/10 
@@ -42,18 +63,22 @@ export default function Infinite() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full h-[40rem] md:h-[30rem]">
             {/* Left Content */}
             <div className="flex flex-col justify-center space-y-6">
-              <h2 className="text-4xl font-bold">Our Projects</h2>
+              <h2 className="text-4xl font-bold">My Projects</h2>
               <p className="text-lg text-gray-200 leading-relaxed">
-                Explore some of the creative projects we’ve been working on.
-                Each card on the right represents an initiative where we blend
+                Explore some of the creative projects I’ve been working on. Each
+                card on the right represents an initiative where I blend
                 innovation, design, and functionality to bring unique ideas to
                 life.
+              </p>
+              <p className="text-xs text-gray-200 leading-relaxed">
+                NOTE: THESE PROJECTS WERE DONE WHILE I WAS WORKING IN AGENCY,
+                THESE ARE NOT MY PERSONAL PROJECTS.
               </p>
             </div>
 
             {/* Right Side: Card Swapper */}
             <div className="flex justify-center w-full h-full">
-              <div className="w-full h-full max-w-md">
+              <div className="w-full h-full">
                 <CardSwap
                   cardDistance={60}
                   verticalDistance={70}

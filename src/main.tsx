@@ -16,7 +16,7 @@ import Contact from "./Contact.tsx";
 import Galaxy from "./components/Galaxy.tsx";
 
 // Smooth scroll function with offset
-const scrollToSection = (id: string, offset = 100) => {
+const scrollToSection = (id: string, offset = 0) => {
   const element = document.getElementById(id);
   if (element) {
     const elementPosition =
@@ -38,7 +38,7 @@ const useSmoothScroll = () => {
         const targetId = (link as HTMLAnchorElement)
           .getAttribute("href")!
           .substring(1);
-        scrollToSection(targetId, -20);
+        scrollToSection(targetId, 120);
       });
     });
     return () => {
