@@ -39,7 +39,11 @@ export default function TechShowcase() {
       {/* First strip - tilted, scrolls right */}
       <div className="-rotate-6">
         <ScrollVelocity
-          texts={[<div className="flex gap-16">{icons}</div>]}
+          texts={[
+            <div key="row1" className="flex gap-16">
+              {icons}
+            </div>,
+          ]}
           velocity={100}
           className="mx-6 my-0"
           numCopies={12}
@@ -49,7 +53,11 @@ export default function TechShowcase() {
       {/* Second strip - same tilt (parallel), scrolls left */}
       <div className="-rotate-6">
         <ScrollVelocity
-          texts={[<div className="flex gap-16">{icons}</div>]}
+          texts={[
+            <div key="row2" className="flex gap-16">
+              {icons}
+            </div>,
+          ]}
           velocity={-100}
           className="mx-6 my-0"
           numCopies={12}

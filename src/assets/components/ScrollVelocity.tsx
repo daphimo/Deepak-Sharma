@@ -9,13 +9,16 @@ import {
   useAnimationFrame,
 } from "motion/react";
 
+// ⬇️ type-only import for ReactNode
+import type { ReactNode } from "react";
+
 interface VelocityMapping {
   input: [number, number];
   output: [number, number];
 }
 
 interface VelocityTextProps {
-  children: React.ReactNode;
+  children: ReactNode;
   baseVelocity: number;
   scrollContainerRef?: React.RefObject<HTMLElement>;
   className?: string;
@@ -31,7 +34,7 @@ interface VelocityTextProps {
 
 interface ScrollVelocityProps {
   scrollContainerRef?: React.RefObject<HTMLElement>;
-  texts: string[];
+  texts: ReactNode[]; // ✅ accepts elements + strings
   velocity?: number;
   className?: string;
   damping?: number;
@@ -155,7 +158,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
         style={parallaxStyle}
       >
         <motion.div
-          className={`${scrollerClassName} flex whitespace-nowrap tracking-[-0.02em] drop-shadow `}
+          className={`${scrollerClassName} flex whitespace-nowrap tracking-[-0.02em] drop-shadow`}
           style={{ x, ...scrollerStyle }}
         >
           {spans}
@@ -166,7 +169,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
 
   return (
     <section>
-      {texts.map((text: string, index: number) => (
+      {texts.map((text, index) => (
         <VelocityText
           key={index}
           className={className}
