@@ -1,13 +1,13 @@
 import CardSwap, { Card } from "./components/CardSwap";
-import { FiExternalLink, FiFileText } from "react-icons/fi";
+// import { FiExternalLink, FiFileText } from "react-icons/fi";
 
 // 🎨 Brand Colors
-const brandColors = {
-  dark: "#000000",
-  steel: "#415a77",
-  sky: "#778da9",
-  light: "#e0e1dd",
-};
+// const brandColors = {
+//   dark: "#000000",
+//   steel: "#415a77",
+//   sky: "#778da9",
+//   light: "#e0e1dd",
+// };
 
 export default function Infinite() {
   const projects = [
@@ -114,7 +114,7 @@ export default function Infinite() {
                         </div>
 
                         {/* Overlay Buttons */}
-                        <div className="absolute inset-0 z-20 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                        {/* <div className="absolute inset-0 z-20 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
                           <a
                             href={project.link}
                             style={{ backgroundColor: brandColors.steel }}
@@ -129,7 +129,7 @@ export default function Infinite() {
                           >
                             <FiFileText /> Case Study
                           </a>
-                        </div>
+                        </div> */}
                       </a>
                     </Card>
                   ))}
