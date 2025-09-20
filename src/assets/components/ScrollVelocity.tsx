@@ -9,16 +9,13 @@ import {
   useAnimationFrame,
 } from "motion/react";
 
-// ⬇️ type-only import for ReactNode
-import type { ReactNode } from "react";
-
 interface VelocityMapping {
   input: [number, number];
   output: [number, number];
 }
 
 interface VelocityTextProps {
-  children: ReactNode;
+  children: React.ReactNode;
   baseVelocity: number;
   scrollContainerRef?: React.RefObject<HTMLElement>;
   className?: string;
@@ -34,7 +31,7 @@ interface VelocityTextProps {
 
 interface ScrollVelocityProps {
   scrollContainerRef?: React.RefObject<HTMLElement>;
-  texts: ReactNode[]; // ✅ accepts elements + strings
+  texts: React.ReactNode[]; // Changed from string[] to React.ReactNode[]
   velocity?: number;
   className?: string;
   damping?: number;
@@ -126,8 +123,15 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
     });
 
     const directionFactor = useRef<number>(1);
-    useAnimationFrame((delta) => {
-      let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+    const lastTime = useRef<number>(0);
+
+    useAnimationFrame((t, delta) => {
+      // Use time-based calculations for smoother animation
+      const timeScale = t * 0.001; // Convert to seconds
+      const timeDelta = lastTime.current === 0 ? delta : t - lastTime.current;
+      lastTime.current = t;
+
+      let moveBy = directionFactor.current * baseVelocity * (timeDelta / 1000);
 
       if (velocityFactor.get() < 0) {
         directionFactor.current = -1;
@@ -135,7 +139,18 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
         directionFactor.current = 1;
       }
 
-      moveBy += directionFactor.current * moveBy * velocityFactor.get();
+      // Apply velocity factor with time-based smoothing
+      const velocityMultiplier = velocityFactor.get();
+      const timeBasedVelocity = Math.sin(timeScale * 0.1) * 0.1;
+      const smoothedVelocity = velocityMultiplier + timeBasedVelocity;
+
+      // Use timeDelta for consistent animation regardless of frame rate
+      moveBy +=
+        directionFactor.current *
+        moveBy *
+        smoothedVelocity *
+        (timeDelta / 16.67); // Normalize to ~60fps
+
       baseX.set(baseX.get() + moveBy);
     });
 
@@ -158,7 +173,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
         style={parallaxStyle}
       >
         <motion.div
-          className={`${scrollerClassName} flex whitespace-nowrap tracking-[-0.02em] drop-shadow`}
+          className={`${scrollerClassName} flex whitespace-nowrap text-center font-sans text-4xl font-bold tracking-[-0.02em] drop-shadow md:text-[5rem] md:leading-[5rem]`}
           style={{ x, ...scrollerStyle }}
         >
           {spans}
@@ -169,7 +184,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
 
   return (
     <section>
-      {texts.map((text, index) => (
+      {texts.map((content: React.ReactNode, index: number) => (
         <VelocityText
           key={index}
           className={className}
@@ -184,7 +199,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
           parallaxStyle={parallaxStyle}
           scrollerStyle={scrollerStyle}
         >
-          {text}&nbsp;
+          {content}
         </VelocityText>
       ))}
     </section>

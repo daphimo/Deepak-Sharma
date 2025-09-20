@@ -40,7 +40,7 @@ export default function TechShowcase() {
       <div className="-rotate-6">
         <ScrollVelocity
           texts={[
-            <div key="row1" className="flex gap-16">
+            <div key="row1" className="flex gap-16 items-center">
               {icons}
             </div>,
           ]}
@@ -54,7 +54,7 @@ export default function TechShowcase() {
       <div className="-rotate-6">
         <ScrollVelocity
           texts={[
-            <div key="row2" className="flex gap-16">
+            <div key="row2" className="flex gap-16 items-center">
               {icons}
             </div>,
           ]}
