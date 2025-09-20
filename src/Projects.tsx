@@ -89,6 +89,7 @@ export default function Infinite() {
                     <Card key={index}>
                       <a
                         href={project.link}
+                        target="_blank"
                         className="relative block w-full h-full rounded-xl overflow-hidden shadow-lg group"
                         aria-label={project.title}
                         title={project.title}
