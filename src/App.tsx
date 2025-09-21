@@ -78,17 +78,14 @@ const Hero = () => {
         </div>
 
         {/* Mobile Layout */}
-        <div className="md:hidden flex flex-col items-center gap-4 text-center">
-          <span className="block text-xs tracking-widest font-medium">
-            DEEPAK SHARMA
-          </span>
-          <h1 className="text-3xl font-extrabold">
-            <span className="text-white/40">Sr.</span> WEB
+        <div className="md:hidden flex flex-col items-center gap-8 text-center">
+          <h1 className="text-5xl font-extrabold">
+            <span className="text-white">Sr.</span> WEB
           </h1>
 
           {/* Mobile Profile Card */}
           <div
-            className="w-40 p-3 rounded-2xl shadow-xl"
+            className="w-72  rounded-3xl shadow-2xl"
             style={{
               background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
             }}
@@ -96,12 +93,12 @@ const Hero = () => {
             <img
               src={myImage}
               alt="Deepak Sharma"
-              className="w-full h-auto object-cover rounded-lg"
+              className="w-full h-auto object-cover rounded-2xl"
             />
           </div>
 
-          <h1 className="text-3xl font-extrabold">DEVELOPER</h1>
-          <p className="text-sm text-gray-200">
+          <h1 className="text-5xl font-extrabold">DEVELOPER</h1>
+          <p className="text-lg text-gray-200 leading-relaxed max-w-sm">
             I am India based Web Developer <br /> and Freelancer
           </p>
         </div>

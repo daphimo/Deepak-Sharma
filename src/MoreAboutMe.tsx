@@ -16,22 +16,25 @@ const App: React.FC = () => {
   return (
     <main className="w-full min-h-screen text-white max-w-7xl mx-auto px-4">
       {/* Row 2: graphic top on mobile, side on desktop */}
-      <section className="py-20 grid grid-cols-1 md:grid-cols-2 items-start gap-8">
+      <section className=" grid grid-cols-1 md:grid-cols-2 items-start gap-8">
         {/* Graphic first */}
-        <div className="flex justify-center w-full h-full order-1 md:order-2">
-          <MetaBalls
-            color={brandColors.sky}
-            cursorBallColor={brandColors.sky}
-            cursorBallSize={1}
-            ballCount={20}
-            animationSize={40}
-            enableMouseInteraction={true}
-            enableTransparency={true}
-            hoverSmoothness={0.05}
-            clumpFactor={1}
-            speed={0.3}
-          />
+        <div className="flex justify-center items-center order-1 md:order-2">
+          <div className="aspect-square w-full max-w-md flex items-center justify-center">
+            <MetaBalls
+              color={brandColors.sky}
+              cursorBallColor={brandColors.sky}
+              cursorBallSize={1}
+              ballCount={20}
+              animationSize={40}
+              enableMouseInteraction={true}
+              enableTransparency={true}
+              hoverSmoothness={0.05}
+              clumpFactor={1}
+              speed={0.3}
+            />
+          </div>
         </div>
+
         {/* Text second */}
         <div className="flex flex-col justify-start p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl order-2 md:order-1">
           <h2 className="text-4xl font-semibold mb-4 text-left">
@@ -47,20 +50,23 @@ const App: React.FC = () => {
       </section>
 
       {/* Row 3: graphic top on mobile, side on desktop */}
-      <section className="py-20 grid grid-cols-1 md:grid-cols-2 items-start gap-8">
+      <section className="pt-20 pb-20 grid grid-cols-1 md:grid-cols-2 items-start gap-8">
         {/* Graphic first */}
-        <div className="flex justify-center order-1 md:order-1">
-          <MagnetLines
-            rows={12}
-            columns={9}
-            containerSize="100%"
-            lineColor="#ffffff"
-            lineWidth="0.8vmin"
-            lineHeight="5vmin"
-            baseAngle={0}
-            style={{ margin: "2rem auto" }}
-          />
+        <div className="flex justify-center items-center order-1 md:order-1">
+          <div className="aspect-square w-full max-w-md flex items-center justify-center">
+            <MagnetLines
+              rows={12}
+              columns={9}
+              containerSize="100%"
+              lineColor="#ffffff"
+              lineWidth="0.8vmin"
+              lineHeight="5vmin"
+              baseAngle={0}
+              style={{ margin: "2rem auto" }}
+            />
+          </div>
         </div>
+
         {/* Text second */}
         <div className="flex flex-col justify-start p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl order-2 md:order-2">
           <h2 className="text-4xl font-semibold mb-4">More About Me</h2>

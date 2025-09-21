@@ -66,18 +66,18 @@ const MoreAboutMe = () => {
   return (
     <section className="bg-transparent text-white pt-12">
       {/* Stats Section */}
-      <div className="flex flex-col md:flex-row gap-10 mb-10">
+      <div className="flex flex-row flex-wrap gap-10 mb-10">
         <div>
           <Counter end={5} />
-          <p className="text-sm mt-1">Years of Experience</p>
+          <p className="text-m mt-1">Years of Experience</p>
         </div>
         <div>
           <Counter end={150} />
-          <p className="text-sm mt-1">Completed Projects</p>
+          <p className="text-m mt-1">Completed Projects</p>
         </div>
         <div>
           <Counter end={40} />
-          <p className="text-sm mt-1">Clients Worldwide</p>
+          <p className="text-m mt-1">Clients Worldwide</p>
         </div>
       </div>
 
@@ -85,11 +85,13 @@ const MoreAboutMe = () => {
       <div className="flex flex-col md:flex-row gap-10">
         <div className="mb-6">
           <p className="font-semibold">Call Today:</p>
-          <p className="text-gray-300">+91 942 701 1442</p>
+          <p className="text-gray-300 text-m">+91 942 701 1442</p>
         </div>
         <div className="mb-6">
           <p className="font-semibold">Email:</p>
-          <p className="text-gray-300">deepakrajeshsharma987654321@gmail.com</p>
+          <p className="text-gray-300 text-m">
+            deepakrajeshsharma987654321@gmail.com
+          </p>
         </div>
       </div>
 

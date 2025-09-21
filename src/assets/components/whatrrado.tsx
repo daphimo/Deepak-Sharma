@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 
 type Service = {
   id: number;
@@ -14,122 +19,149 @@ const services: Service[] = [
     title: "Store Setup & Customization",
     content: `Theme setup, customization, and styling (Dawn, custom themes, etc.)
 Conversion-focused store layouts`,
-    image: "/files/store.jpg",
+    image: "/files/store.webp",
   },
   {
     id: 2,
     title: "Custom Theme Development",
     content: `Build pixel-perfect custom themes from Figma/PSD.
 Reusable Shopify sections and blocks.`,
-    image: "/files/theme.jpg",
+    image: "/files/theme.webp",
   },
   {
     id: 3,
     title: "Performance Optimization",
     content: `Minify assets, lazy loading, Core Web Vitals improvements.
 Speed audits and performance fixes.`,
-    image: "/files/performance.jpg",
+    image: "/files/performance.webp",
   },
   {
     id: 4,
     title: "Responsive Web Applications",
     content: `Mobile-first, cross-browser apps with React / Next.js / Vue.
 Progressive Web Apps (PWAs) for offline-first experiences.`,
-    image: "/files/responsive.jpg",
+    image: "/files/responsive.webp",
   },
   {
     id: 5,
     title: "SEO-friendly Development",
     content: `Schema markup, meta tags, OpenGraph for social sharing.
 Optimized site structure for organic ranking.`,
-    image: "/files/seo.jpg",
+    image: "/files/seo.webp",
   },
 ];
 
-export default function ServicesCollapsible() {
+export default function App() {
   const [active, setActive] = useState<number | null>(null);
   const [hovered, setHovered] = useState<Service | null>(null);
-  const [cursor, setCursor] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
+
+  // Motion values for smooth cursor following
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Use spring for inertia effect
+  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
 
   const toggle = (id: number) => {
     setActive(active === id ? null : id);
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // For fixed positioning, use clientX/Y directly and add offset
+    mouseX.set(e.clientX - 150); // 20px offset to the right
+    mouseY.set(e.clientY - 450); // 100px offset above cursor
+  };
+
   return (
-    <div className="max-w-4xl mx-auto py-6 space-y-4 relative w-full">
-      {services.map((service) => (
-        <div key={service.id} className="w-full border-b border-gray-600">
-          <button
-            onClick={() => toggle(service.id)}
-            className="w-full flex cursor-pointer justify-between items-center py-3 text-left text-2xl font-semibold"
-            onMouseEnter={() => setHovered(service)}
-            onMouseLeave={() => setHovered(null)}
-            onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-          >
-            <span>
-              {service.id}. {service.title}
-            </span>
-            <span>{active === service.id ? "−" : "+"}</span>
-          </button>
+    <div className="text-white">
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-4xl mx-auto space-y-4 relative w-full">
+          {services.map((service) => (
+            <div key={service.id} className="w-full border-b border-gray-600">
+              <button
+                onClick={() => toggle(service.id)}
+                className="w-full flex cursor-pointer justify-between items-center py-4 text-left text-xl md:text-2xl font-semibold hover:text-blue-400 transition-colors duration-200"
+                onMouseEnter={() => setHovered(service)}
+                onMouseLeave={() => setHovered(null)}
+                onMouseMove={handleMouseMove}
+              >
+                <span className="flex items-center gap-4">
+                  <span className="text-blue-400 font-mono">0{service.id}</span>
+                  <span>{service.title}</span>
+                </span>
+                <motion.span
+                  animate={{ rotate: active === service.id ? 45 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-2xl font-light"
+                >
+                  {active === service.id ? "−" : "+"}
+                </motion.span>
+              </button>
 
-          {/* Collapsible Content */}
-          <motion.div
-            initial={false}
-            animate={{
-              height: active === service.id ? "auto" : 0,
-              opacity: active === service.id ? 1 : 0,
-            }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="overflow-hidden pl-2 text-left"
-          >
-            <div className="pb-4 space-y-3">
-              {/* Show image only on mobile (inside collapsible) */}
-              <div className="block md:hidden">
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full rounded-lg mb-3 "
-                />
-              </div>
+              {/* Collapsible Content */}
+              <motion.div
+                initial={false}
+                animate={{
+                  height: active === service.id ? "auto" : 0,
+                  opacity: active === service.id ? 1 : 0,
+                }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="pb-6 pl-8 space-y-4">
+                  {/* Show image only on mobile (inside collapsible) */}
+                  <div className="block md:hidden">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full max-w-sm rounded-lg mb-4"
+                    />
+                  </div>
 
-              <ul className="list-none space-y-2">
-                {service.content.split("\n").map((line, i) => (
-                  <li key={i} className="relative pl-6 text-white">
-                    <span className="absolute left-0 top-1 w-3 h-3 rounded-full border-2 border-white flex items-center justify-center">
-                      <span className="w-1.5 h-1.5 bg-white rounded-full"></span>
-                    </span>
-                    {line}
-                  </li>
-                ))}
-              </ul>
+                  <ul className="list-none space-y-3">
+                    {service.content.split("\n").map((line, i) => (
+                      <li key={i} className="relative pl-6 text-gray-300">
+                        <span className="absolute left-0 top-2 w-2 h-2 rounded-full bg-blue-400"></span>
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      ))}
+          ))}
 
-      {/* Floating Image on Hover (desktop only) */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.img
-            key={hovered.id}
-            src={hovered.image}
-            alt={hovered.title}
-            className="hidden md:block fixed w-50 h-36 object-cover pointer-events-none rounded-xl shadow-lg"
-            style={{
-              top: cursor.y + 50,
-              left: cursor.x + -120,
-              transform: "rotate(10deg) perspective(600px) rotateY(0deg)",
-            }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          />
-        )}
-      </AnimatePresence>
+          {/* Floating Image on Hover (desktop only) */}
+          <AnimatePresence>
+            {hovered && (
+              <motion.div
+                key={hovered.id}
+                className="hidden md:block fixed pointer-events-none z-50"
+                style={{
+                  x: springX,
+                  y: springY,
+                }}
+                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                animate={{ opacity: 1, scale: 1, rotate: 5 }}
+                exit={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              >
+                <div className="relative">
+                  <img
+                    src={hovered.image}
+                    alt={hovered.title}
+                    className="w-64 h-40 object-cover rounded-xl shadow-2xl border-2 border-white/20"
+                  />
+                  <div className="absolute -bottom-2 -right-2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    0{hovered.id}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
