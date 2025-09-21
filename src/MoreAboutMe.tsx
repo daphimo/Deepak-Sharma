@@ -50,7 +50,7 @@ const App: React.FC = () => {
       </section>
 
       {/* Row 3: graphic top on mobile, side on desktop */}
-      <section className="pt-20 pb-20 grid grid-cols-1 md:grid-cols-2 items-start gap-8">
+      <section className="pt-20 pb-20 grid grid-cols-1 md:grid-cols-2 items-center gap-8">
         {/* Graphic first */}
         <div className="flex justify-center items-center order-1 md:order-1">
           <div className="aspect-square w-full max-w-md flex items-center justify-center">
