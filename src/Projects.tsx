@@ -20,28 +20,28 @@ export default function Infinite() {
     },
     {
       title: "Eywa Beauty",
-      img: "../public/files/eywa.png",
+      img: "/files/eywa.png",
       desc: "A creative project showcasing design and innovation.",
       link: "https://www.eywabeauty.com/en-in",
       caseStudy: "https://www.eywabeauty.com/en-in",
     },
     {
       title: "Bellanomi",
-      img: "../public/files/bellanomi.jpg",
+      img: "/files/bellanomi.jpg",
       desc: "A creative project showcasing design and innovation.",
       link: "https://bellanomi.com/",
       caseStudy: "https://bellanomi.com/",
     },
     {
       title: "Apres Cookie",
-      img: "../public/files/aprescookie.png",
+      img: "/files/aprescookie.png",
       desc: "A creative project showcasing design and innovation.",
       link: "https://aprescookies.com/",
       caseStudy: "https://aprescookies.com/s",
     },
     {
       title: "Arzley",
-      img: "../public/files/arzley.jpg",
+      img: "/files/arzley.jpg",
       desc: "A creative project showcasing design and innovation.",
       link: "https://www.arzley.com/",
       caseStudy: "https://www.arzley.com/",
@@ -49,7 +49,7 @@ export default function Infinite() {
   ];
 
   return (
-    <div className="mt-20">
+    <div className="mt-60">
       <div className="w-full min-h-screen text-white max-w-7xl mx-auto px-4">
         <div
           className="p-6 bg-white/10 

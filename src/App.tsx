@@ -1,44 +1,113 @@
-import { motion } from "framer-motion";
+"use client";
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import myImage from "/files/my_profile.png";
 
-function App() {
+gsap.registerPlugin(ScrollTrigger);
+
+const brandColors = {
+  dark: "#000000",
+  steel: "#415a77",
+  sky: "#778da9",
+  light: "#e0e1dd",
+};
+
+const Hero = () => {
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+      });
+
+      // Image scrolls slower
+      tl.to(".hero-image", { yPercent: -15, ease: "power1.out" }, 0);
+
+      // Text scrolls faster (double speed vs before)
+      tl.to(".hero-left", { yPercent: -240, ease: "power1.out" }, 0);
+      tl.to(".hero-right", { yPercent: -180, ease: "power1.out" }, 0);
+      tl.to(".hero-right-bottom", { yPercent: -200, ease: "power1.out" }, 0);
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center text-white px-6 overflow-hidden">
-      {/* Background */}
+    <section className="pt-40 pb-20">
+      <div className="hero-section max-w-7xl m-auto relative flex justify-center items-center text-white overflow-hidden">
+        {/* Desktop Layout */}
+        <div className="hidden md:block relative w-full">
+          {/* Profile Card */}
+          <div
+            className="hero-image relative z-10 mx-auto w-64 md:w-72 lg:w-80 px-4 rounded-2xl shadow-2xl"
+            style={{
+              background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
+            }}
+          >
+            <img
+              src={myImage}
+              alt="Deepak Sharma"
+              className="w-full h-auto object-cover rounded-xl"
+            />
+          </div>
 
-      {/* Content */}
-      <motion.div
-        className="relative z-10 max-w-2xl text-left"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <h1 className="text-4xl md:text-6xl font-bold">
-          Hi, I'm <span className="text-blue-400">Deepak Sharma</span>
-        </h1>
-        <p className="mt-4 text-lg md:text-xl text-slate-300">
-          🚀 Frontend Developer | Shopify Expert | UI/UX Enthusiast
-        </p>
-        <div className="mt-8 flex flex-wrap gap-4 justify-center">
-          <motion.a
-            href="#projects"
-            className="px-6 py-3 rounded-full bg-blue-500 text-white font-semibold shadow-lg hover:bg-blue-600 transition"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View My Work
-          </motion.a>
-          <motion.a
-            href="#contact"
-            className="px-6 py-3 rounded-full border-2 border-blue-400 text-blue-400 font-semibold hover:bg-blue-500 hover:text-white transition"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Contact Me
-          </motion.a>
+          {/* Left Text */}
+          <div className="hero-left absolute top-1/2 left-[calc(50%-28rem)] -translate-y-1/2 text-left z-20">
+            <h1 className="text-7xl font-extrabold leading-none whitespace-nowrap">
+              <span className="text-white -mr-2">Sr.</span>{" "}
+              <span className="text-white">WEB</span>
+            </h1>
+          </div>
+
+          {/* Right Text */}
+          <div className="hero-right absolute top-1/2 right-[calc(50%-36rem)] -translate-y-1/2 text-right z-20">
+            <h1 className="text-7xl font-extrabold leading-none text-white whitespace-nowrap">
+              DEVELOPER
+            </h1>
+          </div>
+          <div className="hero-right-bottom absolute top-[60%] right-[calc(50%-36rem)] -translate-y-1/2 text-right z-20">
+            <p className="text-base text-gray-200 mt-2">
+              I am India based Web Developer <br /> and Freelancer
+            </p>
+          </div>
         </div>
-      </motion.div>
+
+        {/* Mobile Layout */}
+        <div className="md:hidden flex flex-col items-center gap-4 text-center">
+          <span className="block text-xs tracking-widest font-medium">
+            DEEPAK SHARMA
+          </span>
+          <h1 className="text-3xl font-extrabold">
+            <span className="text-white/40">Sr.</span> WEB
+          </h1>
+
+          {/* Mobile Profile Card */}
+          <div
+            className="w-40 p-3 rounded-2xl shadow-xl"
+            style={{
+              background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
+            }}
+          >
+            <img
+              src={myImage}
+              alt="Deepak Sharma"
+              className="w-full h-auto object-cover rounded-lg"
+            />
+          </div>
+
+          <h1 className="text-3xl font-extrabold">DEVELOPER</h1>
+          <p className="text-sm text-gray-200">
+            I am India based Web Developer <br /> and Freelancer
+          </p>
+        </div>
+      </div>
     </section>
   );
-}
+};
 
-export default App;
+export default Hero;

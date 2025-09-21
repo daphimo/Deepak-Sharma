@@ -153,6 +153,11 @@ const Contact: FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Copyright Section */}
+      <div className="mt-10 pb-10 text-center text-gray-400 text-sm">
+        © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
+      </div>
     </div>
   );
 };
