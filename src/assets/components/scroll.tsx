@@ -10,9 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 const DESKTOP_MIN_WIDTH = 768;
 
 const images = [
-  "/public/files/my_profile.png",
-  "/public/files/what_i_do.jpg",
-  "/public/files/more_about_me.jpg",
+  "/files/my_profile.png",
+  "/files/what_i_do.jpg",
+  "/files/more_about_me.jpg",
 ];
 
 const App: React.FC = () => {

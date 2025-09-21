@@ -119,8 +119,8 @@ export default function ServicesCollapsible() {
             alt={hovered.title}
             className="hidden md:block fixed w-50 h-36 object-cover pointer-events-none rounded-xl shadow-lg"
             style={{
-              top: cursor.y + 20,
-              left: cursor.x + 20,
+              top: cursor.y + 50,
+              left: cursor.x + -120,
               transform: "rotate(10deg) perspective(600px) rotateY(0deg)",
             }}
             initial={{ opacity: 0 }}
