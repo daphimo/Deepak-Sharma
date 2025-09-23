@@ -1,10 +1,5 @@
 "use client";
-import { useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import myImage from "/files/my_profile.png";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const brandColors = {
   dark: "#000000",
@@ -14,45 +9,36 @@ const brandColors = {
 };
 
 const Hero = () => {
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".hero-section",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      });
-
-      // Image scrolls slower
-      tl.to(".hero-image", { yPercent: -15, ease: "power1.out" }, 0);
-
-      // Text scrolls faster (double speed vs before)
-      tl.to(".hero-left", { yPercent: -240, ease: "power1.out" }, 0);
-      tl.to(".hero-right", { yPercent: -180, ease: "power1.out" }, 0);
-      tl.to(".hero-right-bottom", { yPercent: -200, ease: "power1.out" }, 0);
-    });
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section className="pt-40 pb-20">
+    <section className="pt-40 pb-20 relative">
       <div className="hero-section max-w-7xl m-auto relative flex justify-center items-center text-white overflow-hidden">
         {/* Desktop Layout */}
-        <div className="hidden md:block relative w-full">
-          {/* Profile Card */}
-          <div
-            className="hero-image relative z-10 mx-auto w-64 md:w-72 lg:w-80 px-4 rounded-2xl shadow-2xl"
-            style={{
-              background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
-            }}
-          >
-            <img
-              src={myImage}
-              alt="Deepak Sharma"
-              className="w-full h-auto object-cover rounded-xl"
+        <div className="hidden md:flex relative w-full justify-center items-center">
+          {/* Profile Card with border + glow */}
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="hero-image relative w-64 md:w-72 lg:w-80 rounded-2xl shadow-2xl overflow-hidden">
+              <img
+                src={myImage}
+                alt="Deepak Sharma"
+                className="w-full h-auto object-cover rounded-xl"
+              />
+            </div>
+
+            {/* Bottom Border */}
+            <div
+              className="w-[100%] h-1 mt-0 rounded-full"
+              style={{ backgroundColor: brandColors.sky }}
+            />
+
+            {/* Elliptical Glow */}
+            <div
+              className="absolute bottom-0 z-0 w-[100%] h-10 pointer-events-none"
+              style={{
+                left: "50%",
+                transform: "translateX(-50%) translateY(8px)",
+                background: `radial-gradient(ellipse at center, ${brandColors.sky} 0%, transparent 80%)`,
+                filter: "blur(12px)",
+              }}
             />
           </div>
 
@@ -85,7 +71,7 @@ const Hero = () => {
 
           {/* Mobile Profile Card */}
           <div
-            className="w-72  rounded-3xl shadow-2xl"
+            className="w-72 rounded-3xl shadow-2xl overflow-hidden"
             style={{
               background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
             }}

@@ -106,3 +106,13 @@ select {
   --brand-light: #e0e1dd;
 }
 
+
+/* index.css or App.css */
+.preloader {
+  perspective: 1000px;
+}
+
+.preloader-curtain-top,
+.preloader-curtain-bottom {
+  transform-origin: center;
+}

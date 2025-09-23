@@ -1,149 +1,120 @@
-"use client";
-
 import { useRef, useEffect } from "react";
 
-const brandColors = {
+export const brandColors = {
   dark: "#000000",
   steel: "#415a77",
   sky: "#778da9",
   light: "#e0e1dd",
 };
 
-type Star = {
-  x: number;
-  y: number;
-  r: number;
-  baseR: number;
-  vx: number;
-  vy: number;
-  hue: string;
-  alpha: number;
-  glow: number;
-  twinklePhase: number;
-};
-
-export default function Space() {
+export default function DarkInteractiveBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const pointerRef = useRef<{ x: number; y: number; active: boolean }>({
+    x: 0,
+    y: 0,
+    active: false,
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current!;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
+    let dpr = Math.max(1, window.devicePixelRatio || 1);
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-
-    const stars: Star[] = [];
-    const starCount = 140; // reduced 5x
-
-    const colors = [
-      brandColors.light,
-      brandColors.sky,
-      brandColors.steel,
-      "#ffd166",
-      "#8ecae6",
-    ];
-
-    function rand(min: number, max: number) {
-      return Math.random() * (max - min) + min;
+    function resize() {
+      dpr = Math.max(1, window.devicePixelRatio || 1);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function initStars() {
-      stars.length = 0;
-      for (let i = 0; i < starCount; i++) {
-        const r = rand(0.25, 2.5);
-        stars.push({
-          x: rand(0, width),
-          y: rand(0, height),
-          r,
-          baseR: r,
-          vx: rand(-0.02, 0.02),
-          vy: rand(-0.02, 0.02),
-          hue: colors[Math.floor(Math.random() * colors.length)],
-          alpha: rand(0.5, 1),
-          glow: rand(6, 22),
-          twinklePhase: Math.random() * Math.PI * 2,
-        });
-      }
-    }
+    function drawGrid() {
+      const w = canvas.width / dpr;
+      const h = canvas.height / dpr;
 
-    initStars();
-
-    const mouse = { x: -9999, y: -9999 };
-
-    function onMove(e: MouseEvent) {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    }
-
-    function onLeave() {
-      mouse.x = -9999;
-      mouse.y = -9999;
-    }
-
-    function draw() {
+      // dark base background
       ctx.fillStyle = brandColors.dark;
-      ctx.fillRect(0, 0, width, height);
+      ctx.fillRect(0, 0, w, h);
 
-      for (const s of stars) {
-        // twinkle
-        s.twinklePhase += 0.02;
-        const pulse = 0.85 + Math.sin(s.twinklePhase) * 0.25;
-        const drawR = Math.max(0.2, s.baseR * pulse);
+      // grid settings
+      const spacing = Math.max(60, Math.round(Math.min(w, h) / 12));
+      const lineColor = hexToRgba(brandColors.light, 0.15); // brighter & more visible
 
-        // subtle movement with mouse proximity
-        if (mouse.x > -9000) {
-          const dx = s.x - mouse.x;
-          const dy = s.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const effectRadius = 120;
-          if (dist < effectRadius) {
-            const force = (1 - dist / effectRadius) * 0.2; // gentle push
-            s.x += (dx / dist) * force * 2;
-            s.y += (dy / dist) * force * 2;
-          }
-        }
+      ctx.beginPath();
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 1;
 
-        // glow
-        ctx.beginPath();
-        ctx.globalAlpha = Math.max(0.06, s.alpha * 0.45);
-        ctx.fillStyle = s.hue;
-        ctx.shadowBlur = s.glow;
-        ctx.shadowColor = s.hue;
-        ctx.arc(s.x, s.y, drawR * 2.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-
-        // core
-        ctx.beginPath();
-        ctx.globalAlpha = s.alpha;
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = s.hue;
-        ctx.arc(s.x, s.y, drawR, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
+      // vertical
+      for (let x = 0; x <= w + spacing; x += spacing) {
+        ctx.moveTo(x + 0.5, 0);
+        ctx.lineTo(x + 0.5, h);
       }
 
-      requestAnimationFrame(draw);
+      // horizontal
+      for (let y = 0; y <= h + spacing; y += spacing) {
+        ctx.moveTo(0, y + 0.5);
+        ctx.lineTo(w, y + 0.5);
+      }
+
+      ctx.stroke();
     }
 
-    draw();
+    function drawPointerGlow() {
+      if (!pointerRef.current.active) return;
+      const w = canvas.width / dpr;
+      const h = canvas.height / dpr;
+      const { x, y } = pointerRef.current;
 
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseleave", onLeave);
-    window.addEventListener("resize", () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      initStars();
-    });
+      // increased glow size (320px radius)
+      const glow = ctx.createRadialGradient(x, y, 0, x, y, 320);
+      glow.addColorStop(0, hexToRgba(brandColors.sky, 0.25));
+      glow.addColorStop(1, hexToRgba(brandColors.dark, 0));
+
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    function loop() {
+      drawGrid();
+      drawPointerGlow();
+      rafRef.current = requestAnimationFrame(loop);
+    }
+
+    function hexToRgba(hex: string, alpha = 1) {
+      const parsed = hex.replace("#", "");
+      const bigint = parseInt(parsed, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      pointerRef.current.active = true;
+      pointerRef.current.x = e.clientX;
+      pointerRef.current.y = e.clientY;
+    }
+    function onPointerLeave() {
+      pointerRef.current.active = false;
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerleave", onPointerLeave);
+
+    rafRef.current = requestAnimationFrame(loop);
 
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
     };
   }, []);
 
@@ -151,7 +122,7 @@ export default function Space() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 w-full h-full"
-      style={{ display: "block", background: brandColors.dark }}
+      aria-hidden
     />
   );
 }
