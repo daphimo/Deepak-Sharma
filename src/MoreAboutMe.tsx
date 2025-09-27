@@ -18,7 +18,7 @@ const App: React.FC = () => {
       {/* Row 2: graphic top on mobile, side on desktop */}
       <section className=" grid grid-cols-1 md:grid-cols-2 items-start gap-8">
         {/* Graphic first */}
-        <div className="flex justify-center w-full h-full items-center order-1 md:order-2">
+        <div className="hidden md:flex justify-center items-center w-full h-full order-1 md:order-2">
           <div className="aspect-square w-full h-full max-w-md flex items-center justify-center">
             <MetaBalls
               color={brandColors.sky}
@@ -52,7 +52,7 @@ const App: React.FC = () => {
       {/* Row 3: graphic top on mobile, side on desktop */}
       <section className="pt-20 pb-20 grid grid-cols-1 md:grid-cols-2 items-center gap-8">
         {/* Graphic first */}
-        <div className="flex justify-center items-center order-1 md:order-1">
+        <div className="hidden md:flex justify-center items-center order-1 md:order-1">
           <div className="aspect-square w-full max-w-md flex items-center justify-center">
             <MagnetLines
               rows={12}
