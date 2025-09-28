@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { motion } from "framer-motion";
 
 type Service = {
   id: number;
@@ -53,24 +48,9 @@ Optimized site structure for organic ranking.`,
 
 export default function App() {
   const [active, setActive] = useState<number | null>(null);
-  const [hovered, setHovered] = useState<Service | null>(null);
-
-  // Motion values for smooth cursor following
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Use spring for inertia effect
-  const springX = useSpring(mouseX, { stiffness: 300, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 300, damping: 30 });
 
   const toggle = (id: number) => {
     setActive(active === id ? null : id);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // For fixed positioning, use clientX/Y directly and add offset
-    mouseX.set(e.clientX - 150); // 20px offset to the right
-    mouseY.set(e.clientY - 450); // 100px offset above cursor
   };
 
   return (
@@ -82,9 +62,6 @@ export default function App() {
               <button
                 onClick={() => toggle(service.id)}
                 className="w-full flex cursor-pointer justify-between items-center py-4 text-left text-xl md:text-2xl font-semibold hover:text-blue-400 transition-colors duration-200"
-                onMouseEnter={() => setHovered(service)}
-                onMouseLeave={() => setHovered(null)}
-                onMouseMove={handleMouseMove}
               >
                 <span className="flex items-center gap-4">
                   <span className="text-blue-400 font-mono">0{service.id}</span>
@@ -110,14 +87,12 @@ export default function App() {
                 className="overflow-hidden"
               >
                 <div className="pb-6 pl-8 space-y-4">
-                  {/* Show image only on mobile (inside collapsible) */}
-                  <div className="block md:hidden">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full max-w-sm rounded-lg mb-4"
-                    />
-                  </div>
+                  {/* Image shown inside collapsible for all devices */}
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full max-w-md rounded-lg mb-4"
+                  />
 
                   <ul className="list-none space-y-3">
                     {service.content.split("\n").map((line, i) => (
@@ -131,35 +106,6 @@ export default function App() {
               </motion.div>
             </div>
           ))}
-
-          {/* Floating Image on Hover (desktop only) */}
-          <AnimatePresence>
-            {hovered && (
-              <motion.div
-                key={hovered.id}
-                className="hidden md:block fixed pointer-events-none z-50"
-                style={{
-                  x: springX,
-                  y: springY,
-                }}
-                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                animate={{ opacity: 1, scale: 1, rotate: 5 }}
-                exit={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              >
-                <div className="relative">
-                  <img
-                    src={hovered.image}
-                    alt={hovered.title}
-                    className="w-64 h-40 object-cover rounded-xl shadow-2xl border-2 border-white/20"
-                  />
-                  <div className="absolute -bottom-2 -right-2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    0{hovered.id}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
     </div>
