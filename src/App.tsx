@@ -1,4 +1,6 @@
 "use client";
+
+import { useEffect, useRef, useState } from "react";
 import myImage from "/files/my_profile.png";
 
 const brandColors = {
@@ -8,31 +10,133 @@ const brandColors = {
   light: "#e0e1dd",
 };
 
-const Hero = () => {
+type CounterProps = {
+  end: number;
+  delay?: number;
+};
+
+const Counter: React.FC<CounterProps & { suffix?: string }> = ({
+  end,
+  delay = 300,
+  suffix,
+}) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          let start = 0;
+          const duration = 2000;
+          const increment = end / (duration / 16);
+          const timeout = setTimeout(() => {
+            const step = () => {
+              start += increment;
+              if (start < end) {
+                setCount(Math.ceil(start));
+                requestAnimationFrame(step);
+              } else {
+                setCount(end);
+              }
+            };
+            step();
+          }, delay);
+          setHasAnimated(true);
+          return () => clearTimeout(timeout);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [end, delay, hasAnimated]);
+
   return (
-    <section className="pt-40 pb-20 relative">
-      <div className="hero-section max-w-7xl m-auto relative flex justify-center items-center text-white overflow-hidden">
-        {/* Desktop Layout */}
-        <div className="hidden md:flex relative w-full justify-center items-center">
-          {/* Profile Card with border + glow */}
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="hero-image relative w-64 md:w-72 lg:w-80 rounded-2xl shadow-2xl overflow-hidden">
-              <img
-                src={myImage}
-                alt="Deepak Sharma"
-                className="w-full h-auto object-cover rounded-xl"
-              />
-            </div>
+    <div
+      ref={ref}
+      style={{ color: brandColors.sky }}
+      className="text-4xl md:text-5xl lg:text-6xl font-bold"
+    >
+      {count}
+      {suffix}
+    </div>
+  );
+};
 
-            {/* Bottom Border */}
-            <div
-              className="w-[100%] h-1 mt-0 rounded-full"
-              style={{ backgroundColor: brandColors.sky }}
+const statsData = [
+  {
+    end: 10000,
+    suffix: "+",
+    title: "User Reach / Traffic Impact",
+    description: "Websites and apps serving large, engaged audiences.",
+    desktopPosition: "top-[10%] left-[15%]",
+  },
+  {
+    end: 5,
+    suffix: "+",
+    title: "Years of Experience",
+    description: "Building modern, responsive web applications.",
+    desktopPosition: "top-[10%] right-[15%]",
+  },
+  {
+    end: 60,
+    suffix: "%",
+    title: "Performance Improvements",
+    description: "Optimized speed for better user experience.",
+    desktopPosition: "top-1/2 -translate-y-1/2 left-[5%]",
+  },
+  {
+    end: 150,
+    suffix: "+",
+    title: "Completed Projects",
+    description: "Delivering creative and functional digital solutions.",
+    desktopPosition: "top-1/2 -translate-y-1/2 right-[5%]",
+  },
+  {
+    end: 40,
+    suffix: "+",
+    title: "Clients Worldwide",
+    description: "Providing custom web solutions across industries.",
+    desktopPosition: "bottom-[5%] right-[15%]",
+  },
+  {
+    end: 30,
+    suffix: "%",
+    title: "Conversion / Business Impact",
+    description: "Enhancing websites to drive meaningful results.",
+    desktopPosition: "bottom-[5%] left-[15%]",
+  },
+];
+
+const App = () => {
+  return (
+    <main className="bg-dark min-h-screen max-w-7xl mx-auto text-white flex flex-col items-center px-4  pb-20 pt-40">
+      {/* Hero Intro */}
+      <section className="text-center mb-16">
+        <h1 className="text-6xl uppercase leading-tight">
+          Hello, I am <span className="text-sky-400 font-extrabold ">Deepak Sharma</span>
+         <br/> <span className="text-sky-400 font-extrabold ">Web Developer</span>
+        </h1>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative w-full flex flex-col items-center min-h-[600px] md:min-h-[700px]">
+        {/* Center Image */}
+        <div className="w-64 mb-8 md:mb-0 md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-10">
+          <div className="relative shadow-2xl overflow-hidden">
+            <img
+              src={myImage}
+              alt="Deepak Sharma"
+              className="w-full h-auto object-cover"
             />
-
-            {/* Elliptical Glow */}
             <div
-              className="absolute bottom-0 z-0 w-[100%] h-10 pointer-events-none"
+              className="absolute bottom-0 w-full h-10 pointer-events-none"
               style={{
                 left: "50%",
                 transform: "translateX(-50%) translateY(8px)",
@@ -41,56 +145,38 @@ const Hero = () => {
               }}
             />
           </div>
-
-          {/* Left Text */}
-          <div className="hero-left absolute top-1/2 left-[calc(50%-28rem)] -translate-y-1/2 text-left z-20">
-            <h1 className="text-7xl font-extrabold leading-none whitespace-nowrap">
-              <span className="text-white -mr-2">Sr.</span>{" "}
-              <span className="text-white">WEB</span>
-            </h1>
-          </div>
-
-          {/* Right Text */}
-          <div className="hero-right absolute top-1/2 right-[calc(50%-36rem)] -translate-y-1/2 text-right z-20">
-            <h1 className="text-7xl font-extrabold leading-none text-white whitespace-nowrap">
-              DEVELOPER
-            </h1>
-          </div>
-          <div className="hero-right-bottom absolute top-[60%] right-[calc(50%-36rem)] -translate-y-1/2 text-right z-20">
-            <p className="text-base text-gray-200 mt-2">
-              I am India based Web Developer <br /> and Freelancer
-            </p>
-          </div>
         </div>
 
-        {/* Mobile Layout */}
-        <div className="md:hidden flex flex-col items-center gap-8 text-center">
-          <h1 className="text-5xl font-extrabold">
-            <span className="text-white">Sr.</span> WEB
-          </h1>
-
-          {/* Mobile Profile Card */}
-          <div
-            className="w-72 rounded-3xl shadow-2xl overflow-hidden"
-            style={{
-              background: `linear-gradient(135deg, ${brandColors.steel}, ${brandColors.sky})`,
-            }}
-          >
-            <img
-              src={myImage}
-              alt="Deepak Sharma"
-              className="w-full h-auto object-cover rounded-2xl"
-            />
-          </div>
-
-          <h1 className="text-5xl font-extrabold">DEVELOPER</h1>
-          <p className="text-lg text-gray-200 leading-relaxed max-w-sm">
-            I am India based Web Developer <br /> and Freelancer
-          </p>
+        {/* Mobile Stacked Stats */}
+        <div className="grid grid-cols-2 gap-6 w-full md:hidden mt-8">
+          {statsData.map((stat, idx) => (
+            <div key={idx} className="flex flex-col items-center gap-1">
+              <Counter end={stat.end} suffix={stat.suffix} />
+              <p className="text-gray-300 text-lg text-center">{stat.title}</p>
+            </div>
+          ))}
         </div>
-      </div>
-    </section>
+
+        {/* Desktop Absolute Stats */}
+        <div className="hidden md:block">
+          {statsData.map((stat, idx) => (
+            <div
+              key={idx}
+              className={`absolute flex flex-col items-center gap-1 max-w-[300px] ${stat.desktopPosition}`}
+            >
+              <Counter end={stat.end} suffix={stat.suffix} />
+              <p className="text-gray-300 text-lg md:text-xl text-center">
+                {stat.title}
+              </p>
+              <p className="text-gray-400 text-sm md:text-base text-center">
+                {stat.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 };
 
-export default Hero;
+export default App;

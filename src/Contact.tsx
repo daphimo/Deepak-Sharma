@@ -70,7 +70,7 @@ const Contact: FC = () => {
       </div>
 
       {/* Contact content container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 mb-20 text-white">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 mb-20 text-white">
         <div
           className="p-6 bg-white/10 
           backdrop-blur-md 
