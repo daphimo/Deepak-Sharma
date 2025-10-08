@@ -161,45 +161,44 @@ const Contact: FC = () => {
           </div>
         </div>
 
-       <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start">
-  {/* Left */}
-  <div className="text-left">
-    © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
-  </div>
+        <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
+          {/* Left */}
+          <div className="text-left">
+            © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
+          </div>
 
-  {/* Center */}
-  <div className="text-left">
-    Made with <span className="text-red-500">❤️</span> in India
-  </div>
+          {/* Center */}
+          <div className="text-left md:text-center">
+            Made with <span className="text-red-500">❤️</span> in India
+          </div>
 
-  {/* Right - Social links */}
-  <div className="text-left flex justify-start gap-4">
-    <a
-      href="https://github.com/daphimo"
-      target="_blank"
-      className="hover:text-white"
-      aria-label="GitHub"
-    >
-      GitHub
-    </a>
-    <a
-      href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
-      target="_blank"
-      className="hover:text-white"
-      aria-label="LinkedIn"
-    >
-      LinkedIn
-    </a>
-    <a
-      href="mailto:deepakrajeshsharma987654321@gmail.com"
-      aria-label="Email"
-      className="hover:text-white"
-    >
-      Email
-    </a>
-  </div>
-</div>
-
+          {/* Right - Social links */}
+          <div className="justify-start md:justify-end flex flex-wrap gap-4">
+            <a
+              href="https://github.com/daphimo"
+              target="_blank"
+              className="hover:text-white"
+              aria-label="GitHub"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
+              target="_blank"
+              className="hover:text-white"
+              aria-label="LinkedIn"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="mailto:deepakrajeshsharma987654321@gmail.com"
+              aria-label="Email"
+              className="hover:text-white"
+            >
+              Email
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
