@@ -145,7 +145,7 @@ const Contact: FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2 rounded-full font-medium text-sm transition"
+                  className="px-6 py-2 cursor-pointer rounded-full font-medium text-sm transition"
                   style={{
                     backgroundColor: brandColors.steel,
                     color: brandColors.light,
