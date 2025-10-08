@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
-import Ballpit from "./components/Ballpit";
+// import Ballpit from "./components/Ballpit";
 
 const brandColors = {
   dark: "#000000",
@@ -48,13 +48,15 @@ const Contact: FC = () => {
   return (
     <section className="relative w-full overflow-hidden">
       {/* Ballpit full background */}
-      <div className="absolute inset-0 -z-10">
-       <Ballpit
+      <div className="absolute inset-0 -z-10" id="BallpitContainer">
+        {/* <Ballpit
           count={100}
           gravity={0.5}
           friction={0.9975}
           wallBounce={0.95}
-          followCursor={true}
+          followCursor={
+            typeof window !== "undefined" && window.innerWidth > 768
+          }
           colors={[0x000000, 0xff0000, 0x00ff00, 0x0000ff]}
           ambientColor={16777215}
           ambientIntensity={1}
@@ -66,7 +68,7 @@ const Contact: FC = () => {
           maxX={5}
           maxY={5}
           maxZ={2}
-        />
+        /> */}
       </div>
 
       {/* Contact content container */}

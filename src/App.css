@@ -98,3 +98,9 @@ select {
   cursor: none;
 }
 
+@media (max-width: 768px) {
+  #BallpitContainer {
+    display: none;
+    pointer-events: none;
+  }
+}
