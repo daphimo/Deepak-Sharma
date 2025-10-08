@@ -104,7 +104,7 @@ export default function StylishBackToTop({
         title="Back to top (press 'T')"
         className={
           baseButtonClass +
-          " right-6 bottom-6 " +
+          " right-6 bottom-25 " +
           (visible ? "scale-100 opacity-100" : "scale-75 opacity-0")
         }
         style={styleVars}
@@ -225,7 +225,7 @@ export default function StylishBackToTop({
       <style>{`
         .back-to-top-root button{ transition-property: transform, opacity; }
         @media (prefers-reduced-motion: reduce){ .back-to-top-root button{ transition: none !important; } }
-        @media (max-width:640px){ .back-to-top-root button{ right:12px; bottom:12px } }
+        
       `}</style>
     </div>
   );

@@ -4,6 +4,7 @@ import ScrambledText from "./Scramble.tsx";
 
 const menuItems = [
   { label: "Home", href: "/" },
+  { label: "About", href: "#aboutme" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
 ];

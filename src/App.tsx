@@ -14,7 +14,6 @@ type CounterProps = {
   end: number;
   delay?: number;
 };
-
 const Counter: React.FC<CounterProps & { suffix?: string }> = ({
   end,
   delay = 300,
@@ -22,15 +21,16 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
 }) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement | null>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasAnimatedRef = useRef(false); // <-- useRef to persist across renders
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
+        if (entries[0].isIntersecting && !hasAnimatedRef.current) {
           let start = 0;
           const duration = 2000;
           const increment = end / (duration / 16);
+
           const timeout = setTimeout(() => {
             const step = () => {
               start += increment;
@@ -43,7 +43,8 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
             };
             step();
           }, delay);
-          setHasAnimated(true);
+
+          hasAnimatedRef.current = true; // mark as animated
           return () => clearTimeout(timeout);
         }
       },
@@ -55,7 +56,7 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
     return () => {
       if (ref.current) observer.unobserve(ref.current);
     };
-  }, [end, delay, hasAnimated]);
+  }, [end, delay]);
 
   return (
     <div
@@ -68,6 +69,7 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
     </div>
   );
 };
+
 
 const statsData = [
   {

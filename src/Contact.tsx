@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
-// import Ballpit from "./components/Ballpit";
+import Ballpit from "./components/Ballpit";
 
 const brandColors = {
   dark: "#000000",
@@ -46,33 +46,19 @@ const Contact: FC = () => {
   };
 
   return (
-    <section className="relative w-full overflow-hidden">
+    <section className="relative w-full mb-20 overflow-hidden">
       {/* Ballpit full background */}
-      <div className="absolute inset-0 -z-10" id="BallpitContainer">
-        {/* <Ballpit
-          count={100}
-          gravity={0.5}
-          friction={0.9975}
-          wallBounce={0.95}
-          followCursor={
-            typeof window !== "undefined" && window.innerWidth > 768
-          }
-          colors={[0x000000, 0xff0000, 0x00ff00, 0x0000ff]}
-          ambientColor={16777215}
-          ambientIntensity={1}
-          lightIntensity={200}
-          minSize={0.4}
-          maxSize={0.6}
-          size0={0.8}
-          maxVelocity={0.15}
-          maxX={5}
-          maxY={5}
-          maxZ={2}
-        /> */}
+      <div className="absolute inset-0 -z-10 bottom-0" id="BallpitContainer">
+        <Ballpit
+          hoverIntensity={1}
+          rotateOnHover={true}
+          hue={0}
+          forceHoverState={true}
+        />
       </div>
 
       {/* Contact content container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20 mb-20 text-white">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 text-white">
         <div
           className="p-6 bg-white/10 
           backdrop-blur-md 
@@ -175,10 +161,45 @@ const Contact: FC = () => {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-10 pb-10 text-center text-gray-400 text-sm">
-          © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
-        </div>
+       <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start">
+  {/* Left */}
+  <div className="text-left">
+    © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
+  </div>
+
+  {/* Center */}
+  <div className="text-left">
+    Made with <span className="text-red-500">❤️</span> in India
+  </div>
+
+  {/* Right - Social links */}
+  <div className="text-left flex justify-start gap-4">
+    <a
+      href="https://github.com/daphimo"
+      target="_blank"
+      className="hover:text-white"
+      aria-label="GitHub"
+    >
+      GitHub
+    </a>
+    <a
+      href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
+      target="_blank"
+      className="hover:text-white"
+      aria-label="LinkedIn"
+    >
+      LinkedIn
+    </a>
+    <a
+      href="mailto:deepakrajeshsharma987654321@gmail.com"
+      aria-label="Email"
+      className="hover:text-white"
+    >
+      Email
+    </a>
+  </div>
+</div>
+
       </div>
     </section>
   );

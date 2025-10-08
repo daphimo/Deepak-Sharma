@@ -15,49 +15,41 @@ const techColors = [
 export default function Infinite() {
   const projects = [
     {
-      title: "Amara Beauty",
-      img: "/files/amara-beauty.webp",
+      title: "Dummy 1",
+      img: "/files/theme.webp",
       desc: "A creative project showcasing design and innovation.",
-      link: "https://amarabeautycare.com/",
-      caseStudy: "https://amarabeautycare.com/",
+      link: "https://dummy.com/",
+      caseStudy: "https://dummy.com/",
       tech: ["Tailwind CSS", "HTML", "React", "Next.js"],
     },
     {
-      title: "Eywa Beauty",
-      img: "/files/eywa.webp",
-      desc: "A high-end beauty brand website focusing on luxury design and seamless UX.",
-      link: "https://www.eywabeauty.com/en-in",
-      caseStudy: "https://www.eywabeauty.com/en-in",
-      tech: ["HTML", "CSS", "Bootstrap", "JavaScript"],
+      title: "Dummy 2",
+      img: "/files/responsive.webp",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://dummy.com/",
+      caseStudy: "https://dummy.com/",
+      tech: ["Tailwind CSS", "HTML", "React", "Next.js"],
     },
     {
-      title: "Bellanomi",
-      img: "/files/bellanomi.webp",
-      desc: "Modern e-commerce fashion platform built with an elegant interface.",
-      link: "https://bellanomi.com/",
-      caseStudy: "https://bellanomi.com/",
-      tech: ["React", "SCSS", "GSAP", "Next.js"],
+      title: "Dummy 3",
+      img: "/files/uiux.webp",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://dummy.com/",
+      caseStudy: "https://dummy.com/",
+      tech: ["Tailwind CSS", "HTML", "React", "Next.js"],
     },
     {
-      title: "Apres Cookie",
-      img: "/files/aprescookie.webp",
-      desc: "Creative cookie store website with rich visuals and fun animations.",
-      link: "https://aprescookies.com/",
-      caseStudy: "https://aprescookies.com/",
-      tech: ["HTML", "Tailwind", "Locomotive", "Animation"],
-    },
-    {
-      title: "Arzley",
-      img: "/files/arzley.webp",
-      desc: "Premium accessories brand with modern interface and dynamic visuals.",
-      link: "https://www.arzley.com/",
-      caseStudy: "https://www.arzley.com/",
-      tech: ["React", "Next.js", "Framer Motion", "GSAP"],
+      title: "Dummy 4",
+      img: "/files/analytics.webp",
+      desc: "A creative project showcasing design and innovation.",
+      link: "https://dummy.com/",
+      caseStudy: "https://dummy.com/",
+      tech: ["Tailwind CSS", "HTML", "React", "Next.js"],
     },
   ];
 
   return (
-    <div className="mt-20 md:mt-40 w-full text-white max-w-7xl mx-auto py-20 px-4">
+    <div className="mt-20 w-full text-white max-w-7xl mx-auto py-20 px-4">
       {/* Header */}
       <div className="mb-16">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -91,7 +83,7 @@ export default function Infinite() {
 // ✅ Simplified GalleryCard
 function GalleryCard({ project }: { project: any }) {
   return (
-    <div className="relative flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl overflow-hidden transition-transform duration-500 hover:scale-[1.02]">
+    <div className="relative flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl overflow-hidden transition-transform duration-500">
       {/* Image */}
       <a
         href={project.caseStudy}

@@ -57,6 +57,8 @@ const Main = () => {
       <div className="main-container w-full min-h-screen">
         <div id="intro">
           <App />
+        </div>
+        <div id="aboutme">
           <AboutMe />
         </div>
         <Tech />
