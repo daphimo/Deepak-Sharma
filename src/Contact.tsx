@@ -161,7 +161,7 @@ const Contact: FC = () => {
           </div>
         </div>
 
-        <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
+        <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start">
           {/* Left */}
           <div className="text-left">
             © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
