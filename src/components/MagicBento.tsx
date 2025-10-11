@@ -87,13 +87,13 @@ const cardData: BentoCardProps[] = [
     image: "/files/uiux.webp",
   },
   {
-    color: "#060010",
+    color: "#001006",
     id: 7,
-    title: "API Integration & Backend Development",
+    title: "Store Migration & Replatforming",
     description:
-      "Integrate third-party APIs, build REST/GraphQL backends, handle authentication, payment gateways, and data management.",
-    label: "Backend",
-    image: "/files/api.webp",
+      "Seamlessly move your store to Shopify with zero data loss. Product, customer, and order migrations with SEO preservation and custom integration handling.",
+    label: "Migration",
+    image: "/files/migration.webp",
   },
   {
     color: "#060010",

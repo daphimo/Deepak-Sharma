@@ -22,8 +22,8 @@ export default function Header(): React.ReactElement {
     <header
       className="fixed top-0 left-0 w-full z-50"
       style={{
-        backdropFilter: "blur(2px)",
-        WebkitBackdropFilter: "blur(2px)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 flex items-center py-4 justify-between">
