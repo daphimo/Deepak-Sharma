@@ -87,7 +87,7 @@ const cardData: BentoCardProps[] = [
     image: "/files/uiux.webp",
   },
   {
-    color: "#001006",
+    color: "#060010",
     id: 7,
     title: "Store Migration & Replatforming",
     description:
