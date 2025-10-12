@@ -89,12 +89,12 @@ function GalleryCard({ project }: { project: any }) {
         href={project.caseStudy}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-full"
+        className="w-full aspect-video"
       >
         <img
           src={project.img}
           alt={project.title}
-          className="w-full h-64 object-cover"
+          className="w-full h-full object-cover"
         />
       </a>
 
