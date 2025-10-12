@@ -187,6 +187,7 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
       {texts.map((content: React.ReactNode, index: number) => (
         <VelocityText
           key={index}
+          title={title}
           className={className}
           baseVelocity={index % 2 !== 0 ? -velocity : velocity}
           scrollContainerRef={scrollContainerRef}
