@@ -1,16 +1,15 @@
+// src/index.tsx
 import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import "./App.css";
-import App from "./App.tsx";
-import AboutMe from "./MoreAboutMe.tsx";
-import Space from "./backgrounds/Space.tsx";
-import Header from "../src/assets/components/header.tsx";
-import Dock from "../src/assets/components/dock.tsx";
-import StylishBackToTop from "../src/assets/components/backtotop.tsx";
-import Tech from "../src/assets/components/technologies.tsx";
-import Projects from "./Projects.tsx";
-import Contact from "./Contact.tsx";
+
+import Space from "./backgrounds/Space";
+import Header from "./assets/components/header";
+import Dock from "./assets/components/dock";
+import StylishBackToTop from "./assets/components/backtotop";
+import AppRouter from "./routes/AppRouter.tsx";
 
 // Smooth scroll function with offset
 const scrollToSection = (id: string, offset = 0) => {
@@ -25,7 +24,7 @@ const scrollToSection = (id: string, offset = 0) => {
   }
 };
 
-// Optional: handle header nav clicks
+// Hook for smooth scrolling within page sections
 const useSmoothScroll = () => {
   useEffect(() => {
     const links = document.querySelectorAll('a[href^="#"]');
@@ -46,7 +45,7 @@ const useSmoothScroll = () => {
   }, []);
 };
 
-const Main = () => {
+const MainLayout = () => {
   useSmoothScroll();
 
   return (
@@ -54,21 +53,7 @@ const Main = () => {
       <Space />
       <div className="fixed inset-0 -z-10 w-full pointer-events-none h-full"></div>
       <Header />
-      <div className="main-container w-full min-h-screen">
-        <div id="intro">
-          <App />
-        </div>
-        <div id="aboutme">
-          <AboutMe />
-        </div>
-        <Tech />
-        <div id="projects">
-          <Projects />
-        </div>
-        <div id="contact">
-          <Contact />
-        </div>
-      </div>
+      <AppRouter />
       <Dock />
       <StylishBackToTop />
     </>
@@ -77,6 +62,8 @@ const Main = () => {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Main />
+    <BrowserRouter>
+      <MainLayout />
+    </BrowserRouter>
   </StrictMode>
 );

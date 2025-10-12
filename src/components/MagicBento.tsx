@@ -683,7 +683,7 @@ const MagicBento: React.FC<BentoProps> = ({
                   <img
                     src={card.image}
                     alt={card.title}
-                    loading='lazy'
+                    loading="lazy"
                     className="absolute card-image w-full h-full left-0 top-0 object-cover"
                   />
                 )}

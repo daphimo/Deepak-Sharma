@@ -1,5 +1,5 @@
 import { FiExternalLink } from "react-icons/fi";
-
+import { Link } from "react-router-dom";
 // 🎨 Fixed color palette for tech tags
 const techColors = [
   "text-pink-400",
@@ -75,6 +75,14 @@ export default function Infinite() {
             </div>
           );
         })}
+      </div>
+       <div className="text-center">
+        <Link
+          to="/projects"
+          className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white transition-all duration-300"
+        >
+          View All Projects
+        </Link>
       </div>
     </div>
   );
