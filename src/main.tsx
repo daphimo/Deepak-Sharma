@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import "./App.css";
+import { Analytics } from "@vercel/analytics/next"
 
 import Space from "./backgrounds/Space";
 import Header from "./assets/components/header";
@@ -59,6 +60,7 @@ const MainLayout = () => {
       <AppRouter />
       <Dock />
       <StylishBackToTop />
+      <Analytics />  
     </>
   );
 };

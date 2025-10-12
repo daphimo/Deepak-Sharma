@@ -288,6 +288,7 @@ const ParticleCard: React.FC<{
         });
       }, index * 100);
 
+      const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
       timeoutsRef.current.push(timeoutId);
     });
   }, [initializeParticles]);
