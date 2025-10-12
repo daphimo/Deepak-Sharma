@@ -42,50 +42,50 @@ import { TbSchema } from "react-icons/tb"; // Schema.org
 export default function TechShowcase() {
   const icons = [
     // Shopify Ecosystem
-    <SiShopify key="shopify" size={60} color="#95BF47" />,
-    <FaReact key="react" size={60} color="#61DBFB" />,
-    <FaNodeJs key="node" size={60} color="#3C873A" />,
-    <SiTailwindcss key="tailwind" size={60} color="#38BDF8" />,
-    <FaBootstrap key="bootstrap" size={60} color="#38BDF8" />,
-    <SiVite key="vite" size={60} color="#A259FF" />,
-    <SiVercel key="vercel" size={60} color="#ffffff" />,
-    <SiNetlify key="netlify" size={60} color="#00AD9F" />,
-    <SiRender key="render" size={60} color="#46E3B7" />,
+    <SiShopify key="shopify" size={60} color="#95BF47" title="Shopify" />,
+    <FaReact key="react" size={60} color="#61DBFB" title="React" />,
+    <FaNodeJs key="node" size={60} color="#3C873A" title="Node.js" />,
+    <SiTailwindcss key="tailwind" size={60} color="#38BDF8" title="Tailwind CSS" />,
+    <FaBootstrap key="bootstrap" size={60} color="#7952B3" title="Bootstrap" />,
+    <SiVite key="vite" size={60} color="#A259FF" title="Vite" />,
+    <SiVercel key="vercel" size={60} color="#ffffff" title="Vercel" />,
+    <SiNetlify key="netlify" size={60} color="#00AD9F" title="Netlify" />,
+    <SiRender key="render" size={60} color="#46E3B7" title="Render" />,
 
     // Package Managers
-    <FaNpm key="npm" size={60} color="#CB3837" />,
-    <FaYarn key="yarn" size={60} color="#2C8EBB" />,
-    <SiPnpm key="pnpm" size={60} color="#F69220" />,
-    <FaJs key="javascripts" size={60} color="#F7DF1E" />,
-    <SiJquery key="jquery" size={60} color="#F7DF1E" />,
+    <FaNpm key="npm" size={60} color="#CB3837" title="NPM" />,
+    <FaYarn key="yarn" size={60} color="#2C8EBB" title="Yarn" />,
+    <SiPnpm key="pnpm" size={60} color="#F69220" title="PNPM" />,
+    <FaJs key="javascripts" size={60} color="#F7DF1E" title="JavaScript" />,
+    <SiJquery key="jquery" size={60} color="#0865A6" title="jQuery" />,
 
     // Automation / Testing
-    <SiPuppeteer key="puppeteer" size={60} color="#40B5A4" />,
+    <SiPuppeteer key="puppeteer" size={60} color="#40B5A4" title="Puppeteer" />,
 
     // Languages & Tools
-    <SiJavascript key="js" size={60} color="#F7DF1E" />,
-    <SiTypescript key="ts" size={60} color="#3178C6" />,
-    <SiJson key="json" size={60} color="#f7a41d" />,
-    <FaHtml5 key="html" size={60} color="#E34F26" />,
-    <FaCss3Alt key="css" size={60} color="#1572B6" />,
+    <SiJavascript key="js" size={60} color="#F7DF1E" title="JavaScript" />,
+    <SiTypescript key="ts" size={60} color="#3178C6" title="TypeScript" />,
+    <SiJson key="json" size={60} color="#f7a41d" title="JSON" />,
+    <FaHtml5 key="html" size={60} color="#E34F26" title="HTML5" />,
+    <FaCss3Alt key="css" size={60} color="#1572B6" title="CSS3" />,
 
     // Code & Formatting
-    <SiPrettier key="prettier" size={60} color="#F7B93E" />,
-    <FaGitAlt key="git" size={60} color="#F1502F" />,
-    <FaGithub key="github" size={60} color="#ffffff" />,
+    <SiPrettier key="prettier" size={60} color="#F7B93E" title="Prettier" />,
+    <FaGitAlt key="git" size={60} color="#F1502F" title="Git" />,
+    <FaGithub key="github" size={60} color="#ffffff" title="GitHub" />,
 
     // Web & SEO
-    <MdSecurity key="https" size={60} color="#1E90FF" />,
-    <HiOutlineLightningBolt key="lazy" size={60} color="#FFD700" />,
-    <RiMetaLine key="meta" size={60} color="#4267B2" />,
-    <TbSchema key="schema" size={60} color="#FFB703" />,
+    <MdSecurity key="https" size={60} color="#1E90FF" title="HTTPS Security" />,
+    <HiOutlineLightningBolt key="lazy" size={60} color="#FFD700" title="Lazy Loading" />,
+    <RiMetaLine key="meta" size={60} color="#4267B2" title="Meta" />,
+    <TbSchema key="schema" size={60} color="#FFB703" title="Schema Markup" />,
 
     // Design / Icons
-    <SiFigma key="figma" size={60} color="#F24E1E" />,
-    <FaFontAwesome key="fontawesome" size={60} color="#528DD7" />,
+    <SiFigma key="figma" size={60} color="#F24E1E" title="Figma" />,
+    <FaFontAwesome key="fontawesome" size={60} color="#528DD7" title="Font Awesome" />,
 
     // Animation
-    <SiFramer key="framer-motion" size={60} color="#0055FF" />,
+    <SiFramer key="framer-motion" size={60} color="#0055FF" title="Framer Motion" />,
   ];
 
   return (
