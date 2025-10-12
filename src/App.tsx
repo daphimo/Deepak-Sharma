@@ -122,8 +122,8 @@ const App = () => {
       {/* Hero Intro */}
       <section className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl uppercase leading-tight">
-          Hello, I am <span className="text-sky-400 font-extrabold ">Deepak Sharma</span>
-         <br/> <span className="text-sky-400 font-extrabold ">Web Developer</span>
+          Hello, I am <span className="text-sky-400 font-bold ">Deepak Sharma</span>
+         <br/> <span className="text-sky-400 font-bold ">Web Developer</span>
         </h1>
       </section>
 

@@ -24,7 +24,7 @@ export default function PageLoader() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm transition-opacity duration-300">
-      <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-white to-gray-400 animate-shine">
+      <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-white to-gray-400 animate-shine">
         DEEPAK SHARMA
       </h1>
 
