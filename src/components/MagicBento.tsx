@@ -689,13 +689,13 @@ const MagicBento: React.FC<BentoProps> = ({
                 )}
 
                 <div className="card__header">
-                  <div className="card__label text-2xl uppercase">
+                  <div className="card__label text-2xl uppercase font-bold">
                     {card.label}
                   </div>
                 </div>
                 <div className="card__content">
-                  <h2 className="card__title">{card.title}</h2>
-                  <p className="card__description">{card.description}</p>
+                  <h2 className="card__title text-xl">{card.title}</h2>
+                  <p className="card__description text-s">{card.description}</p>
                 </div>
               </ParticleCard>
             );

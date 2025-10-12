@@ -1,5 +1,7 @@
 import { FiExternalLink } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import Magnet from "./assets/components/Magnet";
+
 // 🎨 Fixed color palette for tech tags
 const techColors = [
   "text-pink-400",
@@ -28,7 +30,15 @@ export default function Infinite() {
       desc: "Bastion Research is an India-focused equity research unit providing end-to-end independent research services designed to help fund managers, institutions, and family offices make informed investment decisions.",
       link: "http://dev.bastionresearch.in/",
       caseStudy: "http://dev.bastionresearch.in/",
-      tech: ["Tailwind CSS", "HTML", "React", "Vite", "Supabase", "Framer-motion", "Tiptap"],
+      tech: [
+        "Tailwind CSS",
+        "HTML",
+        "React",
+        "Vite",
+        "Supabase",
+        "Framer-motion",
+        "Tiptap",
+      ],
     },
     {
       title: "Diksha Khanna",
@@ -76,13 +86,15 @@ export default function Infinite() {
           );
         })}
       </div>
-       <div className="text-center">
-        <Link
-          to="/projects"
-          className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white transition-all duration-300"
-        >
-          View All Projects
-        </Link>
+      <div className="text-center mt-10">
+        <Magnet padding={50} disabled={false} magnetStrength={5}>
+          <Link
+            to="/projects"
+            className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white transition-all duration-300"
+          >
+            Explore More Projects
+          </Link>
+        </Magnet>
       </div>
     </div>
   );
@@ -130,7 +142,9 @@ function GalleryCard({ project }: { project: any }) {
       </div>
 
       {/* Description */}
-      <p className="text-gray-300 text-sm px-5 mt-2">{project.desc}</p>
+      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
+        {project.desc}
+      </p>
 
       {/* Tech Tags */}
       <div className="flex flex-wrap gap-2 px-5 py-4">

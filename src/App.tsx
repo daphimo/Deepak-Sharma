@@ -121,7 +121,7 @@ const App = () => {
     <main className="bg-dark min-h-screen max-w-7xl mx-auto text-white flex flex-col items-center px-4  pb-20 pt-40">
       {/* Hero Intro */}
       <section className="text-center mb-16">
-        <h1 className="text-6xl uppercase leading-tight">
+        <h1 className="text-4xl md:text-6xl uppercase leading-tight">
           Hello, I am <span className="text-sky-400 font-extrabold ">Deepak Sharma</span>
          <br/> <span className="text-sky-400 font-extrabold ">Web Developer</span>
         </h1>

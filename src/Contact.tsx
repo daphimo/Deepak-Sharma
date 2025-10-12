@@ -5,6 +5,7 @@ import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
 import Ballpit from "./components/Ballpit";
+import Magnet from "./assets/components/Magnet";
 
 const brandColors = {
   dark: "#000000",
@@ -142,17 +143,19 @@ const Contact: FC = () => {
                   required
                   className="w-full px-4 py-2 rounded-2xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 ></textarea>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-6 py-2 cursor-pointer rounded-full font-medium text-sm transition"
-                  style={{
-                    backgroundColor: brandColors.steel,
-                    color: brandColors.light,
-                  }}
-                >
-                  {loading ? "Sending..." : "Send"}
-                </button>
+                <Magnet padding={50} disabled={false} magnetStrength={5}>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-2 cursor-pointer rounded-full font-medium text-sm transition"
+                    style={{
+                      backgroundColor: brandColors.steel,
+                      color: brandColors.light,
+                    }}
+                  >
+                    {loading ? "Sending..." : "Send"}
+                  </button>
+                </Magnet>
                 {status && (
                   <p className="text-sm mt-2 text-gray-300">{status}</p>
                 )}

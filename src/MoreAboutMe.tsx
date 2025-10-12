@@ -27,11 +27,11 @@ const MoreAboutMe: React.FC = () => {
           enableStars={true}
           enableSpotlight={true}
           enableBorderGlow={true}
-          enableTilt={false}
-          enableMagnetism={false}
+          enableTilt={true}
+          enableMagnetism={true}
           clickEffect={true}
           spotlightRadius={300}
-          particleCount={12}
+          particleCount={30}
           glowColor="132, 0, 255"
         />
       </div>

@@ -90,8 +90,7 @@ select {
 }
 
 ::selection{
-  background: #000;
-  color: #fff;
+  background: transparent;
 }
 
 .no-cursor{
@@ -176,13 +175,9 @@ select {
 
 .card__title {
   font-weight: 400;
-  font-size: 16px;
   margin: 0 0 0.25em;
 }
 
-.card__description {
-  font-size: 12px;
-}
 
 .card--text-autohide .card__title,
 .card--text-autohide .card__description {

@@ -10,6 +10,8 @@ import Header from "./assets/components/header";
 import Dock from "./assets/components/dock";
 import StylishBackToTop from "./assets/components/backtotop";
 import AppRouter from "./routes/AppRouter.tsx";
+import ScrollToTop from "./assets/components/ScrollToTop";
+import PageLoader from "./assets/components/PageLoader";
 
 // Smooth scroll function with offset
 const scrollToSection = (id: string, offset = 0) => {
@@ -53,6 +55,7 @@ const MainLayout = () => {
       <Space />
       <div className="fixed inset-0 -z-10 w-full pointer-events-none h-full"></div>
       <Header />
+      <PageLoader />
       <AppRouter />
       <Dock />
       <StylishBackToTop />
@@ -63,6 +66,7 @@ const MainLayout = () => {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <MainLayout />
     </BrowserRouter>
   </StrictMode>
