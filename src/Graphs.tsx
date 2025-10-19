@@ -55,7 +55,7 @@ const metricsData = [
 
 function App() {
   return (
-    <section className="min-h-screen bg-transparent text-white px-6 py-20 flex flex-col gap-20 max-w-6xl mx-auto">
+    <section className="min-h-screen bg-transparent text-white px-6 py-20 flex flex-col gap-20 max-w-7xl mx-auto">
       {metricsData.map((item, idx) => (
         <div
           key={idx}
