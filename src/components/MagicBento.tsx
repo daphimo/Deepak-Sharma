@@ -695,8 +695,8 @@ const MagicBento: React.FC<BentoProps> = ({
                   </div>
                 </div>
                 <div className="card__content">
-                  <h2 className="card__title text-xl">{card.title}</h2>
-                  <p className="card__description text-s">{card.description}</p>
+                  <h2 className="card__title text-m">{card.title}</h2>
+                  <p className="card__description text-sm">{card.description}</p>
                 </div>
               </ParticleCard>
             );

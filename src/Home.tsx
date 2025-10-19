@@ -4,6 +4,7 @@ import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
 import Contact from "./Contact";
+import Graphs from "./Graphs";
 
 const Home = () => {
   return (
@@ -13,11 +14,15 @@ const Home = () => {
       </div>
       <div id="aboutme">
         <AboutMe />
+        <Tech />
       </div>
-      <Tech />
+      <div id="metrics">
+        <Graphs />
+      </div>
       <div id="projects">
         <Projects />
       </div>
+      
       <div id="contact">
         <Contact />
       </div>
