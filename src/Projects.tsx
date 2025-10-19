@@ -46,7 +46,7 @@ export default function Infinite() {
       desc: "We are a label of women’s premium pret in luxe Indian fabrics and fine craftsmanship. We create separates with unique design detail, quality, style, fit and comfort. Our brand stands for thoughtful, timeless design.",
       link: "https://dikshakhanna.in/",
       caseStudy: "https://dikshakhanna.in/",
-      tech: ["Shopify", "HTML", "Liquid", "Js"],
+      tech: ["Shopify", "HTML5", "Liquid", "Js", "CSS3"],
     },
     {
       title: "Huda Bar",
@@ -54,18 +54,26 @@ export default function Infinite() {
       desc: "Nutritious and delicious foods, handmade with care, joy and hope. Small-batch, fresh. Ethically sourced, local, input-free ingredients. Packaged sustainably.",
       link: "https://www.thehudabar.com/",
       caseStudy: "https://www.thehudabar.com/",
-      tech: ["Shopify", "HTML", "Liquid", "Js"],
+      tech: ["Shopify", "HTML5", "Liquid", "Js", "CSS3"],
+    },
+    {
+      title: "Handme",
+      img: "/files/projects/handme.webp",
+      desc: "Handme offers effortlessly stylish, comfortable fashion for modern women. Look glamorous and feel great, every day.",
+      link: "https://handme.co.in/",
+      caseStudy: "https://handme.co.in/",
+      tech: ["Shopify", "HTML5", "Liquid", "Js", "CSS3"],
     },
   ];
 
   return (
     <div className="mt-20 w-full text-white max-w-7xl mx-auto py-20 px-4">
       {/* Header */}
-      <div className="mb-16">
+      <div className="mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
           Let’s Explore Featured Projects
         </h2>
-        <p className="text-gray-300 text-lg max-w-2xl leading-relaxed">
+        <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
           Discover a curated collection of impactful projects that blend
           strategy, creativity, and technology. Each piece embodies our
           dedication to purposeful design and problem-solving — transforming
@@ -73,19 +81,19 @@ export default function Infinite() {
         </p>
       </div>
 
-      {/* Simplified Gallery: 2 grid on desktop, 1 on mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {projects.map((project, index) => {
-          // Check if it's the last project AND total count is odd
-          const isLastOdd =
-            projects.length % 2 !== 0 && index === projects.length - 1;
-          return (
-            <div key={index} className={isLastOdd ? "md:col-span-2" : ""}>
-              <GalleryCard project={project} />
-            </div>
-          );
-        })}
+      {/* ✅ Flexbox layout for clean centering */}
+      <div className="flex flex-wrap justify-center gap-10">
+        {projects.map((project, index) => (
+          <div
+            key={index}
+            className="w-full md:w-[calc(50%-1.25rem)] max-w-[600px]"
+          >
+            <GalleryCard project={project} />
+          </div>
+        ))}
       </div>
+
+      {/* CTA Button */}
       <div className="text-center mt-10">
         <Magnet padding={50} disabled={false} magnetStrength={5}>
           <Link
@@ -100,7 +108,7 @@ export default function Infinite() {
   );
 }
 
-// ✅ Simplified GalleryCard
+// ✅ Gallery Card
 function GalleryCard({ project }: { project: any }) {
   return (
     <div className="relative flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl overflow-hidden transition-transform duration-500">

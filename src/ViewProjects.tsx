@@ -80,6 +80,15 @@ export default function Infinite() {
       category: "Personal",
     },
     {
+      title: "Handme",
+      img: "/files/projects/handme.webp",
+      desc: "Handme offers effortlessly stylish, comfortable fashion for modern women. Look glamorous and feel great, every day.",
+      link: "https://handme.co.in/",
+      caseStudy: "https://handme.co.in/",
+      tech: ["Shopify", "HTML5", "Liquid", "Js", "CSS3"],
+      category: "Personal",
+    },
+    {
       title: "Amara Beauty",
       img: "/files/projects/amarabeauty.webp",
       desc: "As Amara Beauty & Care, we are here to provide your skin with the care and attention it deserves. Pamper yourself and discover your beauty with our natural and effective skincare products.",
@@ -103,7 +112,15 @@ export default function Infinite() {
       desc: "Après Cookies delivers warm, 6 oz gourmet cookies in Aspen, CO. Handmade in a local ghost kitchen using premium ingredients. Perfect for après ski, late nights, or gifting. Available Thursday to Saturday. Order now for delicious, fresh-baked cookie delivery!",
       link: "https://aprescookies.com/",
       caseStudy: "https://aprescookies.com/",
-      tech: ["Shopify", "HTML", "Liquid", "Js", "JSON", "Schema", "Tailwind CSS"],
+      tech: [
+        "Shopify",
+        "HTML",
+        "Liquid",
+        "Js",
+        "JSON",
+        "Schema",
+        "Tailwind CSS",
+      ],
       category: "Under Employer",
     },
     {
@@ -143,7 +160,8 @@ export default function Infinite() {
       category: "Under Employer",
     },
     {
-      title: "Security and Self-Defense Products | The Home Security Superstore",
+      title:
+        "Security and Self-Defense Products | The Home Security Superstore",
       img: "/files/projects/homesecurity.webp",
       desc: "Secure your home and protect your loved ones with the top-rated self-defense tools from The Home Security Superstore. Explore our wide selection of surveillance cameras, alarms, pepper sprays, stun guns, batons and more. Shop now for peace of mind and great prices!",
       link: "https://www.thehomesecuritysuperstore.com",
@@ -161,7 +179,8 @@ export default function Infinite() {
       category: "Under Employer",
     },
     {
-      title: "Leinwand's Online | Shop Online Fashion, Clothing For Men, Women & Kid",
+      title:
+        "Leinwand's Online | Shop Online Fashion, Clothing For Men, Women & Kid",
       img: "/files/projects/leinwands.webp",
       desc: "First in Style, First in Quality, Since 1935. Discover the latest fashion trends in apparel and footwear. The premier place to shop in Southeast North Carolina for all your clothing needs and much more.",
       link: "https://www.leinwands.com",
@@ -237,7 +256,9 @@ export default function Infinite() {
           {filters.map((filter, index) => (
             <button
               key={filter}
-              ref={(el) => {tabRefs.current[index] = el; }}
+              ref={(el) => {
+                tabRefs.current[index] = el;
+              }}
               onClick={() => setSelectedFilter(filter)}
               className={`relative z-10 px-8 py-2 text-sm font-medium cursor-pointer ${
                 selectedFilter === filter ? "text-white" : "text-gray-300"
@@ -256,7 +277,11 @@ export default function Infinite() {
             className="bg-white/10 text-white border border-white/20 rounded-lg px-4 py-2 backdrop-blur-md w-full cursor-pointer"
           >
             {filters.map((filter) => (
-              <option key={filter} value={filter} className="bg-gray-800 text-white">
+              <option
+                key={filter}
+                value={filter}
+                className="bg-gray-800 text-white"
+              >
                 {filter}
               </option>
             ))}
@@ -264,20 +289,16 @@ export default function Infinite() {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {filteredProjects.map((project, index) => {
-            const isLastOdd =
-              filteredProjects.length % 2 !== 0 &&
-              index === filteredProjects.length - 1;
-            return (
-              <div
-                key={project.title + index}
-                className={isLastOdd ? "md:col-span-2" : ""}
-              >
-                <GalleryCard project={project} />
-              </div>
-            );
-          })}
+        {/* Projects Layout (Flex for proper centering) */}
+        <div className="flex flex-wrap justify-center gap-10">
+          {filteredProjects.map((project, index) => (
+            <div
+              key={project.title + index}
+              className="w-full md:w-[calc(50%-1.25rem)] max-w-[600px]"
+            >
+              <GalleryCard project={project} />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -325,13 +346,17 @@ function GalleryCard({ project }: { project: any }) {
         )}
       </div>
 
-      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">{project.desc}</p>
+      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
+        {project.desc}
+      </p>
 
       <div className="flex flex-wrap gap-2 px-5 py-4">
         {project.tech.map((t: string, i: number) => (
           <span
             key={i}
-            className={`${techColors[i % techColors.length]} text-xs font-semibold uppercase tracking-wide`}
+            className={`${
+              techColors[i % techColors.length]
+            } text-xs font-semibold uppercase tracking-wide`}
           >
             #{t}
           </span>
