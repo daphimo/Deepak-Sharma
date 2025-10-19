@@ -183,7 +183,7 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
         {/* Base line */}
         <line
           x1={svgWidth * 0.05 + xOffset}
-          y1={svgHeight - 1}
+          y1={svgHeight - 4}
           x2={svgWidth * 0.95}
           y2={svgHeight - 1}
           stroke="white"
@@ -192,7 +192,7 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
 
         {metrics.map((metric, index) => {
           const barHeight = (metric.value / maxValue) * 100;
-          const {  start, end } = getLinePath(index, barHeight);
+          const { start, end } = getLinePath(index, barHeight);
 
           const spacing = svgWidth / (metrics.length + 1);
           const barWidth = 120;
@@ -201,7 +201,9 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
           // shift line and dots
           const shiftedStart = { x: start.x + xOffset, y: start.y };
           const shiftedEnd = { x: end.x + xOffset, y: end.y };
-          const shiftedPath = `M ${shiftedStart.x},${shiftedStart.y} L ${shiftedStart.x + (shiftedEnd.x - shiftedStart.x) * 0.85},${shiftedStart.y} L ${shiftedEnd.x},${shiftedEnd.y}`;
+          const shiftedPath = `M ${shiftedStart.x},${shiftedStart.y} L ${
+            shiftedStart.x + (shiftedEnd.x - shiftedStart.x) * 0.85
+          },${shiftedStart.y} L ${shiftedEnd.x},${shiftedEnd.y}`;
 
           return (
             <g key={index}>
@@ -248,11 +250,13 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
                 opacity={0}
                 style={{
                   transform: "translateY(10px)",
-                  transition:
-                    "opacity 0.4s ease-out, transform 0.4s ease-out",
+                  transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
                 }}
               >
-                <div className="flex flex-col text-white items-start">
+                <div
+                  className="flex flex-col items-start"
+                  style={{ color: metric.color }}
+                >
                   <span className="text-6xl font-bold">
                     {animatedValues[index]}%
                   </span>
@@ -261,14 +265,6 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
                   </span>
                 </div>
               </foreignObject>
-              <text
-                x={barX + barWidth / 2}
-                y={svgHeight + 30}
-                textAnchor="middle"
-                className="fill-white text-2xl font-medium"
-              >
-                {index === 0 ? "Before" : "After"}
-              </text>
             </g>
           );
         })}

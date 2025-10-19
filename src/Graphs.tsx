@@ -8,37 +8,37 @@ const metricsData = [
     mainMetricLabel: "Before",
     newMetricValue: 95,
     newMetricLabel: "After",
-    mainColor: "#FFA726",
-    newColor: "#8E24AA",
+    mainColor: "#FFffff",
+    newColor: "#69F0AE",
   },
   {
     title: "Website Speed Optimization",
     description: `A faster website creates a smoother browsing experience, keeping visitors engaged and reducing bounce rates. Our optimization efforts resulted in a 95% performance After, allowing users to navigate pages, explore products, and complete actions seamlessly. Faster load times directly contribute to higher engagement, better conversions, and a professional impression of your store.`,
     mainMetricValue: 58,
     mainMetricLabel: "Before",
-    newMetricValue: 95,
+    newMetricValue: 90,
     newMetricLabel: "After",
-    mainColor: "#00E5FF",
-    newColor: "#FF4081",
+    mainColor: "#fff",
+    newColor: "#69F0AE",
   },
   {
     title: "Accessibility Enhancement",
     description: `Accessibility ensures that every visitor can effortlessly interact with your store, regardless of their abilities. By improving accessibility, we achieved an 84% better experience for all users. Clear navigation, readable content, and easy-to-use features increase usability, build trust, and make your store inclusive — positively impacting engagement and brand perception.`,
     mainMetricValue: 60,
     mainMetricLabel: "Before",
-    newMetricValue: 84,
+    newMetricValue: 80,
     newMetricLabel: "After",
-    mainColor: "#42A5F5",
-    newColor: "#FFB300",
+    mainColor: "#fff",
+    newColor: "#69F0AE",
   },
   {
     title: "Lightweight & Reliable Code",
     description: `Our optimized code is 95% lighter, which means faster page load times, smoother interactions, and a more stable site for all users. Leaner code reduces the chance of bugs, improves performance across devices, and creates a seamless experience that keeps visitors engaged and confident in your brand.`,
     mainMetricValue: 42,
     mainMetricLabel: "Before",
-    newMetricValue: 95,
+    newMetricValue: 85,
     newMetricLabel: "After",
-    mainColor: "#7C4DFF",
+    mainColor: "#fff",
     newColor: "#69F0AE",
   },
   {
@@ -48,14 +48,14 @@ const metricsData = [
     mainMetricLabel: "Before",
     newMetricValue: 75,
     newMetricLabel: "After",
-    mainColor: "#00C853",
-    newColor: "#FF5252",
+    mainColor: "#fff",
+    newColor: "#69F0AE",
   },
 ];
 
 function App() {
   return (
-    <section className="min-h-screen bg-transparent text-white px-6 py-20 flex flex-col gap-20 max-w-6xl mx-auto">
+    <section className="min-h-screen bg-transparent text-white px-6 py-20 flex flex-col gap-20 max-w-7xl mx-auto">
       {metricsData.map((item, idx) => (
         <div
           key={idx}
