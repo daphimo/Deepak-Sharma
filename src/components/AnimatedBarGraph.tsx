@@ -145,7 +145,7 @@ const AnimatedBarGraph: React.FC<AnimatedBarGraphProps> = ({
 
   const getLinePath = (index: number, barHeight: number) => {
     const spacing = svgWidth / (metrics.length + 1);
-    const barWidth = 120;
+    const barWidth = 120; // wider bar
     const barX = spacing * (index + 1) - barWidth / 2;
 
     const maxBarHeight = svgHeight * 0.6;

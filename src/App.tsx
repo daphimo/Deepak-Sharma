@@ -28,7 +28,7 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimatedRef.current) {
           let start = 0;
-          const duration = 2000;
+          const duration = 500;
           const increment = end / (duration / 16);
 
           const timeout = setTimeout(() => {
@@ -73,9 +73,9 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
 
 const statsData = [
   {
-    end: 10000,
-    suffix: "+",
-    title: "User Reach / Traffic Impact",
+    end: 95,
+    suffix: "%",
+    title: "SEO SCORE IMPROVEMENT",
     description: "Websites and apps serving large, engaged audiences.",
     desktopPosition: "top-[10%] left-[15%]",
   },
@@ -87,21 +87,21 @@ const statsData = [
     desktopPosition: "top-[10%] right-[15%]",
   },
   {
-    end: 60,
+    end: 80,
     suffix: "%",
     title: "Performance Improvements",
     description: "Optimized speed for better user experience.",
     desktopPosition: "top-1/2 -translate-y-1/2 left-[5%]",
   },
   {
-    end: 150,
+    end: 40,
     suffix: "+",
     title: "Completed Projects",
     description: "Delivering creative and functional digital solutions.",
     desktopPosition: "top-1/2 -translate-y-1/2 right-[5%]",
   },
   {
-    end: 40,
+    end: 10,
     suffix: "+",
     title: "Clients Worldwide",
     description: "Providing custom web solutions across industries.",

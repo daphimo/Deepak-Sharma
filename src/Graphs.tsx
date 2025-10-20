@@ -41,16 +41,6 @@ const metricsData = [
     mainColor: "#fff",
     newColor: "#69F0AE",
   },
-  {
-    title: "Faster Data Loading",
-    description: `API response times have been reduced by 75%, making your website feel instantaneous. Visitors can filter, search, and browse products without waiting, creating a premium and responsive experience. Faster interactions improve satisfaction, reduce drop-offs, and reinforce the perception of a high-quality, reliable store.`,
-    mainMetricValue: 40,
-    mainMetricLabel: "Before",
-    newMetricValue: 75,
-    newMetricLabel: "After",
-    mainColor: "#fff",
-    newColor: "#69F0AE",
-  },
 ];
 
 function App() {
@@ -80,7 +70,7 @@ function App() {
           </div>
         </div>
       ))}
-      <p className="text-gray-400 text-sm mt-10">
+      <p className="text-gray-400 text-sm -mt-14">
         *Note: The “Before” metrics are approximate averages commonly observed
         on websites — not exact values. Many developers often overlook these
         baseline numbers, so consider them as general reference points.*
