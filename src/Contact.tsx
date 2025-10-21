@@ -142,7 +142,7 @@ const Contact: FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex cursor-pointer items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                    className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
                    
                   >
                     {loading ? "Sending..." : "Send"}

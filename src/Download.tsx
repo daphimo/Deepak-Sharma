@@ -68,7 +68,7 @@ const DownloadPage: React.FC = () => {
                 <a
                   href={file.fileUrl}
                   download={file.title}
-                  className="flex items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                  className="flex font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
                 >
                   <Download size={16} />
                   Download
