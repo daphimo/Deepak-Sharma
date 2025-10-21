@@ -7,12 +7,6 @@ import emailjs from "@emailjs/browser";
 import Ballpit from "./components/Ballpit";
 import Magnet from "./assets/components/Magnet";
 
-const brandColors = {
-  dark: "#000000",
-  steel: "#415a77",
-  sky: "#778da9",
-  light: "#e0e1dd",
-};
 
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -75,7 +69,8 @@ const Contact: FC = () => {
                 <h2 className="text-2xl md:text-3xl font-bold">Get in Touch</h2>
                 <p className="text-gray-300 mt-1 text-sm md:text-base">
                   I’d love to hear from you. Whether you have a question or just
-                  want to say hi, feel free to drop a message!
+                  want to say hi, 
+                  <a className="!cursor-text" href="/downloads" aria-label="Download Center" target="_blank"> feel free to drop a message!</a>
                 </p>
               </div>
 
@@ -147,11 +142,8 @@ const Contact: FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2 cursor-pointer rounded-full font-medium text-sm transition"
-                    style={{
-                      backgroundColor: brandColors.steel,
-                      color: brandColors.light,
-                    }}
+                    className="flex cursor-pointer items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                   
                   >
                     {loading ? "Sending..." : "Send"}
                   </button>

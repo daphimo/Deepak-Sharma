@@ -98,7 +98,7 @@ export default function Infinite() {
         <Magnet padding={50} disabled={false} magnetStrength={5}>
           <Link
             to="/projects"
-            className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-white transition-all duration-300"
+            className="flex items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
           >
             Explore More Projects
           </Link>

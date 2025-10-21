@@ -3,7 +3,7 @@ import AnimatedBarGraph from "./components/AnimatedBarGraph";
 const metricsData = [
   {
     title: "Search Engine Optimization",
-    description: `SEO ensures your website is easily discoverable by search engines, driving organic traffic and attracting potential customers. By optimizing content, meta tags, and site structure, we achieved a 70% After in SEO scores. Higher visibility increases traffic, builds credibility, and helps your store reach more of the right audience.`,
+    description: `SEO ensures your website is easily discoverable by search engines, driving organic traffic and attracting potential customers. By optimizing content, meta tags, and site structure, we achieved a 95% After in SEO scores. Higher visibility increases traffic, builds credibility, and helps your store reach more of the right audience.`,
     mainMetricValue: 50,
     mainMetricLabel: "Before",
     newMetricValue: 95,
@@ -13,7 +13,7 @@ const metricsData = [
   },
   {
     title: "Website Speed Optimization",
-    description: `A faster website creates a smoother browsing experience, keeping visitors engaged and reducing bounce rates. Our optimization efforts resulted in a 95% performance After, allowing users to navigate pages, explore products, and complete actions seamlessly. Faster load times directly contribute to higher engagement, better conversions, and a professional impression of your store.`,
+    description: `A faster website creates a smoother browsing experience, keeping visitors engaged and reducing bounce rates. Our optimization efforts resulted in a 90% performance After, allowing users to navigate pages, explore products, and complete actions seamlessly. Faster load times directly contribute to higher engagement, better conversions, and a professional impression of your store.`,
     mainMetricValue: 58,
     mainMetricLabel: "Before",
     newMetricValue: 90,
@@ -23,7 +23,7 @@ const metricsData = [
   },
   {
     title: "Accessibility Enhancement",
-    description: `Accessibility ensures that every visitor can effortlessly interact with your store, regardless of their abilities. By improving accessibility, we achieved an 84% better experience for all users. Clear navigation, readable content, and easy-to-use features increase usability, build trust, and make your store inclusive — positively impacting engagement and brand perception.`,
+    description: `Accessibility ensures that every visitor can effortlessly interact with your store, regardless of their abilities. By improving accessibility, we achieved an 80% better experience for all users. Clear navigation, readable content, and easy-to-use features increase usability, build trust, and make your store inclusive — positively impacting engagement and brand perception.`,
     mainMetricValue: 60,
     mainMetricLabel: "Before",
     newMetricValue: 80,
@@ -33,7 +33,7 @@ const metricsData = [
   },
   {
     title: "Lightweight & Reliable Code",
-    description: `Our optimized code is 95% lighter, which means faster page load times, smoother interactions, and a more stable site for all users. Leaner code reduces the chance of bugs, improves performance across devices, and creates a seamless experience that keeps visitors engaged and confident in your brand.`,
+    description: `Our optimized code is 85% lighter, which means faster page load times, smoother interactions, and a more stable site for all users. Leaner code reduces the chance of bugs, improves performance across devices, and creates a seamless experience that keeps visitors engaged and confident in your brand.`,
     mainMetricValue: 42,
     mainMetricLabel: "Before",
     newMetricValue: 85,
