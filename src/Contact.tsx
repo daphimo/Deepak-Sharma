@@ -69,8 +69,8 @@ const Contact: FC = () => {
                 <h2 className="text-2xl md:text-3xl font-bold">Get in Touch</h2>
                 <p className="text-gray-300 mt-1 text-sm md:text-base">
                   I’d love to hear from you. Whether you have a question or just
-                  want to say hi, 
-                  <a className="!cursor-text" href="/downloads" aria-label="Download Center" target="_blank"> feel free to drop a message!</a>
+                  want to say hi, feel free to drop a message!
+                  {/* <a className="!cursor-text" href="/downloads" aria-label="Download Center" target="_blank"> feel free to drop a message!</a> */}
                 </p>
               </div>
 
