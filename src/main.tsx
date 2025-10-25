@@ -14,7 +14,6 @@ import AppRouter from "./routes/AppRouter.tsx";
 import ScrollToTop from "./assets/components/ScrollToTop";
 import PageLoader from "./assets/components/PageLoader";
 
-// Smooth scroll function with offset
 const scrollToSection = (id: string, offset = 0) => {
   const element = document.getElementById(id);
   if (element) {
