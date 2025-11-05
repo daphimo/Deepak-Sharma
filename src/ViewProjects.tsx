@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { FiExternalLink } from "react-icons/fi";
-import Contact from "./Contact";
 
 // Fixed tech colors
 const techColors = [
@@ -301,8 +300,6 @@ export default function Infinite() {
           ))}
         </div>
       </div>
-
-      <Contact />
     </>
   );
 }
