@@ -4,6 +4,7 @@ import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
 import Graphs from "./Graphs";
+import Blogs from "./FeaturedBlogs.tsx";
 
 const Home = () => {
   return (
@@ -20,6 +21,9 @@ const Home = () => {
       </div>
       <div id="projects">
         <Projects />
+      </div>
+      <div id="blogs">
+        <Blogs />
       </div>
     </main>
   );

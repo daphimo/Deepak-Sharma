@@ -4,9 +4,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -17,6 +19,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -36,7 +39,7 @@
   color: #888;
 }
 
-.button{
+.button {
   cursor: pointer;
 }
 
@@ -91,11 +94,37 @@ select {
   /* Optional: remove rounded corners */
 }
 
-::selection{
-  background: transparent;
+::selection {
+  background: white;
+  color: black;
 }
 
-.no-cursor{
+.ql-toolbar.ql-snow {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 99999;
+}
+
+.ql-container.ql-snow {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.hidden-scrollbar {
+  scrollbar-width: none;
+}
+
+.content-editor *::selection {
+  background: black;
+  color: white;
+}
+
+.blog-content {
+  color: white !important;
+}
+
+.no-cursor {
   cursor: none;
 }
 
@@ -223,11 +252,12 @@ select {
     grid-template-columns: repeat(4, 1fr);
   }
 
-   .card:nth-child(6n+3),
+  .card:nth-child(6n+3),
   .card:nth-child(6n+4) {
     grid-column: span 2;
     grid-row: span 2;
   }
+
   .card:nth-child(6) {
     grid-column: 4;
     grid-row: 3;
@@ -240,12 +270,10 @@ select {
   position: absolute;
   inset: 0;
   padding: 6px;
-  background: radial-gradient(
-    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.8)) 0%,
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.4)) 30%,
-    transparent 60%
-  );
+  background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.8)) 0%,
+      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.4)) 30%,
+      transparent 60%);
   border-radius: inherit;
   mask:
     linear-gradient(#fff 0 0) content-box,
@@ -306,14 +334,79 @@ select {
   user-select: none;
 }
 
-.card-image{
+.card-image {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.card-hover-incase:hover .card-image{
+.card-hover-incase:hover .card-image {
   opacity: 0.08;
 }
+
+/* --- 🌙 Improve prose readability and hierarchy --- */
+pre[class*="language-"] {
+    padding: 0 !important;
+}
+
+.prose {
+  --tw-prose-headings: #fff;
+  --tw-prose-links: #d4af37;
+  --tw-prose-bold: #fff;
+  --tw-prose-quotes: #ccc;
+  --tw-prose-bullets: #d4af37;
+  --tw-prose-counters: #d4af37;
+  --tw-prose-body: #d1d5db;
+  --tw-prose-hr: rgba(255, 255, 255, 0.1);
+}
+
+.prose-invert h1 {
+  font-size: 2.25rem;
+  /* text-4xl */
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.prose-invert h2 {
+  font-size: 1.75rem;
+  /* text-2xl */
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-invert h3 {
+  font-size: 1.5rem;
+  /* text-xl */
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-invert h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-invert a {
+  color: #d4af37;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.prose-invert a:hover {
+  color: #f6d365;
+}
+
+.prose-invert ul li::marker {
+  color: #d4af37;
+}
+
+.prose-invert ol li::marker {
+  color: #d4af37;
+}
+
 
 @media (max-width: 768px) {
   .card-image {

@@ -4,7 +4,6 @@ import { supabase } from "./lib/supabaseClient";
 import Magnet from "./assets/components/Magnet";
 import { FiExternalLink } from "react-icons/fi";
 
-// 🎨 Accent color palette for tags (optional for future categorization)
 const tagColors = [
   "text-pink-400",
   "text-yellow-400",
@@ -22,15 +21,15 @@ export default function FeaturedBlogs() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("blogs")
-        .select("id, title, slug, content, cover_image, created_at, video_embed")
+        .select(
+          "id, title, slug, content, cover_image, created_at, video_embed, blog_tags"
+        )
         .order("created_at", { ascending: false })
-        .limit(3); // show 3 recent blogs for featured section
+        .limit(3);
 
-      if (error) console.error("❌ Error fetching blogs:", error);
-      else setBlogs(data || []);
-
+      setBlogs(data || []);
       setLoading(false);
     };
 
@@ -84,9 +83,7 @@ export default function FeaturedBlogs() {
   );
 }
 
-// ✅ Blog Card Component
 function BlogCard({ blog }: { blog: any }) {
-  // Optional: truncate content or use a short description from HTML
   const shortDesc =
     blog.content.replace(/<[^>]*>?/gm, "").slice(0, 120) + "...";
 
@@ -104,7 +101,6 @@ function BlogCard({ blog }: { blog: any }) {
       {/* Content */}
       <div className="flex flex-col justify-between flex-grow">
         <div>
-          {/* Title & Link */}
           <div className="flex items-center justify-between w-full px-5 mt-4">
             <Link
               to={`/blog/${blog.slug}`}
@@ -121,13 +117,11 @@ function BlogCard({ blog }: { blog: any }) {
             </Link>
           </div>
 
-          {/* Description */}
           <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
             {shortDesc}
           </p>
         </div>
 
-        {/* Date */}
         <div className="px-5 text-xs text-gray-400 mt-2">
           {new Date(blog.created_at).toLocaleDateString("en-US", {
             month: "short",
@@ -135,11 +129,19 @@ function BlogCard({ blog }: { blog: any }) {
           })}
         </div>
 
-        {/* Tags Placeholder */}
         <div className="flex flex-wrap gap-2 px-5 py-4">
-          <span className={`${tagColors[0]} text-xs font-semibold uppercase`}>
-            #Blog
-          </span>
+          {blog.blog_tags &&
+            blog.blog_tags.split(",").map((tag: string, index: number) => {
+              const color = tagColors[index % tagColors.length];
+              return (
+                <span
+                  key={index}
+                  className={`${color} text-xs font-semibold uppercase tracking-wide`}
+                >
+                  #{tag.trim()}
+                </span>
+              );
+            })}
         </div>
       </div>
     </div>

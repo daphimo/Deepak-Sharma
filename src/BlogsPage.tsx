@@ -30,7 +30,9 @@ export default function FeaturedBlogs() {
 
     let query = supabase
       .from("blogs")
-      .select("id, title, slug, content, cover_image, created_at, video_embed")
+      .select(
+        "id, title, slug, content, cover_image, created_at, video_embed, blog_tags"
+      )
       .order("created_at", { ascending: false })
       .range((pageNumber - 1) * blogsPerPage, pageNumber * blogsPerPage - 1);
 
@@ -43,7 +45,6 @@ export default function FeaturedBlogs() {
     const { data, error } = await query;
 
     if (error) {
-      console.error("❌ Error fetching blogs:", error);
       setLoading(false);
       return;
     }
@@ -108,7 +109,28 @@ export default function FeaturedBlogs() {
 
       {/* Blog Cards */}
       {loading && page === 1 ? (
-        <p className="text-center text-gray-400">Loading blogs...</p>
+        <div className="flex justify-center items-center py-10">
+          <svg
+            className="animate-spin h-10 w-10 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            ></path>
+          </svg>
+        </div>
       ) : blogs.length === 0 ? (
         <p className="text-center text-gray-400">No blogs found.</p>
       ) : (
@@ -134,7 +156,28 @@ export default function FeaturedBlogs() {
       )}
 
       {loading && page > 1 && (
-        <p className="text-center text-gray-400 mt-6">Loading more blogs...</p>
+        <div className="flex justify-center items-center mt-6">
+          <svg
+            className="animate-spin h-8 w-8 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            ></path>
+          </svg>
+        </div>
       )}
     </div>
   );
@@ -146,7 +189,7 @@ function BlogCard({ blog }: { blog: any }) {
     blog.content.replace(/<[^>]*>?/gm, "").slice(0, 120) + "...";
 
   return (
-    <div className="w-full flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl overflow-hidden hover:scale-[1.02] transition-transform">
+    <div className="w-full flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl overflow-hidden transition-transform">
       {/* Blog Image */}
       <Link to={`/blogs/${blog.slug}`} className="w-full aspect-video">
         <img
@@ -188,9 +231,18 @@ function BlogCard({ blog }: { blog: any }) {
         </div>
 
         <div className="flex flex-wrap gap-2 px-5 py-4">
-          <span className={`${tagColors[0]} text-xs font-semibold uppercase`}>
-            #Blog
-          </span>
+          {blog.blog_tags &&
+            blog.blog_tags.split(",").map((tag: string, index: number) => {
+              const color = tagColors[index % tagColors.length]; // cycle through colors
+              return (
+                <span
+                  key={index}
+                  className={`${color} text-xs font-semibold uppercase tracking-wide`}
+                >
+                  #{tag.trim()}
+                </span>
+              );
+            })}
         </div>
       </div>
     </div>
