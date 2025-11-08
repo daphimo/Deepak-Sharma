@@ -6,6 +6,7 @@ const menuItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/#aboutme" },
   { label: "Projects", href: "/#projects" },
+  { label: "Blogs", href: "/#blogs" },
   { label: "Contact", href: "/#contact" },
 ];
 

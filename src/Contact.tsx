@@ -7,7 +7,6 @@ import emailjs from "@emailjs/browser";
 import Ballpit from "./components/Ballpit";
 import Magnet from "./assets/components/Magnet";
 
-
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
@@ -79,11 +78,12 @@ const Contact: FC = () => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:items-center flex-wrap sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
                   <a
                     href="mailto:deepakrajeshsharma987654321@gmail.com"
-                    className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm"
+                    className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm break-all"
                   >
                     <FiMail className="text-lg" />
                     <span>deepakrajeshsharma987654321@gmail.com</span>
                   </a>
+
                   <a
                     href="tel:+919427011442"
                     className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm"
@@ -143,7 +143,6 @@ const Contact: FC = () => {
                     type="submit"
                     disabled={loading}
                     className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-                   
                   >
                     {loading ? "Sending..." : "Send"}
                   </button>

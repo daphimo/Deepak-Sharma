@@ -15,6 +15,12 @@ import ScrollToTop from "./assets/components/ScrollToTop";
 import PageLoader from "./assets/components/PageLoader";
 import Contact from "./Contact";
 
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-markup";
+
+
 const scrollToSection = (id: string, offset = 0) => {
   const element = document.getElementById(id);
   if (element) {
