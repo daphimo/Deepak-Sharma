@@ -4,7 +4,6 @@ import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
 import Graphs from "./Graphs";
-import FeaturedBlogs from "./FeaturedBlogs";
 
 const Home = () => {
   return (
@@ -21,9 +20,6 @@ const Home = () => {
       </div>
       <div id="projects">
         <Projects />
-      </div>
-      <div id="featured-blogs">
-        <FeaturedBlogs />
       </div>
     </main>
   );
