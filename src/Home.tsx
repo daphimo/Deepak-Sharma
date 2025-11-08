@@ -3,8 +3,8 @@ import App from "./App.tsx";
 import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
-import Contact from "./Contact";
 import Graphs from "./Graphs";
+import FeaturedBlogs from "./FeaturedBlogs";
 
 const Home = () => {
   return (
@@ -22,9 +22,8 @@ const Home = () => {
       <div id="projects">
         <Projects />
       </div>
-      
-      <div id="contact">
-        <Contact />
+      <div id="featured-blogs">
+        <FeaturedBlogs />
       </div>
     </main>
   );

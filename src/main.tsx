@@ -13,6 +13,7 @@ import StylishBackToTop from "./assets/components/backtotop";
 import AppRouter from "./routes/AppRouter.tsx";
 import ScrollToTop from "./assets/components/ScrollToTop";
 import PageLoader from "./assets/components/PageLoader";
+import Contact from "./Contact";
 
 const scrollToSection = (id: string, offset = 0) => {
   const element = document.getElementById(id);
@@ -60,6 +61,9 @@ const MainLayout = () => {
       <Dock />
       <StylishBackToTop />
       <SpeedInsights />
+      <div id="contact">
+        <Contact />
+      </div>
     </>
   );
 };

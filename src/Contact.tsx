@@ -76,7 +76,7 @@ const Contact: FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold">Contact Details</h3>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:items-center flex-wrap sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
                   <a
                     href="mailto:deepakrajeshsharma987654321@gmail.com"
                     className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm"

@@ -317,6 +317,6 @@ select {
 
 @media (max-width: 768px) {
   .card-image {
-    opacity: 0.08;
+    opacity: 0.14;
   }
 }
