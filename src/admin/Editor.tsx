@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { supabase } from "./lib/supabaseClient";
-import Magnet from "./assets/components/Magnet";
+import { supabase } from "../lib/supabaseClient";
+import Magnet from "../assets/components/Magnet";
 
-export default function AdminBlogEditor() {
+export default function Editor() {
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const blogId = params.get("id");
+
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [coverImage, setCoverImage] = useState("");
@@ -14,27 +19,21 @@ export default function AdminBlogEditor() {
   const [message, setMessage] = useState("");
 
   // 🔐 Password protection
-  const [enteredPassword, setEnteredPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const ADMIN_PASSWORD = "monkeytyper";
   const STORAGE_KEY = "admin_auth";
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [enteredPassword, setEnteredPassword] = useState("");
 
-  // ✅ Check localStorage on mount
   useEffect(() => {
     const savedAuth = localStorage.getItem(STORAGE_KEY);
-    if (savedAuth === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-    }
+    if (savedAuth === ADMIN_PASSWORD) setIsAuthenticated(true);
   }, []);
 
   const handleLogin = () => {
     if (enteredPassword === ADMIN_PASSWORD) {
+      localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD);
       setIsAuthenticated(true);
-      localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD); // ✅ Save in localStorage
-      setEnteredPassword("");
-    } else {
-      alert("❌ Incorrect password!");
-    }
+    } else alert("❌ Incorrect password!");
   };
 
   const handleLogout = () => {
@@ -42,36 +41,69 @@ export default function AdminBlogEditor() {
     setIsAuthenticated(false);
   };
 
-  const handlePublish = async () => {
+  // 🧠 Fetch existing blog if editing
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!blogId) return;
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("id", blogId)
+        .single();
+
+      if (!error && data) {
+        setTitle(data.title);
+        setSlug(data.slug);
+        setCoverImage(data.cover_image || "");
+        setVideoEmbed(data.video_embed || "");
+        setBlogTags(data.blog_tags || "");
+        setContent(data.content || "");
+      }
+    };
+    if (isAuthenticated) fetchBlog();
+  }, [isAuthenticated, blogId]);
+
+  const handleSave = async () => {
     if (!title || !slug || !content) {
       setMessage("❌ Title, slug, and content are required!");
       return;
     }
 
-    const { error } = await supabase.from("blogs").insert([
-      {
-        title,
-        slug,
-        content,
-        cover_image: coverImage || null,
-        video_embed: videoEmbed || null,
-        blog_tags: blogTags || null,
-      },
-    ]);
+    if (blogId) {
+      // update existing
+      const { error } = await supabase
+        .from("blogs")
+        .update({
+          title,
+          slug,
+          content,
+          cover_image: coverImage || null,
+          video_embed: videoEmbed || null,
+          blog_tags: blogTags || null,
+        })
+        .eq("id", blogId);
 
-    if (error) setMessage("❌ " + error.message);
-    else {
-      setMessage("✅ Blog published!");
-      setTitle("");
-      setSlug("");
-      setCoverImage("");
-      setVideoEmbed("");
-      setBlogTags("");
-      setContent("");
+      if (error) setMessage("❌ " + error.message);
+      else setMessage("✅ Blog updated!");
+    } else {
+      // create new
+      const { error } = await supabase.from("blogs").insert([
+        {
+          title,
+          slug,
+          content,
+          cover_image: coverImage || null,
+          video_embed: videoEmbed || null,
+          blog_tags: blogTags || null,
+        },
+      ]);
+
+      if (error) setMessage("❌ " + error.message);
+      else setMessage("✅ Blog published!");
     }
   };
 
-  // 🧱 Login screen
+  // 🔒 Login screen
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
@@ -97,23 +129,31 @@ export default function AdminBlogEditor() {
     );
   }
 
-  // ✅ Authenticated view
+  // 📝 Editor UI
   return (
     <div className="content-editor max-w-7xl mx-auto px-6 py-24">
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-semibold text-gray-800">
-            ✍️ Create a New Blog Post
+            {blogId ? "📝 Edit Blog Post" : "✍️ Create a New Blog Post"}
           </h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
-          >
-            Logout
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/admin")}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
-        {/* Blog Title */}
+        {/* Title */}
         <label className="block text-gray-700 font-medium mb-1">Blog Title</label>
         <input
           type="text"
@@ -136,7 +176,7 @@ export default function AdminBlogEditor() {
           onChange={(e) => setSlug(e.target.value)}
         />
 
-        {/* Cover Image URL */}
+        {/* Cover Image */}
         <label className="block text-gray-700 font-medium mb-1">Cover Image URL</label>
         <input
           type="text"
@@ -146,7 +186,7 @@ export default function AdminBlogEditor() {
           onChange={(e) => setCoverImage(e.target.value)}
         />
 
-        {/* Video Embed */}
+        {/* Video */}
         <label className="block text-gray-700 font-medium mb-1">YouTube Embed Code</label>
         <textarea
           placeholder="Paste video embed HTML..."
@@ -156,7 +196,9 @@ export default function AdminBlogEditor() {
         />
 
         {/* Tags */}
-        <label className="block text-gray-700 font-medium mb-1">Blog Tags (comma-separated)</label>
+        <label className="block text-gray-700 font-medium mb-1">
+          Blog Tags (comma-separated)
+        </label>
         <input
           type="text"
           placeholder="e.g. tech, ai, innovation"
@@ -165,7 +207,7 @@ export default function AdminBlogEditor() {
           onChange={(e) => setBlogTags(e.target.value)}
         />
 
-        {/* Content Editor */}
+        {/* Content */}
         <label className="block text-gray-700 font-medium mb-2">Blog Content</label>
         <div className="h-[400px] mb-6 border border-gray-200 rounded-lg overflow-hidden">
           <ReactQuill
@@ -184,13 +226,13 @@ export default function AdminBlogEditor() {
           />
         </div>
 
-        {/* Publish Button */}
+        {/* Save Button */}
         <div className="flex items-center justify-between">
           <button
-            onClick={handlePublish}
+            onClick={handleSave}
             className="bg-blue-600 cursor-pointer hover:bg-blue-700 transition text-white px-6 py-3 rounded-lg font-medium shadow-md"
           >
-            🚀 Publish Blog
+            {blogId ? "💾 Update Blog" : "🚀 Publish Blog"}
           </button>
           {message && (
             <p
