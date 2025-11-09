@@ -13,7 +13,7 @@ type FileItem = {
 const files: FileItem[] = [
   {
     id: 1,
-    title: "Resume",
+    title: "Deepak Sharma",
     description: "My Resume",
     fileUrl: "/files/resume.pdf",
   },
