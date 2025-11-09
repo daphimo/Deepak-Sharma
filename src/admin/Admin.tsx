@@ -3,6 +3,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import Magnet from "../assets/components/Magnet";
+import {
+  Trash2,
+  PlusCircle,
+  LogOut,
+  Lock,
+  BookOpen,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -18,6 +27,14 @@ export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState("");
 
+  // Popup message
+  const [popup, setPopup] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  const showPopup = (type: "success" | "error", message: string) => {
+    setPopup({ type, message });
+    setTimeout(() => setPopup(null), 2500);
+  };
+
   useEffect(() => {
     const savedAuth = localStorage.getItem(STORAGE_KEY);
     if (savedAuth === ADMIN_PASSWORD) setIsAuthenticated(true);
@@ -27,12 +44,16 @@ export default function Admin() {
     if (enteredPassword === ADMIN_PASSWORD) {
       localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD);
       setIsAuthenticated(true);
-    } else alert("❌ Incorrect password!");
+      showPopup("success", "Welcome back, Admin!");
+    } else {
+      showPopup("error", "Incorrect password!");
+    }
   };
 
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setIsAuthenticated(false);
+    showPopup("success", "Logged out successfully.");
   };
 
   const fetchBlogs = async (pageNum: number) => {
@@ -75,7 +96,6 @@ export default function Admin() {
   // 🗑️ Delete selected
   const handleDeleteSelected = async () => {
     if (selectedBlogs.length === 0) return;
-
     const confirmDelete = window.confirm(
       `Are you sure you want to delete ${selectedBlogs.length} blog(s)? This action cannot be undone.`
     );
@@ -89,35 +109,39 @@ export default function Admin() {
 
     if (error) {
       console.error(error);
-      alert("❌ Error deleting blogs. Check console for details.");
+      showPopup("error", "Error deleting blogs. Check console for details.");
     } else {
       setBlogs((prev) => prev.filter((b) => !selectedBlogs.includes(b.id)));
       setSelectedBlogs([]);
-      alert("✅ Selected blogs deleted successfully.");
+      showPopup("success", "Selected blogs deleted successfully.");
     }
     setLoading(false);
   };
 
+  // 🔓 Login screen
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
+        {popup && (
+          <Popup type={popup.type} message={popup.message} />
+        )}
         <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-4 text-white">
-            🔒 Admin Access
+          <h2 className="text-2xl font-semibold mb-4 text-white flex items-center gap-2">
+            <Lock className="w-6 h-6" /> Admin Access
           </h2>
           <input
             type="password"
             placeholder="Enter admin password"
             value={enteredPassword}
             onChange={(e) => setEnteredPassword(e.target.value)}
-            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500"
+            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500 bg-transparent"
           />
           <Magnet padding={50} disabled={false} magnetStrength={5}>
             <button
               onClick={handleLogin}
               className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
             >
-              Enter
+              <BookOpen className="w-4 h-4" /> Enter
             </button>
           </Magnet>
         </div>
@@ -125,35 +149,40 @@ export default function Admin() {
     );
   }
 
+  // 🧠 Admin dashboard
   return (
-    <div className="w-full mx-auto px-6 py-20">
-      <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100 max-w-7xl mx-auto">
+    <div className="w-full mx-auto px-6 py-20 relative">
+      {popup && <Popup type={popup.type} message={popup.message} />}
+
+      <div className="bg-white shadow-lg px-4 rounded-2xl p-6 sm:p-10 border border-gray-100 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-semibold text-gray-800">
-            🧠 Admin Dashboard
+          <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
+            <BookOpen className="w-7 h-7 text-blue-600" /> Admin Dashboard
           </h1>
+
           <div className="flex items-center gap-3">
             {selectedBlogs.length > 0 && (
               <button
                 onClick={handleDeleteSelected}
                 disabled={loading}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
               >
-                🗑️ Delete ({selectedBlogs.length})
+                <Trash2 className="w-4 h-4" />
+                Delete ({selectedBlogs.length})
               </button>
             )}
             <button
               onClick={() => navigate("/editor")}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
             >
-              ✍️ Write New Blog
+              <PlusCircle className="w-4 h-4" /> Write New
             </button>
             <button
               onClick={handleLogout}
-              className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+              className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
             >
-              Logout
+              <LogOut className="w-4 h-4" /> Logout
             </button>
           </div>
         </div>
@@ -195,7 +224,7 @@ export default function Admin() {
                     e.stopPropagation();
                     toggleSelectBlog(blog.id);
                   }}
-                  className={`absolute bottom-3 right-3 px-3 py-1.5 rounded-lg text-sm font-medium shadow-md transition-all ${
+                  className={`absolute bottom-3 right-3 px-3 py-1.5 rounded-lg text-sm font-medium shadow-md transition-all flex items-center gap-1 ${
                     isSelected
                       ? "bg-red-600 text-white hover:bg-red-700"
                       : "bg-blue-600 text-white hover:bg-blue-700"
@@ -221,6 +250,21 @@ export default function Admin() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// 💬 Popup component
+function Popup({ type, message }: { type: "success" | "error"; message: string }) {
+  const Icon = type === "success" ? CheckCircle2 : XCircle;
+  return (
+    <div
+      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-50 ${
+        type === "success" ? "bg-green-600" : "bg-red-600"
+      }`}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="font-medium">{message}</span>
     </div>
   );
 }

@@ -1,9 +1,20 @@
+// src/admin/Editor.tsx
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { supabase } from "../lib/supabaseClient";
 import Magnet from "../assets/components/Magnet";
+import {
+  Lock,
+  ArrowLeft,
+  LogOut,
+  FileEdit,
+  Rocket,
+  Save,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 
 export default function Editor() {
   const navigate = useNavigate();
@@ -16,14 +27,24 @@ export default function Editor() {
   const [videoEmbed, setVideoEmbed] = useState("");
   const [blogTags, setBlogTags] = useState("");
   const [content, setContent] = useState("");
-  const [message, setMessage] = useState("");
 
-  // 🔐 Password protection
+  // 🔐 Auth
   const ADMIN_PASSWORD = "monkeytyper";
   const STORAGE_KEY = "admin_auth";
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState("");
 
+  // Popup system
+  const [popup, setPopup] = useState<{ type: "success" | "error"; message: string } | null>(
+    null
+  );
+
+  const showPopup = (type: "success" | "error", message: string) => {
+    setPopup({ type, message });
+    setTimeout(() => setPopup(null), 2500);
+  };
+
+  // 🔑 Load saved auth
   useEffect(() => {
     const savedAuth = localStorage.getItem(STORAGE_KEY);
     if (savedAuth === ADMIN_PASSWORD) setIsAuthenticated(true);
@@ -33,12 +54,14 @@ export default function Editor() {
     if (enteredPassword === ADMIN_PASSWORD) {
       localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD);
       setIsAuthenticated(true);
-    } else alert("❌ Incorrect password!");
+      showPopup("success", "Welcome back, Admin!");
+    } else showPopup("error", "Incorrect password!");
   };
 
   const handleLogout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setIsAuthenticated(false);
+    showPopup("success", "Logged out successfully.");
   };
 
   // 🧠 Fetch existing blog if editing
@@ -65,12 +88,11 @@ export default function Editor() {
 
   const handleSave = async () => {
     if (!title || !slug || !content) {
-      setMessage("❌ Title, slug, and content are required!");
+      showPopup("error", "Title, slug, and content are required!");
       return;
     }
 
     if (blogId) {
-      // update existing
       const { error } = await supabase
         .from("blogs")
         .update({
@@ -83,10 +105,9 @@ export default function Editor() {
         })
         .eq("id", blogId);
 
-      if (error) setMessage("❌ " + error.message);
-      else setMessage("✅ Blog updated!");
+      if (error) showPopup("error", error.message);
+      else showPopup("success", "Blog updated successfully!");
     } else {
-      // create new
       const { error } = await supabase.from("blogs").insert([
         {
           title,
@@ -98,8 +119,8 @@ export default function Editor() {
         },
       ]);
 
-      if (error) setMessage("❌ " + error.message);
-      else setMessage("✅ Blog published!");
+      if (error) showPopup("error", error.message);
+      else showPopup("success", "Blog published successfully!");
     }
   };
 
@@ -107,21 +128,24 @@ export default function Editor() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
+        {popup && <Popup type={popup.type} message={popup.message} />}
         <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-4 text-white">🔒 Admin Access</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-white flex items-center gap-2">
+            <Lock className="w-6 h-6" /> Admin Access
+          </h2>
           <input
             type="password"
             placeholder="Enter admin password"
             value={enteredPassword}
             onChange={(e) => setEnteredPassword(e.target.value)}
-            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500"
+            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500 bg-transparent"
           />
           <Magnet padding={50} disabled={false} magnetStrength={5}>
             <button
               onClick={handleLogin}
               className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
             >
-              Enter
+              <FileEdit className="w-4 h-4" /> Enter
             </button>
           </Magnet>
         </div>
@@ -131,24 +155,35 @@ export default function Editor() {
 
   // 📝 Editor UI
   return (
-    <div className="content-editor max-w-7xl mx-auto px-6 py-24">
+    <div className="content-editor max-w-7xl mx-auto px-4 py-24 relative">
+      {popup && <Popup type={popup.type} message={popup.message} />}
+
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-semibold text-gray-800">
-            {blogId ? "📝 Edit Blog Post" : "✍️ Create a New Blog Post"}
+          <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
+            {blogId ? (
+              <>
+                <FileEdit className="w-6 h-6 text-blue-600" /> Edit Blog Post
+              </>
+            ) : (
+              <>
+                <Rocket className="w-6 h-6 text-blue-600" /> Create a New Blog Post
+              </>
+            )}
           </h1>
+
           <div className="flex gap-3">
             <button
               onClick={() => navigate("/admin")}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
             >
-              Back
+              <ArrowLeft className="w-4 h-4" /> Back
             </button>
             <button
               onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
             >
-              Logout
+              <LogOut className="w-4 h-4" /> Logout
             </button>
           </div>
         </div>
@@ -230,21 +265,35 @@ export default function Editor() {
         <div className="flex items-center justify-between">
           <button
             onClick={handleSave}
-            className="bg-blue-600 cursor-pointer hover:bg-blue-700 transition text-white px-6 py-3 rounded-lg font-medium shadow-md"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
           >
-            {blogId ? "💾 Update Blog" : "🚀 Publish Blog"}
+            {blogId ? (
+              <>
+                <Save className="w-5 h-5" /> Update Blog
+              </>
+            ) : (
+              <>
+                <Rocket className="w-5 h-5" /> Publish Blog
+              </>
+            )}
           </button>
-          {message && (
-            <p
-              className={`text-sm font-medium ${
-                message.startsWith("✅") ? "text-green-600" : "text-red-500"
-              }`}
-            >
-              {message}
-            </p>
-          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+// 💬 Popup component (same as Admin)
+function Popup({ type, message }: { type: "success" | "error"; message: string }) {
+  const Icon = type === "success" ? CheckCircle2 : XCircle;
+  return (
+    <div
+      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-50 ${
+        type === "success" ? "bg-green-600" : "bg-red-600"
+      }`}
+    >
+      <Icon className="w-5 h-5" />
+      <span className="font-medium">{message}</span>
     </div>
   );
 }
