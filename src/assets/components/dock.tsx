@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useNavigate } from "react-router-dom";
 import { Home, FolderGit2, Mail, User, Rss } from "lucide-react";
 import GlassSurface from "./GlassSurface.tsx";
 
@@ -13,14 +14,15 @@ const dockItems = [
 ];
 
 export default function Dock() {
-  const { ref, inView } = useInView({ threshold: 0 });
+  const { ref } = useInView({ threshold: 0 });
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
+  // Detect mobile devices
   useEffect(() => {
-    // detect mobile
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // Tailwind md breakpoint
+      setIsMobile(window.innerWidth < 768);
     };
 
     checkMobile();
@@ -28,6 +30,7 @@ export default function Dock() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Toggle visibility based on scroll or mobile
   useEffect(() => {
     if (isMobile) {
       setVisible(true);
@@ -36,16 +39,36 @@ export default function Dock() {
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (!inView && scrollY > 50) {
+      // Show if user scrolled below 150px or not at top
+      if (scrollY > 150) {
         setVisible(true);
       } else {
         setVisible(false);
       }
     };
 
+    // Run once on mount in case user is already scrolled down
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [inView, isMobile]);
+  }, [isMobile]);
+
+  // Smooth SPA navigation with section scroll
+  const handleNavClick = (href: string) => {
+    if (href.startsWith("/#")) {
+      const sectionId = href.replace("/#", "");
+      navigate("/"); // navigate to home page
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 300);
+    } else {
+      navigate(href);
+    }
+  };
 
   return (
     <>
@@ -58,9 +81,8 @@ export default function Dock() {
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
         className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
       >
-        {/* Apply GlassSurface to the Dock */}
         <GlassSurface
-          width={isMobile ? 320 : 400} // responsive width
+          width={isMobile ? 320 : 400}
           height={60}
           borderRadius={20}
           blur={15}
@@ -75,9 +97,13 @@ export default function Dock() {
           className="px-6 py-3 flex gap-6 items-center justify-center"
         >
           {dockItems.map((item) => (
-            <a key={item.id} href={item.href} className="text-[#EAEAEA]">
+            <button
+              key={item.id}
+              onClick={() => handleNavClick(item.href)}
+              className="text-[#EAEAEA] hover:text-sky-400 cursor-pointer transition-colors"
+            >
               {item.icon}
-            </a>
+            </button>
           ))}
         </GlassSurface>
       </motion.div>

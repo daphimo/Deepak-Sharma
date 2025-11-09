@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Shuffle from "./Shuffle.tsx";
 import ScrambledText from "./Scramble.tsx";
 
@@ -19,6 +20,26 @@ const brandColors = {
 };
 
 export default function Header(): React.ReactElement {
+  const navigate = useNavigate();
+
+  const handleNavClick = (href: string) => {
+    if (href.startsWith("/#")) {
+      // Extract section ID (e.g., "projects")
+      const sectionId = href.replace("/#", "");
+      // Navigate to home page
+      navigate("/");
+      // Wait briefly for home to mount, then scroll
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 300);
+    } else {
+      navigate(href);
+    }
+  };
+
   return (
     <header
       className="fixed top-0 left-0 w-full z-50"
@@ -46,9 +67,9 @@ export default function Header(): React.ReactElement {
         {/* Nav Items with Scramble */}
         <nav className="hidden md:flex gap-6 items-center">
           {menuItems.map((item) => (
-            <a
+            <span
               key={item.label}
-              href={item.href}
+              onClick={() => handleNavClick(item.href)}
               className="cursor-pointer hover:text-sky-400 transition-colors"
             >
               <ScrambledText
@@ -61,7 +82,7 @@ export default function Header(): React.ReactElement {
               >
                 {item.label}
               </ScrambledText>
-            </a>
+            </span>
           ))}
         </nav>
       </div>
