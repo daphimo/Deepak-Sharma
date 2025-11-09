@@ -6,7 +6,8 @@ import Download from "../Download.tsx";
 import Blogs from "../BlogsPage.tsx";
 import BlogDetail from "../blogs/BlogDetail.tsx";
 import Admin from "../admin/Admin.tsx";
-import Editor from "../admin/Editor.tsx";
+import BlogEditor from "../admin/BlogEditor.tsx";
+import ProjectEditor from "../admin/ProjectEditor.tsx";
 
 const AppRouter = () => {
   return (
@@ -18,7 +19,8 @@ const AppRouter = () => {
 
       {/* Blog Editor */}
       <Route path="/admin" element={<Admin />} />
-      <Route path="/editor" element={<Editor />} />
+      <Route path="/blogs-editor" element={<BlogEditor />} />
+      <Route path="/project-editor" element={<ProjectEditor />} />
 
       {/* Blog routes */}
       <Route path="/blogs" element={<Blogs />} />
