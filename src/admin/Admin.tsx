@@ -65,14 +65,14 @@ export default function Admin() {
     fetchBlogs(next);
   };
 
-  // ✅ Handle select/deselect blog
+  // ✅ Toggle select/deselect
   const toggleSelectBlog = (id: string) => {
     setSelectedBlogs((prev) =>
       prev.includes(id) ? prev.filter((b) => b !== id) : [...prev, id]
     );
   };
 
-  // 🗑️ Delete selected blogs
+  // 🗑️ Delete selected
   const handleDeleteSelected = async () => {
     if (selectedBlogs.length === 0) return;
 
@@ -160,42 +160,52 @@ export default function Admin() {
 
         {/* Blog list */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogs.map((blog) => (
-            <div
-              key={blog.id}
-              className={`relative cursor-pointer bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden border ${
-                selectedBlogs.includes(blog.id)
-                  ? "border-red-400 ring-2 ring-red-300"
-                  : "border-gray-100"
-              }`}
-            >
-              {/* Checkbox for selection */}
-              <input
-                type="checkbox"
-                checked={selectedBlogs.includes(blog.id)}
-                onChange={() => toggleSelectBlog(blog.id)}
-                className="absolute top-3 left-3 w-5 h-5 cursor-pointer accent-red-600"
-                onClick={(e) => e.stopPropagation()} // prevent navigation when clicking checkbox
-              />
-              <div onClick={() => navigate(`/editor?id=${blog.id}`)}>
-                {blog.cover_image && (
-                  <img
-                    src={blog.cover_image}
-                    alt={blog.title}
-                    className="h-40 w-full object-cover"
-                  />
-                )}
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    {blog.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {new Date(blog.created_at).toLocaleDateString()}
-                  </p>
+          {blogs.map((blog) => {
+            const isSelected = selectedBlogs.includes(blog.id);
+            return (
+              <div
+                key={blog.id}
+                className={`relative bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden border ${
+                  isSelected
+                    ? "border-red-400 ring-2 ring-red-300"
+                    : "border-gray-100"
+                }`}
+              >
+                <div onClick={() => navigate(`/editor?id=${blog.id}`)}>
+                  {blog.cover_image && (
+                    <img
+                      src={blog.cover_image}
+                      alt={blog.title}
+                      className="h-40 w-full object-cover"
+                    />
+                  )}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {blog.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {new Date(blog.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
+
+                {/* Floating Select Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleSelectBlog(blog.id);
+                  }}
+                  className={`absolute bottom-3 right-3 px-3 py-1.5 rounded-lg text-sm font-medium shadow-md transition-all ${
+                    isSelected
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                >
+                  {isSelected ? "Selected" : "Select"}
+                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Load more */}
