@@ -1,155 +1,149 @@
 // src/admin/ProjectEditor.tsx
-import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabaseClient";
-import Magnet from "../assets/components/Magnet";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Lock,
   ArrowLeft,
-  LogOut,
+  CheckCircle2,
   FileEdit,
   Rocket,
   Save,
-  CheckCircle2,
   XCircle,
 } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { useRequireAuth } from "./useRequireAuth";
+import { QuillEditor } from "../components/QuillEditor";
+import { SupabaseImageUpload } from "../components/SupabaseImageUpload";
 
 export default function ProjectEditor() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const projectId = params.get("id");
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [url, setUrl] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [techs, setTechs] = useState("");
-  const [type, setType] = useState("");
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [projectUrl, setProjectUrl] = useState("");
+  const [image, setImage] = useState("");
+  const [mobileImage, setMobileImage] = useState("");
+  const [desktopImage, setDesktopImage] = useState("");
+  const [category, setCategory] = useState("");
+  const [subcategory, setSubcategory] = useState("");
+  const [status, setStatus] = useState("");
+  const [date, setDate] = useState("");
+  const [designer, setDesigner] = useState("");
+  const [location, setLocation] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagsInput, setTagsInput] = useState("");
+  const [problems, setProblems] = useState("");
+  const [results, setResults] = useState("");
+  const [solutions, setSolutions] = useState("");
 
-  // 🔐 Auth
-  const ADMIN_PASSWORD = "monkeytyper";
-  const STORAGE_KEY = "admin_auth";
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [enteredPassword, setEnteredPassword] = useState("");
+  const checkingAuth = useRequireAuth();
 
-  // Popup system
-  const [popup, setPopup] = useState<{ type: "success" | "error"; message: string } | null>(
-    null
-  );
+  const [popup, setPopup] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const showPopup = (type: "success" | "error", message: string) => {
     setPopup({ type, message });
     setTimeout(() => setPopup(null), 2500);
   };
 
-  // 🔑 Load saved auth
-  useEffect(() => {
-    const savedAuth = localStorage.getItem(STORAGE_KEY);
-    if (savedAuth === ADMIN_PASSWORD) setIsAuthenticated(true);
-  }, []);
-
-  const handleLogin = () => {
-    if (enteredPassword === ADMIN_PASSWORD) {
-      localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD);
-      setIsAuthenticated(true);
-      showPopup("success", "Welcome back, Admin!");
-    } else showPopup("error", "Incorrect password!");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setIsAuthenticated(false);
-    showPopup("success", "Logged out successfully.");
-  };
-
-  // 🧠 Fetch existing project if editing
   useEffect(() => {
     const fetchProject = async () => {
       if (!projectId) return;
       const { data, error } = await supabase
-        .from("projects")
+        .from("project")
         .select("*")
         .eq("id", projectId)
         .single();
 
       if (!error && data) {
-        setTitle(data.title || "");
-        setDescription(data.description || "");
-        setUrl(data.url || "");
-        setImageUrl(data.image_url || "");
-        setTechs(data.techs || "");
-        setType(data.type || "");
+        const fetchedTags = ((data as any).tags || []) as string[];
+
+        setName((data as any).name || "");
+        setSlug((data as any).slug || "");
+        setProjectUrl((data as any).project_url || "");
+        setImage((data as any).image || "");
+        setMobileImage((data as any).mobile_image || "");
+        setDesktopImage((data as any).desktop_image || "");
+        setCategory((data as any).category || "");
+        setSubcategory((data as any).subcategory || "");
+        setStatus((data as any).status || "");
+        setDate((data as any).date || "");
+        setDesigner((data as any).designer || "");
+        setLocation((data as any).location || "");
+        setSeoTitle((data as any).seo_title || "");
+        setSeoDescription((data as any).seo_description || "");
+        setTags(fetchedTags);
+        setTagsInput(fetchedTags.join(", "));
+        setProblems((data as any).problems || "");
+        setResults((data as any).results || "");
+        setSolutions((data as any).solutions || "");
       }
     };
-    if (isAuthenticated) fetchProject();
-  }, [isAuthenticated, projectId]);
+    if (!checkingAuth) fetchProject();
+  }, [checkingAuth, projectId]);
 
-  // 💾 Save project
   const handleSave = async () => {
-    if (!title || !description || !url) {
-      showPopup("error", "Title, description, and URL are required!");
+    if (!name || !slug || !projectUrl) {
+      showPopup("error", "Name, slug, and URL are required!");
       return;
     }
 
     const projectData = {
-      title,
-      description,
-      url,
-      image_url: imageUrl || null,
-      techs: techs || null,
-      type: type || null,
+      name,
+      slug,
+      project_url: projectUrl,
+      image: image || null,
+      mobile_image: mobileImage || null,
+      desktop_image: desktopImage || null,
+      category,
+      subcategory,
+      status,
+      date,
+      designer,
+      location,
+      seo_title: seoTitle,
+      seo_description: seoDescription,
+      tags: tags && tags.length ? tags : null,
+      problems: problems || null,
+      results: results || null,
+      solutions: solutions || null,
     };
 
     if (projectId) {
       const { error } = await supabase
-        .from("projects")
+        .from("project")
         .update(projectData)
         .eq("id", projectId);
 
       if (error) showPopup("error", error.message);
       else showPopup("success", "Project updated successfully!");
     } else {
-      const { error } = await supabase.from("projects").insert([projectData]);
+      const { error } = await supabase.from("project").insert([projectData]);
       if (error) showPopup("error", error.message);
       else showPopup("success", "Project added successfully!");
     }
   };
 
-  // 🔒 Login screen
-  if (!isAuthenticated) {
+  if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        {popup && <Popup type={popup.type} message={popup.message} />}
-        <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-4 text-white flex items-center gap-2">
-            <Lock className="w-6 h-6" /> Admin Access
-          </h2>
-          <input
-            type="password"
-            placeholder="Enter admin password"
-            value={enteredPassword}
-            onChange={(e) => setEnteredPassword(e.target.value)}
-            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500 bg-transparent"
-          />
-          <Magnet padding={50} disabled={false} magnetStrength={5}>
-            <button
-              onClick={handleLogin}
-              className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-            >
-              <FileEdit className="w-4 h-4" /> Enter
-            </button>
-          </Magnet>
+        <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md text-center">
+          Checking session...
         </div>
       </div>
     );
   }
 
-  // 📝 Project Editor UI
   return (
-    <div className="content-editor max-w-7xl mx-auto px-4 py-24 relative ">
+    <div className="content-editor max-w-7xl mx-auto p-4 relative min-h-screen">
       {popup && <Popup type={popup.type} message={popup.message} />}
 
-      <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100">
+      <div className="bg-gray-50 shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-200 text-black">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
             {projectId ? (
@@ -170,75 +164,212 @@ export default function ProjectEditor() {
             >
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" /> Logout
-            </button>
           </div>
         </div>
 
-        {/* Title */}
-        <label className="block text-gray-700 font-medium mb-1">Project Title</label>
+        <label className="block  font-medium mb-1">
+          Project Name
+        </label>
         <input
           type="text"
-          placeholder="Enter project title..."
+          placeholder="Enter project name..."
           className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
+          }}
         />
 
-        {/* Description */}
-        <label className="block text-gray-700 font-medium mb-1">Description</label>
-        <textarea
-          placeholder="Enter project description..."
-          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800 h-32"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+        <label className="block  font-medium mb-1">Slug</label>
+        <input
+          type="text"
+          placeholder="project-slug"
+          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
         />
 
-        {/* URL */}
-        <label className="block text-gray-700 font-medium mb-1">Project URL</label>
+        <label className="block  font-medium mb-1">
+          Project URL
+        </label>
         <input
           type="text"
           placeholder="Enter live/demo/project URL..."
           className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          value={projectUrl}
+          onChange={(e) => setProjectUrl(e.target.value)}
         />
 
-        {/* Image URL */}
-        <label className="block text-gray-700 font-medium mb-1">Image URL</label>
-        <input
-          type="text"
-          placeholder="Enter image URL..."
-          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
+        <SupabaseImageUpload
+          label="Image"
+          value={image}
+          onChange={setImage}
+          helperText="Primary cover image for project detail and cards."
+          className="mb-4"
         />
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <SupabaseImageUpload
+            label="Mobile Image"
+            value={mobileImage}
+            onChange={setMobileImage}
+            helperText="Used for narrow/mobile layouts."
+          />
+          <SupabaseImageUpload
+            label="Desktop Image"
+            value={desktopImage}
+            onChange={setDesktopImage}
+            helperText="Used for wide/desktop layouts."
+          />
+        </div>
 
-        {/* Techs */}
-        <label className="block text-gray-700 font-medium mb-1">Techs (comma-separated)</label>
-        <input
-          type="text"
-          placeholder="e.g. React, Node.js, Tailwind, Supabase"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={techs}
-          onChange={(e) => setTechs(e.target.value)}
-        />
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block  font-medium mb-1">
+              Category
+            </label>
+            <input
+              type="text"
+              placeholder="Category"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">
+              Subcategory
+            </label>
+            <input
+              type="text"
+              placeholder="Subcategory"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={subcategory}
+              onChange={(e) => setSubcategory(e.target.value)}
+            />
+          </div>
+        </div>
 
-        {/* Type */}
-        <label className="block text-gray-700 font-medium mb-1">Project Type</label>
-        <input
-          type="text"
-          placeholder="e.g. Web App, Mobile App, Shopify Store"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-6 text-gray-800"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        />
+        <div className="grid md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label className="block  font-medium mb-1">
+              Status
+            </label>
+            <input
+              type="text"
+              placeholder="Status"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">Date</label>
+            <input
+              type="date"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">
+              Designer
+            </label>
+            <input
+              type="text"
+              placeholder="Designer"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={designer}
+              onChange={(e) => setDesigner(e.target.value)}
+            />
+          </div>
+        </div>
 
-        {/* Save Button */}
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block  font-medium mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              placeholder="Location"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">
+              Tags (comma separated)
+            </label>
+            <input
+              type="text"
+              placeholder="tag1, tag2"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={tagsInput}
+              onChange={(e) => {
+                const value = e.target.value;
+                setTagsInput(value);
+                setTags(
+                  value
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean)
+                );
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label className="block  font-medium mb-1">
+              SEO Title
+            </label>
+            <input
+              type="text"
+              placeholder="SEO Title"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={seoTitle}
+              onChange={(e) => setSeoTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">
+              SEO Description
+            </label>
+            <input
+              type="text"
+              placeholder="SEO Description"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={seoDescription}
+              onChange={(e) => setSeoDescription(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 mb-8">
+          <QuillEditor
+            label="Problems"
+            value={problems}
+            placeholder="Describe the challenge, constraints, and pain points..."
+            onChange={setProblems}
+          />
+          <QuillEditor
+            label="Solutions"
+            value={solutions}
+            placeholder="Highlight the approach, decisions, tools, and collaboration..."
+            onChange={setSolutions}
+          />
+          <QuillEditor
+            label="Results"
+            value={results}
+            placeholder="Summarize the measurable impact, learnings, and next steps..."
+            onChange={setResults}
+          />
+        </div>
+
         <div className="flex items-center justify-between">
           <button
             onClick={handleSave}
@@ -260,12 +391,17 @@ export default function ProjectEditor() {
   );
 }
 
-// 💬 Popup component
-function Popup({ type, message }: { type: "success" | "error"; message: string }) {
+function Popup({
+  type,
+  message,
+}: {
+  type: "success" | "error";
+  message: string;
+}) {
   const Icon = type === "success" ? CheckCircle2 : XCircle;
   return (
     <div
-      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-50 ${
+      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-[9999] ${
         type === "success" ? "bg-green-600" : "bg-red-600"
       }`}
     >

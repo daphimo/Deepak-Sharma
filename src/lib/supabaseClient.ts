@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from "../config/env";
 
-const supabaseUrl = "https://vqscsbznqejxxwygftrt.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxc2NzYnpucWVqeHh3eWdmdHJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1OTg2NzgsImV4cCI6MjA3ODE3NDY3OH0.FKf81ic7IbQNRDruqKYgYYYMoq_JsAgW8CiFsi33R9Y";
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    "[supabase] Missing SUPABASE credentials. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file."
+  );
+}
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

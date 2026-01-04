@@ -3,12 +3,12 @@ import App from "./App.tsx";
 import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
-import Graphs from "./Graphs";
+// import Graphs from "./Graphs";
 import Blogs from "./FeaturedBlogs.tsx";
 
 const Home = () => {
   return (
-    <main className="main-container w-full min-h-screen">
+    <main className="main-container w-full min-h-screen text-[var(--foreground)] transition-colors duration-500">
       <div id="intro">
         <App />
       </div>
@@ -16,9 +16,9 @@ const Home = () => {
         <AboutMe />
         <Tech />
       </div>
-      <div id="metrics">
+      {/* <div id="metrics">
         <Graphs />
-      </div>
+      </div> */}
       <div id="projects">
         <Projects />
       </div>

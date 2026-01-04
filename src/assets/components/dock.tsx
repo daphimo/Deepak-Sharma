@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 import { Home, FolderGit2, Mail, User, Rss } from "lucide-react";
 import GlassSurface from "./GlassSurface.tsx";
+import DayNightToggle from "../../components/DayNightToggle";
 
 const dockItems = [
   { id: "Home", icon: <Home size={22} />, href: "/" },
@@ -94,17 +95,20 @@ export default function Dock() {
           brightness={50}
           opacity={0.85}
           mixBlendMode="difference"
-          className="px-6 py-3 flex gap-6 items-center justify-center"
+          className="px-6 py-3 flex  shadow-xl gap-6 items-center justify-center"
         >
-          {dockItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.href)}
-              className="text-[#EAEAEA] hover:text-sky-400 cursor-pointer transition-colors"
-            >
-              {item.icon}
-            </button>
-          ))}
+          <div className="flex items-center gap-4">
+            {dockItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.href)}
+                className="cursor-pointer !text-[#00BCFF] transition-colors duration-200"
+              >
+                {item.icon}
+              </button>
+            ))}
+            <DayNightToggle variant="compact" className="!text-[#00BCFF] !px-2 !py-1" />
+          </div>
         </GlassSurface>
       </motion.div>
     </>

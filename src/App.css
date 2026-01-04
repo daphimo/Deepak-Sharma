@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -12,8 +15,6 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
-
 
 @keyframes logo-spin {
   from {
@@ -94,23 +95,6 @@ select {
   /* Optional: remove rounded corners */
 }
 
-::selection {
-  background: white;
-  color: black;
-}
-
-.ql-toolbar.ql-snow {
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 99999;
-}
-
-.ql-container.ql-snow {
-  max-height: 400px;
-  overflow: auto;
-}
-
 .hidden-scrollbar {
   scrollbar-width: none;
 }
@@ -118,6 +102,18 @@ select {
 .content-editor *::selection {
   background: black;
   color: white;
+}
+
+.content-editor {
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.editor-surface {
+  height: 60vh;
+  min-height: 360px;
+  overflow-y: auto;
+  background: #ffffff;
 }
 
 .blog-content {
@@ -140,10 +136,12 @@ select {
   --sat: 69%;
   --white: hsl(0, 0%, 100%);
   --purple-primary: rgba(132, 0, 255, 1);
-  --purple-glow: rgba(132, 0, 255, 0.2);
-  --purple-border: rgba(132, 0, 255, 0.8);
-  --border-color: #392e4e;
-  --background-dark: #060010;
+  --purple-glow: rgba(var(--glow-color, 132, 0, 255), 0.2);
+  --purple-border: rgba(var(--glow-color, 132, 0, 255), 0.8);
+  --border-color: var(--border, #392e4e);
+  --background-dark: var(--card);
+  --bento-card-bg: var(--card);
+  --bento-card-foreground: var(--card-foreground);
   color-scheme: light dark;
 }
 
@@ -165,10 +163,11 @@ select {
   padding: 1.25em;
   border-radius: 20px;
   border: 1px solid var(--border-color);
-  background: var(--background-dark);
+  background: var(--bento-card-bg);
   font-weight: 300;
   overflow: hidden;
   transition: all 0.3s ease;
+  color: var(--bento-card-foreground);
 
   --glow-x: 50%;
   --glow-y: 50%;
@@ -185,7 +184,7 @@ select {
 .card__content {
   display: flex;
   position: relative;
-  color: var(--white);
+  color: var(--bento-card-foreground);
 }
 
 .card__header {
@@ -271,8 +270,8 @@ select {
   inset: 0;
   padding: 6px;
   background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.8)) 0%,
-      rgba(132, 0, 255, calc(var(--glow-intensity) * 0.4)) 30%,
+      rgba(var(--glow-color, 132, 0, 255), calc(var(--glow-intensity) * 0.8)) 0%,
+      rgba(var(--glow-color, 132, 0, 255), calc(var(--glow-intensity) * 0.4)) 30%,
       transparent 60%);
   border-radius: inherit;
   mask:
@@ -310,7 +309,7 @@ select {
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: rgba(132, 0, 255, 0.2);
+  background: rgba(var(--glow-color, 132, 0, 255), 0.2);
   border-radius: 50%;
   z-index: -1;
 }
@@ -345,7 +344,7 @@ select {
 
 /* --- 🌙 Improve prose readability and hierarchy --- */
 pre[class*="language-"] {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .prose {

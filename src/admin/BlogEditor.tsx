@@ -1,40 +1,42 @@
-// src/admin/Editor.tsx
-import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { supabase } from "../lib/supabaseClient";
-import Magnet from "../assets/components/Magnet";
+// src/admin/BlogEditor.tsx
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Lock,
   ArrowLeft,
-  LogOut,
   FileEdit,
   Rocket,
   Save,
   CheckCircle2,
   XCircle,
 } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { useRequireAuth } from "./useRequireAuth";
+import { QuillEditor } from "../components/QuillEditor";
+import { SupabaseImageUpload } from "../components/SupabaseImageUpload";
 
-export default function Editor() {
+export default function BlogEditor() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const blogId = params.get("id");
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [videoEmbed, setVideoEmbed] = useState("");
-  const [blogTags, setBlogTags] = useState("");
+  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState("");
+  const [subcategory, setSubcategory] = useState("");
+  const [status, setStatus] = useState("");
+  const [date, setDate] = useState("");
+  const [readingTime, setReadingTime] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [video, setVideo] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagsInput, setTagsInput] = useState("");
   const [content, setContent] = useState("");
 
-  // 🔐 Auth
-  const ADMIN_PASSWORD = "monkeytyper";
-  const STORAGE_KEY = "admin_auth";
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [enteredPassword, setEnteredPassword] = useState("");
+  const checkingAuth = useRequireAuth();
 
-  // Popup system
   const [popup, setPopup] = useState<{ type: "success" | "error"; message: string } | null>(
     null
   );
@@ -44,47 +46,36 @@ export default function Editor() {
     setTimeout(() => setPopup(null), 2500);
   };
 
-  // 🔑 Load saved auth
-  useEffect(() => {
-    const savedAuth = localStorage.getItem(STORAGE_KEY);
-    if (savedAuth === ADMIN_PASSWORD) setIsAuthenticated(true);
-  }, []);
-
-  const handleLogin = () => {
-    if (enteredPassword === ADMIN_PASSWORD) {
-      localStorage.setItem(STORAGE_KEY, ADMIN_PASSWORD);
-      setIsAuthenticated(true);
-      showPopup("success", "Welcome back, Admin!");
-    } else showPopup("error", "Incorrect password!");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setIsAuthenticated(false);
-    showPopup("success", "Logged out successfully.");
-  };
-
-  // 🧠 Fetch existing blog if editing
   useEffect(() => {
     const fetchBlog = async () => {
       if (!blogId) return;
       const { data, error } = await supabase
-        .from("blogs")
+        .from("blog")
         .select("*")
         .eq("id", blogId)
         .single();
 
       if (!error && data) {
-        setTitle(data.title);
-        setSlug(data.slug);
-        setCoverImage(data.cover_image || "");
-        setVideoEmbed(data.video_embed || "");
-        setBlogTags(data.blog_tags || "");
-        setContent(data.content || "");
+        setTitle((data as any).title || "");
+        setSlug((data as any).slug || "");
+        setAuthor((data as any).author || "");
+        setCategory((data as any).category || "");
+        setSubcategory((data as any).subcategory || "");
+        setStatus((data as any).status || "");
+        setDate((data as any).date || "");
+        setReadingTime((data as any).reading_time || "");
+        setSeoTitle((data as any).seo_title || "");
+        setSeoDescription((data as any).seo_description || "");
+        setImage((data as any).image || "");
+        setVideo((data as any).video || "");
+        const incomingTags = ((data as any).tags || []) as string[];
+        setTags(incomingTags);
+        setTagsInput(incomingTags.join(", "));
+        setContent((data as any).content || "");
       }
     };
-    if (isAuthenticated) fetchBlog();
-  }, [isAuthenticated, blogId]);
+    if (!checkingAuth) fetchBlog();
+  }, [checkingAuth, blogId]);
 
   const handleSave = async () => {
     if (!title || !slug || !content) {
@@ -92,73 +83,54 @@ export default function Editor() {
       return;
     }
 
+    const payload = {
+      title,
+      slug,
+      content,
+      author,
+      category,
+      subcategory,
+      status,
+      date,
+      reading_time: readingTime,
+      seo_title: seoTitle,
+      seo_description: seoDescription,
+      image: image || null,
+      video: video || null,
+      tags: tags && tags.length ? tags : null,
+    };
+
     if (blogId) {
       const { error } = await supabase
-        .from("blogs")
-        .update({
-          title,
-          slug,
-          content,
-          cover_image: coverImage || null,
-          video_embed: videoEmbed || null,
-          blog_tags: blogTags || null,
-        })
+        .from("blog")
+        .update(payload)
         .eq("id", blogId);
 
       if (error) showPopup("error", error.message);
       else showPopup("success", "Blog updated successfully!");
     } else {
-      const { error } = await supabase.from("blogs").insert([
-        {
-          title,
-          slug,
-          content,
-          cover_image: coverImage || null,
-          video_embed: videoEmbed || null,
-          blog_tags: blogTags || null,
-        },
-      ]);
+      const { error } = await supabase.from("blog").insert([payload]);
 
       if (error) showPopup("error", error.message);
       else showPopup("success", "Blog published successfully!");
     }
   };
 
-  // 🔒 Login screen
-  if (!isAuthenticated) {
+  if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        {popup && <Popup type={popup.type} message={popup.message} />}
-        <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md">
-          <h2 className="text-2xl font-semibold mb-4 text-white flex items-center gap-2">
-            <Lock className="w-6 h-6" /> Admin Access
-          </h2>
-          <input
-            type="password"
-            placeholder="Enter admin password"
-            value={enteredPassword}
-            onChange={(e) => setEnteredPassword(e.target.value)}
-            className="border text-white border-gray-300 rounded-lg p-3 w-full mb-4 focus:ring focus:ring-blue-100 focus:border-blue-500 bg-transparent"
-          />
-          <Magnet padding={50} disabled={false} magnetStrength={5}>
-            <button
-              onClick={handleLogin}
-              className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-            >
-              <FileEdit className="w-4 h-4" /> Enter
-            </button>
-          </Magnet>
+        <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md text-center">
+          Checking session...
         </div>
       </div>
     );
   }
 
-  // 📝 Editor UI
   return (
-    <div className="content-editor max-w-7xl mx-auto px-4 py-24 relative">
+    <div className="content-editor max-w-7xl mx-auto p-4 relative min-h-screen">
       {popup && <Popup type={popup.type} message={popup.message} />}
 
-      <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100">
+      <div className="bg-gray-50 shadow-lg rounded-2xl p-6 sm:p-10 border border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-semibold text-gray-800 flex items-center gap-2">
             {blogId ? (
@@ -179,16 +151,10 @@ export default function Editor() {
             >
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" /> Logout
-            </button>
+          
           </div>
         </div>
 
-        {/* Title */}
         <label className="block text-gray-700 font-medium mb-1">Blog Title</label>
         <input
           type="text"
@@ -201,7 +167,6 @@ export default function Editor() {
           }}
         />
 
-        {/* Slug */}
         <label className="block text-gray-700 font-medium mb-1">Slug</label>
         <input
           type="text"
@@ -211,57 +176,142 @@ export default function Editor() {
           onChange={(e) => setSlug(e.target.value)}
         />
 
-        {/* Cover Image */}
-        <label className="block text-gray-700 font-medium mb-1">Cover Image URL</label>
-        <input
-          type="text"
-          placeholder="Paste image URL..."
-          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={coverImage}
-          onChange={(e) => setCoverImage(e.target.value)}
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Author</label>
+            <input
+              type="text"
+              placeholder="Author name"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Category</label>
+            <input
+              type="text"
+              placeholder="Category"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Subcategory</label>
+            <input
+              type="text"
+              placeholder="Subcategory"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={subcategory}
+              onChange={(e) => setSubcategory(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Status</label>
+            <input
+              type="text"
+              placeholder="Status"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Date</label>
+            <input
+              type="date"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Reading Time</label>
+            <input
+              type="text"
+              placeholder="e.g. 5 min"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={readingTime}
+              onChange={(e) => setReadingTime(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Tags (comma separated)</label>
+            <input
+              type="text"
+              placeholder="tag1, tag2"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={tagsInput}
+              onChange={(e) => {
+                const next = e.target.value;
+                setTagsInput(next);
+                setTags(
+                  next
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean)
+                );
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">SEO Title</label>
+            <input
+              type="text"
+              placeholder="SEO Title"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={seoTitle}
+              onChange={(e) => setSeoTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">SEO Description</label>
+            <input
+              type="text"
+              placeholder="SEO Description"
+              className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
+              value={seoDescription}
+              onChange={(e) => setSeoDescription(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <SupabaseImageUpload
+          label="Cover Image"
+          value={image}
+          onChange={setImage}
+          helperText="Uploads to Supabase and saves the public URL for this post."
+          className="mb-4"
         />
 
-        {/* Video */}
         <label className="block text-gray-700 font-medium mb-1">YouTube Embed Code</label>
         <textarea
           placeholder="Paste video embed HTML..."
           className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800 h-24"
-          value={videoEmbed}
-          onChange={(e) => setVideoEmbed(e.target.value)}
+          value={video}
+          onChange={(e) => setVideo(e.target.value)}
         />
 
-        {/* Tags */}
-        <label className="block text-gray-700 font-medium mb-1">
-          Blog Tags (comma-separated)
-        </label>
-        <input
-          type="text"
-          placeholder="e.g. tech, ai, innovation"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800"
-          value={blogTags}
-          onChange={(e) => setBlogTags(e.target.value)}
-        />
-
-        {/* Content */}
         <label className="block text-gray-700 font-medium mb-2">Blog Content</label>
-        <div className="h-[400px] mb-6 border border-gray-200 rounded-lg overflow-hidden">
-          <ReactQuill
+        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-3">
+          <QuillEditor
             value={content}
             onChange={setContent}
-            className="h-full max-h-[400px] overflow-y-auto hidden-scrollbar"
-            theme="snow"
-            modules={{
-              toolbar: [
-                [{ header: [1, 2, 3, 4, false] }],
-                ["bold", "italic", "underline", "strike"],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["link", "image", "code-block"],
-              ],
-            }}
+            placeholder="Write and format your blog content..."
+            note="Rich text with image upload & resize"
           />
         </div>
 
-        {/* Save Button */}
         <div className="flex items-center justify-between">
           <button
             onClick={handleSave}
@@ -283,12 +333,11 @@ export default function Editor() {
   );
 }
 
-// 💬 Popup component (same as Admin)
 function Popup({ type, message }: { type: "success" | "error"; message: string }) {
   const Icon = type === "success" ? CheckCircle2 : XCircle;
   return (
     <div
-      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-50 ${
+      className={`fixed top-6 right-6 flex items-center gap-2 px-4 py-3 rounded-xl text-white shadow-lg transition-all z-[9999] ${
         type === "success" ? "bg-green-600" : "bg-red-600"
       }`}
     >

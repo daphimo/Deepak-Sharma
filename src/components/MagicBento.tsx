@@ -28,12 +28,12 @@ export interface BentoProps {
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
-const DEFAULT_GLOW_COLOR = "132, 0, 255";
+const DEFAULT_GLOW_COLOR_DARK = "132, 0, 255";
+const DEFAULT_GLOW_COLOR_LIGHT = "0, 112, 243";
 const MOBILE_BREAKPOINT = 768;
 
 const cardData: BentoCardProps[] = [
   {
-    color: "#060010",
     id: 1,
     title: "Store Setup & Customization",
     description:
@@ -42,7 +42,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/store.webp",
   },
   {
-    color: "#060010",
     id: 2,
     title: "Custom Theme Development",
     description:
@@ -51,7 +50,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/theme.webp",
   },
   {
-    color: "#060010",
     id: 3,
     title: "Performance Optimization",
     description:
@@ -60,7 +58,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/performance.webp",
   },
   {
-    color: "#060010",
     id: 4,
     title: "Responsive Web Applications",
     description:
@@ -69,7 +66,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/responsive.webp",
   },
   {
-    color: "#060010",
     id: 5,
     title: "SEO-friendly Development",
     description:
@@ -78,7 +74,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/seo.webp",
   },
   {
-    color: "#060010",
     id: 6,
     title: "UI/UX Design & Prototyping",
     description:
@@ -87,7 +82,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/uiux.webp",
   },
   {
-    color: "#060010",
     id: 7,
     title: "Store Migration & Replatforming",
     description:
@@ -96,7 +90,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/migration.webp",
   },
   {
-    color: "#060010",
     id: 8,
     title: "E-commerce Features & App Integration",
     description:
@@ -105,7 +98,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/apps.webp",
   },
   {
-    color: "#060010",
     id: 9,
     title: "Web Security & Data Protection",
     description:
@@ -114,7 +106,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/security.webp",
   },
   {
-    color: "#060010",
     id: 10,
     title: "Analytics & Conversion Optimization",
     description:
@@ -123,7 +114,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/analytics.webp",
   },
   {
-    color: "#060010",
     id: 11,
     title: "Progressive Web Apps (PWA)",
     description:
@@ -132,7 +122,6 @@ const cardData: BentoCardProps[] = [
     image: "/files/pwa.webp",
   },
   {
-    color: "#060010",
     id: 12,
     title: "Web Maintenance & Support",
     description:
@@ -142,10 +131,39 @@ const cardData: BentoCardProps[] = [
   },
 ];
 
+const useIsDarkTheme = () => {
+  const getTheme = () => {
+    if (typeof document === "undefined") return false;
+    const root = document.documentElement;
+    if (root.classList.contains("dark")) return true;
+    if (root.classList.contains("light")) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  };
+
+  const [isDark, setIsDark] = useState(getTheme);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const updateTheme = () => setIsDark(getTheme());
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    mediaQuery.addEventListener("change", updateTheme);
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener("change", updateTheme);
+    };
+  }, []);
+
+  return isDark;
+};
+
 const createParticleElement = (
   x: number,
   y: number,
-  color: string = DEFAULT_GLOW_COLOR
+  color: string = DEFAULT_GLOW_COLOR_DARK
 ): HTMLDivElement => {
   const el = document.createElement("div");
   el.className = "particle";
@@ -202,7 +220,7 @@ const ParticleCard: React.FC<{
   disableAnimations = false,
   style,
   particleCount = DEFAULT_PARTICLE_COUNT,
-  glowColor = DEFAULT_GLOW_COLOR,
+  glowColor = DEFAULT_GLOW_COLOR_DARK,
   enableTilt = true,
   clickEffect = false,
   enableMagnetism = false,
@@ -461,7 +479,7 @@ const GlobalSpotlight: React.FC<{
   disableAnimations = false,
   enabled = true,
   spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
-  glowColor = DEFAULT_GLOW_COLOR,
+  glowColor = DEFAULT_GLOW_COLOR_DARK,
 }) => {
   const spotlightRef = useRef<HTMLDivElement | null>(null);
   const isInsideSection = useRef(false);
@@ -635,13 +653,18 @@ const MagicBento: React.FC<BentoProps> = ({
   spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
   particleCount = DEFAULT_PARTICLE_COUNT,
   enableTilt = false,
-  glowColor = DEFAULT_GLOW_COLOR,
+  glowColor,
   clickEffect = true,
   enableMagnetism = true,
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobileDetection();
   const shouldDisableAnimations = disableAnimations || isMobile;
+  const isDark = useIsDarkTheme();
+  const resolvedGlowColor =
+    glowColor ?? (isDark ? DEFAULT_GLOW_COLOR_DARK : DEFAULT_GLOW_COLOR_LIGHT);
+  const cardBackgroundColor = "var(--card)";
+  const cardTextColor = "var(--card-foreground)";
 
   return (
     <>
@@ -651,7 +674,7 @@ const MagicBento: React.FC<BentoProps> = ({
           disableAnimations={shouldDisableAnimations}
           enabled={enableSpotlight}
           spotlightRadius={spotlightRadius}
-          glowColor={glowColor}
+          glowColor={resolvedGlowColor}
         />
       )}
 
@@ -663,8 +686,9 @@ const MagicBento: React.FC<BentoProps> = ({
           const cardProps = {
             className: baseClassName,
             style: {
-              backgroundColor: card.color,
-              "--glow-color": glowColor,
+              backgroundColor: cardBackgroundColor,
+              color: cardTextColor,
+              "--glow-color": resolvedGlowColor,
             } as React.CSSProperties,
           };
 
@@ -675,7 +699,7 @@ const MagicBento: React.FC<BentoProps> = ({
                 {...cardProps}
                 disableAnimations={shouldDisableAnimations}
                 particleCount={particleCount}
-                glowColor={glowColor}
+                glowColor={resolvedGlowColor}
                 enableTilt={enableTilt}
                 clickEffect={clickEffect}
                 enableMagnetism={enableMagnetism}
@@ -785,7 +809,7 @@ const MagicBento: React.FC<BentoProps> = ({
                     width: ${maxDistance * 2}px;
                     height: ${maxDistance * 2}px;
                     border-radius: 50%;
-                    background: radial-gradient(circle, rgba(${glowColor}, 0.4) 0%, rgba(${glowColor}, 0.2) 30%, transparent 70%);
+                    background: radial-gradient(circle, rgba(${resolvedGlowColor}, 0.4) 0%, rgba(${resolvedGlowColor}, 0.2) 30%, transparent 70%);
                     left: ${x - maxDistance}px;
                     top: ${y - maxDistance}px;
                     pointer-events: none;

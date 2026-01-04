@@ -29,6 +29,13 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({
   useEffect(() => {
     if (!rootRef.current) return;
 
+    // Lock the container width so surrounding menu items don't shift when characters scramble
+    const initialWidth = rootRef.current.getBoundingClientRect().width;
+    Object.assign(rootRef.current.style, {
+      width: `${initialWidth}px`,
+      display: "inline-block",
+    });
+
     const split = SplitText.create(rootRef.current.querySelector("p"), {
       type: "chars",
       charsClass: "inline-block will-change-transform",
@@ -74,7 +81,7 @@ const ScrambledText: React.FC<ScrambledTextProps> = ({
   return (
     <div
       ref={rootRef}
-      className={`font-mono text-l text-white ${className}`}
+      className={`text-l text-white ${className}`}
       style={style}
     >
       <p className={`text-white flex flex-nowrap ${className}`}>{children}</p>

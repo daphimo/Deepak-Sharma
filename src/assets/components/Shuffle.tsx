@@ -153,12 +153,12 @@ const Shuffle: React.FC<ShuffleProps> = ({
           const w = ch.getBoundingClientRect().width;
           if (!w) return;
 
-          const wrap = document.createElement("span");
+          const wrap = document.createElement("div");
           wrap.className =
             "inline-block overflow-hidden align-baseline text-left";
           Object.assign(wrap.style, { width: w + "px" });
 
-          const inner = document.createElement("span");
+          const inner = document.createElement("div");
           inner.className =
             "inline-block whitespace-nowrap will-change-transform origin-left transform-gpu";
 
@@ -376,10 +376,12 @@ const Shuffle: React.FC<ShuffleProps> = ({
   );
 
   const baseTw =
-    "inline-block whitespace-normal break-words will-change-transform uppercase text-3xl leading-none";
+    "inline-block align-middle whitespace-normal break-words will-change-transform uppercase text-3xl leading-none";
 
   const commonStyle: React.CSSProperties = {
     textAlign,
+    fontFamily: "Roboto, sans-serif",
+    lineHeight: 1,
     ...style,
   };
 

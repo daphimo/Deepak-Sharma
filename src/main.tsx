@@ -1,24 +1,20 @@
 // src/index.tsx
-import { StrictMode, useEffect } from "react";
+import { StrictMode, lazy, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import "./index.css";
 import "./App.css";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
-import Space from "./backgrounds/Space";
-import Header from "./assets/components/header";
-import Dock from "./assets/components/dock";
-import StylishBackToTop from "./assets/components/backtotop";
-import AppRouter from "./routes/AppRouter.tsx";
 import ScrollToTop from "./assets/components/ScrollToTop";
 import PageLoader from "./assets/components/PageLoader";
-import Contact from "./Contact";
-
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-markup";
+const Space = lazy(() => import("./backgrounds/Space"));
+const Header = lazy(() => import("./assets/components/header"));
+const Dock = lazy(() => import("./assets/components/dock"));
+const StylishBackToTop = lazy(() => import("./assets/components/backtotop"));
+const AppRouter = lazy(() => import("./routes/AppRouter.tsx"));
+const Contact = lazy(() => import("./Contact"));
+const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
 
 
 const scrollToSection = (id: string, offset = 0) => {
@@ -59,26 +55,52 @@ const MainLayout = () => {
 
   return (
     <>
-      <Space />
+      <Suspense fallback={null}>
+        <Space />
+      </Suspense>
       <div className="fixed inset-0 -z-10 w-full pointer-events-none h-full"></div>
-      <Header />
-      <PageLoader />
-      <AppRouter />
-      <Dock />
-      <StylishBackToTop />
+      <Suspense fallback={<PageLoader />}>
+        <Header />
+        <PageLoader />
+        <AppRouter />
+        <Dock />
+        <StylishBackToTop />
+        <div id="contact">
+          <Contact />
+        </div>
+      </Suspense>
       <SpeedInsights />
-      <div id="contact">
-        <Contact />
-      </div>
     </>
   );
+};
+
+const Root = () => {
+  const location = useLocation();
+  const isAdminRoute =
+    location.pathname.startsWith("/admin") || location.pathname.startsWith("/login");
+
+  useEffect(() => {
+    if (isAdminRoute) {
+      document.documentElement.classList.remove("dark", "light");
+    }
+  }, [isAdminRoute]);
+
+  if (isAdminRoute) {
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <AdminRoutes />
+      </Suspense>
+    );
+  }
+
+  return <MainLayout />;
 };
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <ScrollToTop />
-      <MainLayout />
+      <Root />
     </BrowserRouter>
   </StrictMode>
 );

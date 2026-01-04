@@ -1,108 +1,175 @@
-import { useEffect, useState } from "react";
-import { FiCopy } from "react-icons/fi";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { FiArrowLeft, FiClock, FiTag, FiUser } from "react-icons/fi";
+import { Link, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import parse from "html-react-parser";
-import type { DOMNode } from "html-react-parser";
-
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
+import "../styles/richtext.css";
+import { BlogMiniCard } from "../components/BlogMiniCard";
 
-interface Blog {
+type Blog = {
   id: string;
   title: string;
   slug: string;
   content: string;
-  cover_image?: string;
-  video_embed?: string;
+  image?: string | null;
+  video?: string | null;
   created_at: string;
-  blog_tags: string;
-}
+  tags?: string[] | string | null;
+  author?: string | null;
+  category?: string | null;
+  subcategory?: string | null;
+  reading_time?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+};
+
+const mapBlogFields = (item: any): Blog => ({
+  ...(item as Blog),
+  image: (item as any).cover_image || (item as any).image,
+  video: (item as any).video_embed || (item as any).video,
+  tags: (item as any).blog_tags || (item as any).tags,
+});
 
 const tagColors = [
-  "text-pink-400",
-  "text-yellow-400",
-  "text-green-400",
-  "text-blue-400",
-  "text-purple-400",
-  "text-orange-400",
-  "text-teal-400",
-  "text-red-400",
+  "text-pink-400 border-pink-500/40",
+  "text-yellow-400 border-yellow-500/40",
+  "text-green-400 border-green-500/40",
+  "text-blue-400 border-blue-500/40",
+  "text-purple-400 border-purple-500/40",
+  "text-orange-400 border-orange-500/40",
+  "text-teal-400 border-teal-500/40",
+  "text-red-400 border-red-500/40",
 ];
 
-// --- ✨ Copy Code Button ---
-function CodeBlock({ code, language }: { code: string; language: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, [code]);
-
-  return (
-    <div className="relative my-8">
-      <button
-        onClick={handleCopy}
-        className="absolute top-3 right-3 text-xs bg-[#2b2b2b] text-gray-300 px-2 py-1 rounded-md flex items-center gap-1 transition cursor-pointer hover:bg-[#3b3b3b]"
-      >
-        <FiCopy className="text-gray-400" />
-        {copied ? "Copied!" : "Copy"}
-      </button>
-      <pre className="!bg-[#1e1e1e] rounded-xl overflow-x-auto border border-white/10 shadow-lg">
-        <code className={`language-${language} text-sm p-4 block`}>{code}</code>
-      </pre>
-    </div>
-  );
+function updateMeta(title?: string | null, description?: string | null) {
+  if (title) document.title = title;
+  if (description) {
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", description);
+  }
 }
 
-// --- ✨ Coming Soon Placeholder ---
-function ComingSoon() {
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center space-y-6 px-4">
-      <img
-        src="/files/water.png"
-        alt="Drink water your blog is coming soon"
-        className="h-[300px] w-auto md:max-w-md"
-      />
-      <h2 className="text-white text-3xl md:text-4xl font-bold">
-        Drink Water this blog is constructing...
-      </h2>
-      <a
-        href="/blogs"
-        className="mt-2 flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-      >
-        Read More
-      </a>
-    </div>
-  );
+function escapeHtml(input: string) {
+  return input.replace(/[&<>"']/g, (char) => {
+    const map: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;",
+    };
+    return map[char] || char;
+  });
+}
+
+function serializeRichContent(value?: string | null): string {
+  if (!value) return "";
+  const trimmed = value.trim();
+
+  const extractJson = () => {
+    if (!trimmed.includes("[")) return trimmed;
+    const start = trimmed.indexOf("[");
+    const end = trimmed.lastIndexOf("]");
+    if (start === -1 || end === -1) return trimmed;
+    return trimmed.slice(start, end + 1);
+  };
+
+  const maybeJson = extractJson();
+  try {
+    const parsed = JSON.parse(maybeJson);
+    if (!Array.isArray(parsed)) return value;
+
+    const renderText = (child: any) => {
+      let text = escapeHtml(child.text ?? "");
+      if (child.code) text = `<code>${text}</code>`;
+      if (child.bold) text = `<strong>${text}</strong>`;
+      if (child.italic) text = `<em>${text}</em>`;
+      if (child.underline) text = `<u>${text}</u>`;
+      return text;
+    };
+
+    const renderChildren = (children: any[] = []) => children.map(renderText).join("");
+
+    const renderNode = (node: any): string => {
+      const children = renderChildren(node.children || []);
+      switch (node.type) {
+        case "h1":
+          return `<h1>${children}</h1>`;
+        case "h2":
+          return `<h2>${children}</h2>`;
+        case "h3":
+          return `<h3>${children}</h3>`;
+        case "blockquote":
+          return `<blockquote>${children}</blockquote>`;
+        case "p":
+        default:
+          return `<p>${children}</p>`;
+      }
+    };
+
+    return parsed.map(renderNode).join("");
+  } catch {
+    return value;
+  }
 }
 
 export default function BlogDetail() {
   const { slug } = useParams();
   const [blog, setBlog] = useState<Blog | null>(null);
+  const [related, setRelated] = useState<Blog[]>([]);
+  const [prismReady, setPrismReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const parsedTags = useMemo(() => {
+    if (!blog?.tags) return [];
+    return Array.isArray(blog.tags)
+      ? blog.tags
+      : String(blog.tags)
+          .split(",")
+          .map((tag) => tag.trim());
+  }, [blog]);
+
   useEffect(() => {
-    const fetchBlog = async () => {
+    const loadPrismLanguages = async () => {
+      await Promise.all([
+        import("prismjs/components/prism-javascript"),
+        import("prismjs/components/prism-jsx"),
+        import("prismjs/components/prism-css"),
+        import("prismjs/components/prism-markup"),
+      ]);
+      setPrismReady(true);
+    };
+
+    const fetchBlogAndRelated = async () => {
       try {
         if (!slug) throw new Error("Blog slug is missing");
 
-        const { data, error } = await supabase
-          .from("blogs")
-          .select("*")
-          .eq("slug", slug)
-          .single();
-
+        const { data, error } = await supabase.from("blog").select("*").eq("slug", slug).single();
         if (error) throw error;
         if (!data) throw new Error("Blog not found");
 
-        setBlog(data);
+        setBlog(mapBlogFields(data));
+
+        const { data: relatedData, error: relatedError } = await supabase
+          .from("blog")
+          .select("id, title, slug, content, image, created_at, video, tags")
+          .order("created_at", { ascending: false })
+          .limit(4);
+
+        if (!relatedError) {
+          setRelated(
+            (relatedData || [])
+              .map(mapBlogFields)
+              .filter((item) => item.slug !== slug)
+          );
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load blog");
       } finally {
@@ -110,116 +177,144 @@ export default function BlogDetail() {
       }
     };
 
-    fetchBlog();
+    fetchBlogAndRelated();
+    loadPrismLanguages();
   }, [slug]);
 
   useEffect(() => {
-    Prism.highlightAll();
+    if (blog) {
+      updateMeta(blog.seo_title || blog.title, blog.seo_description || undefined);
+    }
   }, [blog]);
 
-  // --- ✨ Show Coming Soon until a valid blog is loaded ---
-  if (loading || error || !blog) {
-    return <ComingSoon />;
+  useEffect(() => {
+    if (prismReady) {
+      Prism.highlightAll();
+    }
+  }, [blog, prismReady]);
+
+  const contentHtml = useMemo(() => serializeRichContent(blog?.content), [blog?.content]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-[var(--foreground)]">
+        Loading blog...
+      </div>
+    );
   }
 
-  // --- ✨ Custom parser for code blocks ---
-  const parsedContent = parse(blog.content, {
-    replace: (domNode: DOMNode) => {
-      if ((domNode as any)?.name === "pre") {
-        const node = domNode as any;
-
-        // ✅ Case 1: <pre><code>...</code></pre>
-        if (Array.isArray(node.children) && node.children[0]?.name === "code") {
-          const codeElement = node.children[0];
-          const languageClass = codeElement.attribs?.class || "";
-          const language = languageClass.replace("ql-", "") || "syntax";
-          const code = codeElement.children
-            .map((child: any) => ("data" in child ? child.data : ""))
-            .join("");
-          return <CodeBlock code={code.trim()} language={language} />;
-        }
-
-        // ✅ Case 2: <pre class="ql-syntax">Hello World</pre>
-        if (node.attribs?.class?.includes("ql-syntax")) {
-          const code =
-            node.children
-              ?.map((child: any) => ("data" in child ? child.data : ""))
-              .join("") || "";
-          return <CodeBlock code={code.trim()} language="text" />;
-        }
-      }
-
-      return undefined;
-    },
-  });
+  if (error || !blog) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-center text-[var(--foreground)] px-4 space-y-4">
+        <p>{error || "Blog not found."}</p>
+        <Link
+          to="/blogs"
+          className="inline-flex items-center font-bold gap-2 text-sm text-[var(--background)] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+        >
+          Back to blogs
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="blog-content relative z-10 max-w-5xl mx-auto px-4 pt-20 text-white min-h-screen">
-      <div className="p-6 bg-black backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white text-center md:text-left">
-          {blog.title}
-        </h1>
-        <p className="text-[#d4af37] mb-2 text-center md:text-left">
-          {new Date(blog.created_at).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-        <div className="flex flex-wrap gap-2 mb-8">
-          {blog.blog_tags &&
-            blog.blog_tags.split(",").map((tag: string, index: number) => {
-              const color = tagColors[index % tagColors.length];
-              return (
-                <span
-                  key={index}
-                  className={`${color} text-xs font-semibold uppercase tracking-wide`}
-                >
-                  #{tag.trim()}
+    <div className="relative z-10 max-w-7xl mx-auto px-4 pt-28 pb-12 text-[var(--foreground)] min-h-screen">
+      <div className="mb-6 flex items-center justify-between">
+        <Link
+          to="/blogs"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#d4af37] hover:underline"
+        >
+          <FiArrowLeft /> Back to blogs
+        </Link>
+        <div className="text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
+          {blog.category}
+          {blog.subcategory ? ` > ${blog.subcategory}` : ""}
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-[70%] space-y-6">
+          {blog.image && <img src={blog.image} alt={blog.title} className="w-full h-80 object-cover rounded-2xl" />}
+
+          <div className="space-y-3">
+            <h1 className="text-3xl md:text-4xl font-bold">{blog.title}</h1>
+            <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted-foreground)]">
+              {blog.author && (
+                <span className="inline-flex items-center gap-1">
+                  <FiUser /> {blog.author}
                 </span>
-              );
-            })}
+              )}
+              <span className="inline-flex items-center gap-1">
+                <FiClock />
+                {new Date(blog.created_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+              {blog.reading_time && <span className="inline-flex items-center gap-1">{blog.reading_time}</span>}
+            </div>
+          </div>
+
+          <div className="space-y-10">
+            {parsedTags.length > 0 && (
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-sm text-[var(--muted-foreground)] flex items-center gap-2 uppercase tracking-wide">
+                  <FiTag /> Tags
+                </span>
+                {parsedTags.map((tag, index) => {
+                  const color = tagColors[index % tagColors.length];
+                  return (
+                    <span key={tag + index} className={`px-3 py-1 rounded-full border ${color} text-xs font-semibold`}>
+                      #{tag}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+
+            {blog.video && (
+              <div
+                className="relative w-full overflow-hidden rounded-2xl bg-[var(--background)]"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe src={blog.video} title={blog.title} allowFullScreen className="absolute top-0 left-0 w-full h-full rounded-2xl"></iframe>
+              </div>
+            )}
+
+            <div
+              className="
+                richtext
+                prose
+                prose-lg
+                max-w-none
+                leading-relaxed
+                dark:prose-invert
+                prose-a:underline
+                prose-ul:list-disc prose-ol:list-decimal
+                text-[var(--foreground)]
+              "
+            >
+              <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+            </div>
+          </div>
         </div>
 
-        {blog.cover_image && (
-          <div className="mb-10">
-            <img
-              src={blog.cover_image}
-              alt={blog.title}
-              className="rounded-2xl w-full object-cover shadow-lg max-h-[400px]"
-            />
-          </div>
-        )}
+        <div className="mt-8 md:mt-0 md:w-[30%] flex-shrink-0">
+          <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-3xl shadow-lg p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">You may also like</h3>
+              <Link to="/blogs" className="text-sm font-semibold text-[#d4af37] hover:underline">
+                View all
+              </Link>
+            </div>
 
-        {blog.video_embed && (
-          <div
-            className="relative w-full overflow-hidden rounded-2xl shadow-lg mb-10"
-            style={{ paddingBottom: "450px" }}
-          >
-            <iframe
-              src={blog.video_embed}
-              title={blog.title}
-              allowFullScreen
-              className="absolute top-0 left-0 w-full h-full rounded-2xl"
-            ></iframe>
+            <div className="grid gap-3">
+              {related.map((item) => (
+                <BlogMiniCard key={item.id} blog={item} />
+              ))}
+            </div>
           </div>
-        )}
-
-        {/* ✨ Beautiful formatted content */}
-        <div
-          className="
-            prose 
-            prose-invert 
-            prose-lg 
-            max-w-none 
-            text-gray-300 
-            leading-relaxed
-            prose-a:text-[#d4af37] prose-a:underline 
-            prose-strong:text-white
-            prose-ul:list-disc prose-ol:list-decimal prose-li:marker:text-[#d4af37]
-          "
-        >
-          {parsedContent}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useId } from "react";
+import * as React from "react";
+import { useEffect, useRef, useState, useId } from "react";
 
 export interface GlassSurfaceProps {
   children?: React.ReactNode;
@@ -42,17 +43,35 @@ export interface GlassSurfaceProps {
 }
 
 const useDarkMode = () => {
-  const [isDark, setIsDark] = useState(false);
+  const getThemeFromDom = () => {
+    if (typeof document === "undefined") return false;
+    const root = document.documentElement;
+    if (root.classList.contains("dark")) return true;
+    if (root.classList.contains("light")) return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  };
+
+  const [isDark, setIsDark] = useState(() => getThemeFromDom());
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mediaQuery.matches);
+    const handleChange = () => setIsDark(getThemeFromDom());
 
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+    handleChange();
+    mediaQuery.addEventListener("change", handleChange);
+
+    const observer = new MutationObserver(handleChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+      observer.disconnect();
+    };
   }, []);
 
   return isDark;
