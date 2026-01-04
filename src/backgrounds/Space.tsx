@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const brandColors = {
   dark: "#000000",
@@ -15,8 +15,52 @@ export default function DarkInteractiveBackground() {
     y: 0,
     active: false,
   });
+  const paletteRef = useRef({
+    background: brandColors.dark,
+    grid: brandColors.light,
+    glow: brandColors.sky,
+    glowAlpha: 0.24,
+    lineAlpha: 0.12,
+  });
+  const themeObserverRef = useRef<MutationObserver | null>(null);
+
+  const getIsDark = () => document.documentElement.classList.contains("dark");
+
+  const updatePaletteFromTheme = () => {
+    const isDark = getIsDark();
+    paletteRef.current = isDark
+      ? {
+          background: "#060010",
+          grid: "#778da9",
+          glow: "#7dd3fc",
+          glowAlpha: 0.24,
+          lineAlpha: 0.12,
+        }
+      : {
+          background: "#f8fafc",
+          grid: "#0f172a",
+          glow: "#0284c7",
+          glowAlpha: 0.18,
+          lineAlpha: 0.08,
+        };
+  };
 
   useEffect(() => {
+    updatePaletteFromTheme();
+    const observer = new MutationObserver(updatePaletteFromTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    themeObserverRef.current = observer;
+
+    return () => {
+      themeObserverRef.current?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    updatePaletteFromTheme();
     const canvas = canvasRef.current!;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
@@ -36,14 +80,15 @@ export default function DarkInteractiveBackground() {
     function drawGrid() {
       const w = canvas.width / dpr;
       const h = canvas.height / dpr;
+      const palette = paletteRef.current;
 
       // dark base background
-      ctx.fillStyle = brandColors.dark;
+      ctx.fillStyle = palette.background;
       ctx.fillRect(0, 0, w, h);
 
       // grid settings
       const spacing = Math.max(60, Math.round(Math.min(w, h) / 12));
-      const lineColor = hexToRgba(brandColors.light, 0.15); // brighter & more visible
+      const lineColor = hexToRgba(palette.grid, palette.lineAlpha);
 
       ctx.beginPath();
       ctx.strokeStyle = lineColor;
@@ -69,11 +114,12 @@ export default function DarkInteractiveBackground() {
       const w = canvas.width / dpr;
       const h = canvas.height / dpr;
       const { x, y } = pointerRef.current;
+      const palette = paletteRef.current;
 
       // increased glow size (320px radius)
       const glow = ctx.createRadialGradient(x, y, 0, x, y, 320);
-      glow.addColorStop(0, hexToRgba(brandColors.sky, 0.25));
-      glow.addColorStop(1, hexToRgba(brandColors.dark, 0));
+      glow.addColorStop(0, hexToRgba(palette.glow, palette.glowAlpha));
+      glow.addColorStop(1, hexToRgba(palette.background, 0));
 
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, w, h);

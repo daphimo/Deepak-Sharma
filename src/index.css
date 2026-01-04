@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -40,6 +38,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   --radius: 0.625rem;
@@ -119,3 +119,23 @@
   }
 }
 
+/* Theme polish */
+html.light {
+  color-scheme: light;
+}
+
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-gray-300 {
+  color: #1f2937 !important;
+}
+
+html.light .text-gray-400 {
+  color: #334155 !important;
+}
+
+html.light .bg-dark {
+  background-color: #f8fafc !important;
+}

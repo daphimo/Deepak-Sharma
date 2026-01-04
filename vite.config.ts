@@ -2,8 +2,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import path from "path";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "styled-components": path.resolve(__dirname, "node_modules/styled-components"),
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
@@ -33,6 +40,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.codenirmata\.com\/.*$/,
@@ -74,4 +82,17 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          supabase: ["@supabase/supabase-js"],
+          editor: ["react-quill", "quill", "prismjs"],
+          three: ["three", "@react-three/fiber", "@react-three/drei", "@react-three/postprocessing"],
+          motion: ["framer-motion", "motion", "gsap", "@gsap/react", "@studio-freight/lenis"],
+        },
+      },
+    },
+  },
 });

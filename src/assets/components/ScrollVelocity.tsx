@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useRef, useLayoutEffect, useState } from "react";
 import {
   motion,
@@ -207,3 +208,4 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
 };
 
 export default ScrollVelocity;
+// @ts-nocheck

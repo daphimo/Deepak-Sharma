@@ -1,22 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-
-
 
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -36,7 +40,7 @@
   color: #888;
 }
 
-.button{
+.button {
   cursor: pointer;
 }
 
@@ -91,11 +95,32 @@ select {
   /* Optional: remove rounded corners */
 }
 
-::selection{
-  background: transparent;
+.hidden-scrollbar {
+  scrollbar-width: none;
 }
 
-.no-cursor{
+.content-editor *::selection {
+  background: black;
+  color: white;
+}
+
+.content-editor {
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.editor-surface {
+  height: 60vh;
+  min-height: 360px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.blog-content {
+  color: white !important;
+}
+
+.no-cursor {
   cursor: none;
 }
 
@@ -111,10 +136,12 @@ select {
   --sat: 69%;
   --white: hsl(0, 0%, 100%);
   --purple-primary: rgba(132, 0, 255, 1);
-  --purple-glow: rgba(132, 0, 255, 0.2);
-  --purple-border: rgba(132, 0, 255, 0.8);
-  --border-color: #392e4e;
-  --background-dark: #060010;
+  --purple-glow: rgba(var(--glow-color, 132, 0, 255), 0.2);
+  --purple-border: rgba(var(--glow-color, 132, 0, 255), 0.8);
+  --border-color: var(--border, #392e4e);
+  --background-dark: var(--card);
+  --bento-card-bg: var(--card);
+  --bento-card-foreground: var(--card-foreground);
   color-scheme: light dark;
 }
 
@@ -136,10 +163,11 @@ select {
   padding: 1.25em;
   border-radius: 20px;
   border: 1px solid var(--border-color);
-  background: var(--background-dark);
+  background: var(--bento-card-bg);
   font-weight: 300;
   overflow: hidden;
   transition: all 0.3s ease;
+  color: var(--bento-card-foreground);
 
   --glow-x: 50%;
   --glow-y: 50%;
@@ -156,7 +184,7 @@ select {
 .card__content {
   display: flex;
   position: relative;
-  color: var(--white);
+  color: var(--bento-card-foreground);
 }
 
 .card__header {
@@ -223,11 +251,12 @@ select {
     grid-template-columns: repeat(4, 1fr);
   }
 
-   .card:nth-child(6n+3),
+  .card:nth-child(6n+3),
   .card:nth-child(6n+4) {
     grid-column: span 2;
     grid-row: span 2;
   }
+
   .card:nth-child(6) {
     grid-column: 4;
     grid-row: 3;
@@ -240,12 +269,10 @@ select {
   position: absolute;
   inset: 0;
   padding: 6px;
-  background: radial-gradient(
-    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.8)) 0%,
-    rgba(132, 0, 255, calc(var(--glow-intensity) * 0.4)) 30%,
-    transparent 60%
-  );
+  background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+      rgba(var(--glow-color, 132, 0, 255), calc(var(--glow-intensity) * 0.8)) 0%,
+      rgba(var(--glow-color, 132, 0, 255), calc(var(--glow-intensity) * 0.4)) 30%,
+      transparent 60%);
   border-radius: inherit;
   mask:
     linear-gradient(#fff 0 0) content-box,
@@ -282,7 +309,7 @@ select {
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: rgba(132, 0, 255, 0.2);
+  background: rgba(var(--glow-color, 132, 0, 255), 0.2);
   border-radius: 50%;
   z-index: -1;
 }
@@ -306,17 +333,82 @@ select {
   user-select: none;
 }
 
-.card-image{
+.card-image {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.card-hover-incase:hover .card-image{
+.card-hover-incase:hover .card-image {
   opacity: 0.08;
 }
 
+/* --- 🌙 Improve prose readability and hierarchy --- */
+pre[class*="language-"] {
+  padding: 0 !important;
+}
+
+.prose {
+  --tw-prose-headings: #fff;
+  --tw-prose-links: #d4af37;
+  --tw-prose-bold: #fff;
+  --tw-prose-quotes: #ccc;
+  --tw-prose-bullets: #d4af37;
+  --tw-prose-counters: #d4af37;
+  --tw-prose-body: #d1d5db;
+  --tw-prose-hr: rgba(255, 255, 255, 0.1);
+}
+
+.prose-invert h1 {
+  font-size: 2.25rem;
+  /* text-4xl */
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.prose-invert h2 {
+  font-size: 1.75rem;
+  /* text-2xl */
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-invert h3 {
+  font-size: 1.5rem;
+  /* text-xl */
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-invert h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-invert a {
+  color: #d4af37;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.prose-invert a:hover {
+  color: #f6d365;
+}
+
+.prose-invert ul li::marker {
+  color: #d4af37;
+}
+
+.prose-invert ol li::marker {
+  color: #d4af37;
+}
+
+
 @media (max-width: 768px) {
   .card-image {
-    opacity: 0.08;
+    opacity: 0.14;
   }
 }

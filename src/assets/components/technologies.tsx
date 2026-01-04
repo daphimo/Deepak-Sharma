@@ -32,6 +32,8 @@ import {
   SiPrettier,
   SiFigma,
   SiFramer,
+  SiBun,
+  SiSupabase,
 } from "react-icons/si";
 
 import { HiOutlineLightningBolt } from "react-icons/hi"; // Lazy Loading substitute
@@ -54,6 +56,7 @@ export default function TechShowcase() {
 
     // Package Managers
     <FaNpm key="npm" size={60} color="#CB3837" title="NPM" />,
+    <SiBun key="bun" size={60} color="#CB3837" title="Bun" />,
     <FaYarn key="yarn" size={60} color="#2C8EBB" title="Yarn" />,
     <SiPnpm key="pnpm" size={60} color="#F69220" title="PNPM" />,
     <FaJs key="javascripts" size={60} color="#F7DF1E" title="JavaScript" />,
@@ -86,6 +89,8 @@ export default function TechShowcase() {
 
     // Animation
     <SiFramer key="framer-motion" size={60} color="#0055FF" title="Framer Motion" />,
+    // Database
+    <SiSupabase key="supabase" size={60} color="#3ECF8E" title="Supabase" />,
   ];
 
   return (

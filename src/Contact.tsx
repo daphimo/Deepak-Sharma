@@ -7,7 +7,6 @@ import emailjs from "@emailjs/browser";
 import Ballpit from "./components/Ballpit";
 import Magnet from "./assets/components/Magnet";
 
-
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
@@ -41,7 +40,7 @@ const Contact: FC = () => {
   };
 
   return (
-    <section className="relative w-full mb-20 overflow-hidden">
+    <section className="relative w-full mb-20 text-[var(--foreground)] transition-colors duration-500">
       {/* Ballpit full background */}
       <div className="absolute inset-0 -z-10 bottom-0" id="BallpitContainer">
         <Ballpit
@@ -53,22 +52,15 @@ const Contact: FC = () => {
       </div>
 
       {/* Contact content container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 text-white">
-        <div
-          className="p-6 bg-white/10 
-          backdrop-blur-md 
-          border border-white/20 
-          shadow-lg 
-          rounded-2xl 
-          w-full"
-        >
+      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 transition-colors duration-500 text-[var(--foreground)]">
+        <div className="w-full p-6 rounded-2xl shadow-lg backdrop-blur-md border transition-colors duration-500 bg-white/75 border-black/10 dark:bg-white/10 dark:border-white/20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Side */}
             <div className="flex flex-col space-y-5 justify-center">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold">Get in Touch</h2>
-                <p className="text-gray-300 mt-1 text-sm md:text-base">
-                  I’d love to hear from you. Whether you have a question or just
+                <p className="mt-1 text-sm md:text-base text-[var(--muted-foreground)]">
+                  I'd love to hear from you. Whether you have a question or just
                   want to say hi, feel free to drop a message!
                   {/* <a className="!cursor-text" href="/downloads" aria-label="Download Center" target="_blank"> feel free to drop a message!</a> */}
                 </p>
@@ -76,17 +68,18 @@ const Contact: FC = () => {
 
               <div>
                 <h3 className="text-lg font-semibold">Contact Details</h3>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:items-center flex-wrap sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
                   <a
                     href="mailto:deepakrajeshsharma987654321@gmail.com"
-                    className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm"
+                    className="flex items-center space-x-2 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-sm break-all"
                   >
                     <FiMail className="text-lg" />
                     <span>deepakrajeshsharma987654321@gmail.com</span>
                   </a>
+
                   <a
                     href="tel:+919427011442"
-                    className="flex items-center space-x-2 text-gray-300 hover:text-white transition text-sm"
+                    className="flex items-center space-x-2 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-sm"
                   >
                     <FiPhone className="text-lg" />
                     <span>+91 94270 11442</span>
@@ -99,7 +92,7 @@ const Contact: FC = () => {
                   href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white transition text-xl"
+                  className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
                   <FaLinkedin />
                 </a>
@@ -107,7 +100,7 @@ const Contact: FC = () => {
                   href="https://github.com/daphimo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white transition text-xl"
+                  className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
                   <FaGithub />
                 </a>
@@ -122,41 +115,40 @@ const Contact: FC = () => {
                   name="name"
                   placeholder="Your Name"
                   required
-                  className="w-full px-4 py-2 rounded-full bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Your Email"
                   required
-                  className="w-full px-4 py-2 rounded-full bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
                 />
                 <textarea
                   name="message"
                   rows={4}
                   placeholder="Your Message..."
                   required
-                  className="w-full px-4 py-2 rounded-2xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="w-full px-4 py-2 rounded-2xl bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
                 ></textarea>
                 <Magnet padding={50} disabled={false} magnetStrength={5}>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex cursor-pointer font-bold items-center gap-2 text-sm text-[#1a1a1a] bg-[#d4af37] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-                   
+                    className="flex cursor-pointer font-bold items-center gap-2 text-sm bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
                   >
                     {loading ? "Sending..." : "Send"}
                   </button>
                 </Magnet>
                 {status && (
-                  <p className="text-sm mt-2 text-gray-300">{status}</p>
+                  <p className="text-sm mt-2 text-[var(--muted-foreground)]">{status}</p>
                 )}
               </form>
             </div>
           </div>
         </div>
 
-        <div className="mt-15 pb-10 text-gray-400 text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start">
+        <div className="mt-15 pb-10 text-[var(--muted-foreground)] text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start transition-colors duration-500">
           {/* Left */}
           <div className="text-left">
             © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
@@ -172,7 +164,7 @@ const Contact: FC = () => {
             <a
               href="https://github.com/daphimo"
               target="_blank"
-              className="hover:text-white"
+              className="hover:text-[var(--primary)] transition-colors"
               aria-label="GitHub"
             >
               GitHub
@@ -180,7 +172,7 @@ const Contact: FC = () => {
             <a
               href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
               target="_blank"
-              className="hover:text-white"
+              className="hover:text-[var(--primary)] transition-colors"
               aria-label="LinkedIn"
             >
               LinkedIn
@@ -188,7 +180,7 @@ const Contact: FC = () => {
             <a
               href="mailto:deepakrajeshsharma987654321@gmail.com"
               aria-label="Email"
-              className="hover:text-white"
+              className="hover:text-[var(--primary)] transition-colors"
             >
               Email
             </a>

@@ -3,13 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import myImage from "/files/my_profile.png";
 
-const brandColors = {
-  dark: "#000000",
-  steel: "#415a77",
-  sky: "#778da9",
-  light: "#e0e1dd",
-};
-
 type CounterProps = {
   end: number;
   delay?: number;
@@ -61,7 +54,7 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
   return (
     <div
       ref={ref}
-      style={{ color: brandColors.sky }}
+      style={{ color: "var(--primary)" }}
       className="text-4xl md:text-5xl lg:text-6xl font-bold"
     >
       {count}
@@ -118,7 +111,7 @@ const statsData = [
 
 const App = () => {
   return (
-    <main className="bg-dark min-h-screen max-w-7xl mx-auto text-white flex flex-col items-center px-4  pb-20 pt-40">
+    <main className="min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-40 text-[var(--foreground)] transition-colors duration-500">
       {/* Hero Intro */}
       <section className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl uppercase leading-tight">
@@ -131,21 +124,13 @@ const App = () => {
       <section className="relative w-full flex flex-col items-center min-h-[600px] md:min-h-[700px]">
         {/* Center Image */}
         <div className="w-64 mb-8 md:mb-0 md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-10">
-          <div className="relative shadow-2xl overflow-hidden">
+          <div className="relative overflow-hidden">
             <img
               src={myImage}
               alt="Deepak Sharma"
               className="w-full h-auto object-cover"
             />
-            <div
-              className="absolute bottom-0 w-full h-10 pointer-events-none"
-              style={{
-                left: "50%",
-                transform: "translateX(-50%) translateY(8px)",
-                background: `radial-gradient(ellipse at center, ${brandColors.sky} 0%, transparent 80%)`,
-                filter: "blur(12px)",
-              }}
-            />
+           
           </div>
         </div>
 
