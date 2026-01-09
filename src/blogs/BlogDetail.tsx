@@ -294,7 +294,7 @@ export default function BlogDetail() {
                 text-[var(--foreground)]
               "
             >
-              <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: contentHtml }} />
             </div>
           </div>
         </div>
