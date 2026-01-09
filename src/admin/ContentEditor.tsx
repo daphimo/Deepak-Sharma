@@ -2,8 +2,17 @@ import { type ChangeEvent, useEffect, useState } from "react";
 import type { Json } from "../types/database.types";
 import { supabase } from "../lib/supabaseClient";
 import { useRequireAuth } from "./useRequireAuth";
-import { CheckCircle2, Loader2, RefreshCw, Save, UploadCloud, X, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
+  Save,
+  UploadCloud,
+  X,
+  XCircle,
+} from "lucide-react";
 import { useUploadFile } from "../hooks/use-upload-file";
+import { SupabaseImageUpload } from "../components/SupabaseImageUpload";
 
 type PopupState = { type: "success" | "error"; message: string } | null;
 const STORAGE_BUCKET = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET || "public";
@@ -23,7 +32,11 @@ export default function ContentEditor() {
   useEffect(() => {
     const fetchContent = async () => {
       setLoading(true);
-      const { data, error } = await supabase.from("Contents").select("*").limit(1).maybeSingle();
+      const { data, error } = await supabase
+        .from("Contents")
+        .select("*")
+        .limit(1)
+        .maybeSingle();
       setLoading(false);
       if (error) {
         if (error.message.includes("coerce")) {
@@ -48,7 +61,9 @@ export default function ContentEditor() {
     if (!row) return;
     setLoading(true);
     const payload = { ...row, id: id ?? 1 };
-    const { error } = await supabase.from("Contents").upsert(payload, { onConflict: "id" });
+    const { error } = await supabase
+      .from("Contents")
+      .upsert(payload, { onConflict: "id" });
     setLoading(false);
     if (error) showPopup("error", error.message);
     else {
@@ -74,7 +89,9 @@ export default function ContentEditor() {
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-8 border border-gray-200 space-y-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-800">Content Editor</h1>
+            <h1 className="text-2xl font-semibold text-gray-800">
+              Content Editor
+            </h1>
             <p className="text-sm text-gray-600">
               Edit the single content row and save changes (upsert by id).
             </p>
@@ -96,9 +113,21 @@ export default function ContentEditor() {
         )}
 
         {row && (
+          <SupabaseImageUpload
+            label="Cover Image"
+            value={(row as any).image || ""}
+            onChange={(url) => handleChange("image", url)}
+            helperText="Uploads to Supabase and saves the public URL."
+            className="mb-4"
+          />
+        )}
+
+        {row && (
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
               <input
                 type="email"
                 value={(row as any).Email || ""}
@@ -108,7 +137,9 @@ export default function ContentEditor() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone
+              </label>
               <input
                 type="text"
                 value={(row as any).Phone || ""}
@@ -153,7 +184,9 @@ function DownloadsField({
   const [removingIndex, setRemovingIndex] = useState<number | null>(null);
 
   const updateItem = (index: number, key: keyof DownloadItem, val: string) => {
-    const next = downloads.map((item, i) => (i === index ? { ...item, [key]: val } : item));
+    const next = downloads.map((item, i) =>
+      i === index ? { ...item, [key]: val } : item
+    );
     onChange(next);
   };
 
@@ -206,7 +239,9 @@ function DownloadsField({
   const removeFromStorage = async (path?: string | null, url?: string) => {
     const storagePath = path || extractPathFromUrl(url);
     if (!storagePath) return;
-    const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
+    const { error } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .remove([storagePath]);
     if (error) throw error;
   };
 
@@ -221,14 +256,18 @@ function DownloadsField({
       onChange(next);
       onNotify?.("success", "File removed");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to remove file";
+      const message =
+        error instanceof Error ? error.message : "Unable to remove file";
       onNotify?.("error", message);
     } finally {
       setRemovingIndex(null);
     }
   };
 
-  const handleFileInputChange = async (index: number, event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (
+    index: number,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
     await handleFileUpload(index, file);
@@ -238,7 +277,9 @@ function DownloadsField({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-gray-700">Downloads</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Downloads
+        </label>
         <button
           type="button"
           onClick={addItem}
@@ -248,11 +289,16 @@ function DownloadsField({
         </button>
       </div>
       {downloads.length === 0 && (
-        <p className="text-xs text-gray-500">No downloads yet. Click add to create one.</p>
+        <p className="text-xs text-gray-500">
+          No downloads yet. Click add to create one.
+        </p>
       )}
       <div className="space-y-4">
         {downloads.map((item, idx) => (
-          <div key={idx} className="rounded-lg border border-gray-200 p-3 space-y-2">
+          <div
+            key={idx}
+            className="rounded-lg border border-gray-200 p-3 space-y-2"
+          >
             <div className="grid md:grid-cols-3 gap-3">
               <input
                 type="text"
@@ -287,7 +333,9 @@ function DownloadsField({
                     ) : (
                       <UploadCloud className="w-4 h-4" />
                     )}
-                    {uploadingIndex === idx && isUploading ? "Uploading..." : "Upload file"}
+                    {uploadingIndex === idx && isUploading
+                      ? "Uploading..."
+                      : "Upload file"}
                   </label>
                   <input
                     id={`download-file-${idx}`}
@@ -311,7 +359,11 @@ function DownloadsField({
                         className="inline-flex items-center gap-1 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
                         disabled={removingIndex === idx}
                       >
-                        {removingIndex === idx ? <Loader2 className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
+                        {removingIndex === idx ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <X className="w-4 h-4" />
+                        )}
                         {removingIndex === idx ? "Removing..." : "Remove file"}
                       </button>
                     </>
@@ -323,12 +375,19 @@ function DownloadsField({
                   <div className="flex items-center gap-2 font-semibold">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     {uploadingFile?.name || "Uploading..."}
-                    <span className="ml-auto text-[11px]">{Math.round(progress)}%</span>
+                    <span className="ml-auto text-[11px]">
+                      {Math.round(progress)}%
+                    </span>
                   </div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/70">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 transition-all duration-150"
-                      style={{ width: `${Math.min(Math.max(progress || 10, 10), 100)}%` }}
+                      style={{
+                        width: `${Math.min(
+                          Math.max(progress || 10, 10),
+                          100
+                        )}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -350,7 +409,13 @@ function DownloadsField({
   );
 }
 
-function Popup({ type, message }: { type: "success" | "error"; message: string }) {
+function Popup({
+  type,
+  message,
+}: {
+  type: "success" | "error";
+  message: string;
+}) {
   const Icon = type === "success" ? CheckCircle2 : XCircle;
   return (
     <div
