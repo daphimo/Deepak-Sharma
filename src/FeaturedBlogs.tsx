@@ -34,15 +34,15 @@ export default function FeaturedBlogs() {
     <div className="mt-20 w-full text-[var(--foreground)] max-w-7xl mx-auto py-20 px-4">
       <div className="mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">Turn Gaps Into Great Features</h2>
-        <p className="text-[var(--muted-foreground)] text-lg max-w-2xl mx-auto leading-relaxed">
+        <p className="text-[var(--foreground)] text-lg max-w-2xl mx-auto leading-relaxed">
           Explore modern Shopify how-tos that fill the missing pieces, from wishlists to popups, helping you build themes that feel polished and complete.
         </p>
       </div>
 
       {loading ? (
-        <p className="text-center text-[var(--muted-foreground)]">Loading blogs...</p>
+        <p className="text-center text-[var(--foreground)]">Loading blogs...</p>
       ) : blogs.length === 0 ? (
-        <p className="text-center text-[var(--muted-foreground)]">No blogs found.</p>
+        <p className="text-center text-[var(--foreground)]">No blogs found.</p>
       ) : (
         <div className="flex flex-wrap justify-center gap-10 items-stretch">
           {blogs.map((blog, index) => (

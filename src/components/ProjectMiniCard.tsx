@@ -25,7 +25,7 @@ export function ProjectMiniCard({ project }: ProjectMiniCardProps) {
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-[var(--foreground)] line-clamp-2">{project.name}</p>
         {project.date && (
-          <p className="text-xs text-[var(--muted-foreground)] mt-1">
+          <p className="text-xs text-[var(--foreground)] mt-1">
             {new Date(project.date).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
           </p>
         )}

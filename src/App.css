@@ -203,6 +203,10 @@ select {
   --clamp-desc: 2;
 }
 
+.card__description {
+  font-weight: 500;
+}
+
 .card__title {
   font-weight: 400;
   margin: 0 0 0.25em;
@@ -339,7 +343,7 @@ select {
 }
 
 .card-hover-incase:hover .card-image {
-  opacity: 0.08;
+  opacity: 0.18;
 }
 
 /* --- 🌙 Improve prose readability and hierarchy --- */

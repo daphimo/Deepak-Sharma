@@ -26,7 +26,7 @@ export function BlogMiniCard({ blog }: BlogMiniCardProps) {
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-[var(--foreground)] line-clamp-2">{blog.title}</p>
         {blog.created_at && (
-          <p className="text-xs text-[var(--muted-foreground)] mt-1">
+          <p className="text-xs text-[var(--foreground)] mt-1">
             {new Date(blog.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
           </p>
         )}

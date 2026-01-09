@@ -132,7 +132,7 @@ export default function ProjectEditor() {
   if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        <div className="p-6 bg-white/10 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md text-center">
+        <div className="p-6 bg-[var(--card)] backdrop-blur-md border border-white/20 shadow-lg rounded-2xl w-full max-w-md text-center">
           Checking session...
         </div>
       </div>

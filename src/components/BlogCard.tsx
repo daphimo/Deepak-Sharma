@@ -9,14 +9,13 @@ type BlogCardProps = {
 };
 
 const tagColors = [
-  "text-pink-400",
-  "text-yellow-400",
-  "text-green-400",
-  "text-blue-400",
-  "text-purple-400",
-  "text-orange-400",
-  "text-teal-400",
-  "text-red-400",
+  "text-pink-600",
+  "text-amber-600",
+  "text-emerald-600",
+  "text-sky-600",
+  "text-purple-600",
+  "text-orange-600",
+  "text-red-600",
 ];
 
 export function serializeRichContentToText(value?: string | null): string {
@@ -72,7 +71,7 @@ export function BlogCard({ blog, className = "", excerptLength = 120 }: BlogCard
   return (
     <div
       className={clsx(
-        "w-full flex flex-col bg-[var(--card)] border border-[color:var(--border)] shadow-lg rounded-2xl overflow-hidden transition-transform",
+        "relative flex flex-col bg-[var(--card)] backdrop-blur-md border border-white/20 shadow-md rounded-2xl overflow-hidden ",
         className
       )}
     >
@@ -84,9 +83,9 @@ export function BlogCard({ blog, className = "", excerptLength = 120 }: BlogCard
         />
       </Link>
 
-      <div className="flex flex-col justify-between flex-grow">
-        <div>
-          <div className="flex items-center justify-between w-full px-5 mt-4">
+      <div className="pt-2 px-4 pb-4 flex flex-col gap-2 flex-grow">
+        <div className="flex flex-col justify-between flex-grow gap-0">
+          <div className="flex items-center justify-between w-full">
             <Link
               to={`/blogs/${blog.slug}`}
               className="text-lg md:text-2xl font-semibold text-[var(--foreground)] hover:text-[#d4af37] transition"
@@ -95,7 +94,7 @@ export function BlogCard({ blog, className = "", excerptLength = 120 }: BlogCard
             </Link>
             <Link
               to={`/blogs/${blog.slug}`}
-              className="text-[var(--muted-foreground)] hover:text-[#d4af37]"
+              className="text-[var(--foreground)] hover:text-[#d4af37]"
               aria-label={`Read ${blog.title}`}
             >
               <FiExternalLink size={20} />
@@ -103,24 +102,15 @@ export function BlogCard({ blog, className = "", excerptLength = 120 }: BlogCard
           </div>
 
           {shortDesc && (
-            <p className="text-[var(--muted-foreground)] text-sm px-5 mt-2 line-clamp-2">
+            <p className="text-[var(--foreground)] text-sm line-clamp-2">
               {shortDesc}...
             </p>
           )}
         </div>
 
-        {blog?.created_at && (
-          <div className="px-5 text-xs text-[var(--muted-foreground)] mt-2">
-            {new Date(blog.created_at).toLocaleDateString("en-US", {
-              month: "short",
-              year: "numeric",
-            })}
-          </div>
-        )}
-
         {tags && (
-          <div className="flex flex-wrap gap-2 px-5 py-4">
-            {tags.map((tag: string, index: number) => {
+          <div className="flex flex-wrap gap-2">
+            {tags.slice(0, 3).map((tag: string, index: number) => {
               const color = tagColors[index % tagColors.length];
               return (
                 <span

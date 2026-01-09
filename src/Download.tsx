@@ -72,7 +72,7 @@ const DownloadPage: React.FC = () => {
         {downloads.map((file, index) => (
           <motion.div
             key={file.storagePath || file.file || index}
-            className="group bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 w-72 shadow-lg"
+            className="group bg-[var(--card)] backdrop-blur-lg border border-white/20 rounded-2xl p-6 w-72 shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.15, duration: 0.5 }}

@@ -87,7 +87,7 @@ export default function Infinite() {
         <select
           value={selectedFilter}
           onChange={(e) => setSelectedFilter(e.target.value)}
-          className="bg-white/10 text-white border border-white/20 rounded-lg px-4 py-2 backdrop-blur-md w-full cursor-pointer"
+          className="bg-[var(--card)] text-white border border-white/20 rounded-lg px-4 py-2 backdrop-blur-md w-full cursor-pointer"
         >
           {filters.map((filter) => (
             <option key={filter} value={filter} className="bg-gray-800 text-white">
@@ -105,7 +105,7 @@ export default function Infinite() {
       ) : (
         <div className="flex flex-wrap justify-center gap-10">
           {filteredProjects.map((project) => (
-            <div key={project.id} className="w-full md:w-[calc(50%-1.25rem)] max-w-[600px]">
+            <div key={project.id} className="w-full md:w-[calc(30%-1.25rem)] max-w-[400px]">
               <ProjectCard project={project} />
             </div>
           ))}
