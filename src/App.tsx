@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import myImage from "/files/my_profile.png";
+import { supabase } from "./lib/supabaseClient";
 
 type CounterProps = {
   end: number;
@@ -110,10 +111,28 @@ const statsData = [
 ];
 
 const App = () => {
+  const [profileImage, setProfileImage] = useState<string>(myImage);
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      const { data, error } = await supabase
+        .from("Contents")
+        .select("image")
+        .limit(1)
+        .maybeSingle();
+
+      if (!error && data?.image) {
+        setProfileImage(data.image);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
+
   return (
-    <main className="min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-40 text-[var(--foreground)] transition-colors duration-500">
+    <main className="min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-28 text-[var(--foreground)] transition-colors duration-500">
       {/* Hero Intro */}
-      <section className="text-center mb-16">
+      <section className="text-center mb-4">
         <h1 className="text-4xl md:text-6xl uppercase leading-tight">
           Hello, I am <span className="text-sky-400 font-bold ">Deepak Sharma</span>
          <br/> <span className="text-sky-400 font-bold ">Web Developer</span>
@@ -126,7 +145,7 @@ const App = () => {
         <div className="w-64 mb-8 md:mb-0 md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-10">
           <div className="relative overflow-hidden">
             <img
-              src={myImage}
+              src={profileImage}
               alt="Deepak Sharma"
               className="w-full h-auto object-cover"
             />
