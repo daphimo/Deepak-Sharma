@@ -28,13 +28,13 @@ type Project = {
 };
 
 const chipColors = [
-  "text-pink-300 border-pink-400/40",
-  "text-amber-300 border-amber-400/40",
-  "text-emerald-300 border-emerald-400/40",
-  "text-sky-300 border-sky-400/40",
-  "text-purple-300 border-purple-400/40",
-  "text-orange-300 border-orange-400/40",
-  "text-red-300 border-red-400/40",
+  "text-pink-600 border-pink-500/60",
+  "text-amber-600 border-amber-500/60",
+  "text-emerald-600 border-emerald-500/60",
+  "text-sky-600 border-sky-500/60",
+  "text-purple-600 border-purple-500/60",
+  "text-orange-600 border-orange-500/60",
+  "text-red-600 border-red-500/60",
 ];
 
 function updateMeta(title?: string | null, description?: string | null) {
@@ -89,7 +89,8 @@ function serializeRichContent(value?: string | null): string {
       return text;
     };
 
-    const renderChildren = (children: any[] = []) => children.map(renderText).join("");
+    const renderChildren = (children: any[] = []) =>
+      children.map(renderText).join("");
 
     const renderNode = (node: any): string => {
       const children = renderChildren(node.children || []);
@@ -123,14 +124,23 @@ export default function SupabaseProjectDetail() {
 
   const heroImage = useMemo(() => {
     if (!project) return null;
-    return project.image || project.desktop_image || project.mobile_image || "/files/fallback_desktop.png";
+    return (
+      project.image ||
+      project.desktop_image ||
+      project.mobile_image ||
+      "/files/fallback_desktop.png"
+    );
   }, [project]);
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
         if (!slug) throw new Error("Project slug missing");
-        const { data, error } = await supabase.from("project").select("*").eq("slug", slug).single();
+        const { data, error } = await supabase
+          .from("project")
+          .select("*")
+          .eq("slug", slug)
+          .single();
         if (error) throw error;
         setProject(data as Project);
 
@@ -152,7 +162,10 @@ export default function SupabaseProjectDetail() {
 
   useEffect(() => {
     if (project) {
-      updateMeta(project.seo_title || project.name, project.seo_description || undefined);
+      updateMeta(
+        project.seo_title || project.name,
+        project.seo_description || undefined
+      );
     }
   }, [project]);
 
@@ -199,20 +212,28 @@ export default function SupabaseProjectDetail() {
         )}
       </div>
 
-      <div className="mt-8 space-y-6">
+      <div className="mt-8 space-y-6 p-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl overflow-hidden">
         {heroImage && (
-          <img src={heroImage} alt={project.name} className="w-full rounded-2xl object-contain" />
+          <img
+            src={heroImage}
+            alt={project.name}
+            className="w-full rounded-2xl object-contain"
+          />
         )}
 
         <div className="space-y-3">
-          <div className="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
+          <div className="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-[var(--foreground)]">
             {project.category && <span>{project.category}</span>}
             {project.subcategory && <span>{project.subcategory}</span>}
             {project.status && <span>{project.status}</span>}
           </div>
           <h1 className="text-3xl md:text-4xl font-bold">{project.name}</h1>
-          <div className="text-sm flex flex-wrap gap-3 text-[var(--muted-foreground)]">
-            {project.date && <span>Delivered: {new Date(project.date).toLocaleDateString()}</span>}
+          <div className="text-sm flex flex-wrap gap-3 text-[var(--foreground)]">
+            {project.date && (
+              <span>
+                Delivered: {new Date(project.date).toLocaleDateString()}
+              </span>
+            )}
             {project.location && <span>Location: {project.location}</span>}
             {project.designer && <span>Designer: {project.designer}</span>}
           </div>
@@ -221,13 +242,16 @@ export default function SupabaseProjectDetail() {
         <div className="flex flex-col gap-10">
           {project.tags && project.tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm text-[var(--muted-foreground)] flex items-center gap-2 uppercase tracking-wide">
+              <span className="text-sm text-[var(--foreground)] flex items-center gap-2 uppercase tracking-wide">
                 <FiTag /> Tags
               </span>
               {project.tags.map((tag, index) => {
                 const color = chipColors[index % chipColors.length];
                 return (
-                  <span key={tag + index} className={`px-3 py-1 rounded-full border ${color} text-xs font-semibold`}>
+                  <span
+                    key={tag + index}
+                    className={`px-3 py-1 rounded-full border ${color} text-xs font-semibold`}
+                  >
                     #{tag}
                   </span>
                 );
@@ -242,7 +266,9 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Problems</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{ __html: serializeRichContent(project.problems) }}
+                    dangerouslySetInnerHTML={{
+                      __html: serializeRichContent(project.problems),
+                    }}
                   />
                 </section>
               )}
@@ -252,7 +278,9 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Solutions</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{ __html: serializeRichContent(project.solutions) }}
+                    dangerouslySetInnerHTML={{
+                      __html: serializeRichContent(project.solutions),
+                    }}
                   />
                 </section>
               )}
@@ -262,7 +290,9 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Results</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{ __html: serializeRichContent(project.results) }}
+                    dangerouslySetInnerHTML={{
+                      __html: serializeRichContent(project.results),
+                    }}
                   />
                 </section>
               )}
@@ -271,30 +301,42 @@ export default function SupabaseProjectDetail() {
             <aside className="space-y-4">
               <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-5 flex flex-col gap-3 text-sm shadow-sm">
                 <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Category</span>
-                  <span className="font-semibold">{project.category || "N/A"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Subcategory</span>
-                  <span className="font-semibold">{project.subcategory || "N/A"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Status</span>
-                  <span className="font-semibold">{project.status || "N/A"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Date</span>
+                  <span className="text-[var(--foreground)]">Category</span>
                   <span className="font-semibold">
-                    {project.date ? new Date(project.date).toLocaleDateString() : "N/A"}
+                    {project.category || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Designer</span>
-                  <span className="font-semibold">{project.designer || "N/A"}</span>
+                  <span className="text-[var(--foreground)]">Subcategory</span>
+                  <span className="font-semibold">
+                    {project.subcategory || "N/A"}
+                  </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--muted-foreground)]">Location</span>
-                  <span className="font-semibold">{project.location || "N/A"}</span>
+                  <span className="text-[var(--foreground)]">Status</span>
+                  <span className="font-semibold">
+                    {project.status || "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--foreground)]">Date</span>
+                  <span className="font-semibold">
+                    {project.date
+                      ? new Date(project.date).toLocaleDateString()
+                      : "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--foreground)]">Designer</span>
+                  <span className="font-semibold">
+                    {project.designer || "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--foreground)]">Location</span>
+                  <span className="font-semibold">
+                    {project.location || "N/A"}
+                  </span>
                 </div>
                 {project.project_url && (
                   <a
@@ -310,7 +352,7 @@ export default function SupabaseProjectDetail() {
 
               {project.mobile_image && (
                 <img
-                  src={project.mobile_image || "/files/fallback_mobile.png" }
+                  src={project.mobile_image || "/files/fallback_mobile.png"}
                   alt={`${project.name} mobile preview`}
                   className="w-auto h-76"
                 />
@@ -325,7 +367,10 @@ export default function SupabaseProjectDetail() {
           <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-3xl shadow-lg p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">You may also like</h3>
-              <Link to="/projects" className="text-sm font-semibold text-[#d4af37] hover:underline">
+              <Link
+                to="/projects"
+                className="text-sm font-semibold text-[#d4af37] hover:underline"
+              >
                 View all
               </Link>
             </div>

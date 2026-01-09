@@ -32,14 +32,13 @@ const mapBlogFields = (item: any): Blog => ({
 });
 
 const tagColors = [
-  "text-pink-400 border-pink-500/40",
-  "text-yellow-400 border-yellow-500/40",
-  "text-green-400 border-green-500/40",
-  "text-blue-400 border-blue-500/40",
-  "text-purple-400 border-purple-500/40",
-  "text-orange-400 border-orange-500/40",
-  "text-teal-400 border-teal-500/40",
-  "text-red-400 border-red-500/40",
+  "text-pink-600 border-pink-500/60",
+  "text-amber-600 border-amber-500/60",
+  "text-emerald-600 border-emerald-500/60",
+  "text-sky-600 border-sky-500/60",
+  "text-purple-600 border-purple-500/60",
+  "text-orange-600 border-orange-500/60",
+  "text-red-600 border-red-500/60",
 ];
 
 function updateMeta(title?: string | null, description?: string | null) {
@@ -226,19 +225,19 @@ export default function BlogDetail() {
         >
           <FiArrowLeft /> Back to blogs
         </Link>
-        <div className="text-xs uppercase tracking-wide text-[var(--muted-foreground)]">
+        <div className="text-xs uppercase tracking-wide text-[var(--foreground)]">
           {blog.category}
           {blog.subcategory ? ` > ${blog.subcategory}` : ""}
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-[70%] space-y-6">
+        <div className="w-full md:w-[70%] space-y-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl overflow-hidden p-6">
           {blog.image && <img src={blog.image} alt={blog.title} className="w-full h-80 object-cover rounded-2xl" />}
 
           <div className="space-y-3">
             <h1 className="text-3xl md:text-4xl font-bold">{blog.title}</h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--muted-foreground)]">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--foreground)]">
               {blog.author && (
                 <span className="inline-flex items-center gap-1">
                   <FiUser /> {blog.author}
@@ -259,7 +258,7 @@ export default function BlogDetail() {
           <div className="space-y-10">
             {parsedTags.length > 0 && (
               <div className="flex flex-wrap items-center gap-3">
-                <span className="text-sm text-[var(--muted-foreground)] flex items-center gap-2 uppercase tracking-wide">
+                <span className="text-sm text-[var(--foreground)] flex items-center gap-2 uppercase tracking-wide">
                   <FiTag /> Tags
                 </span>
                 {parsedTags.map((tag, index) => {

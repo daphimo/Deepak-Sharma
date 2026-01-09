@@ -50,7 +50,7 @@ export default function TechShowcase() {
     <SiTailwindcss key="tailwind" size={60} color="#38BDF8" title="Tailwind CSS" />,
     <FaBootstrap key="bootstrap" size={60} color="#7952B3" title="Bootstrap" />,
     <SiVite key="vite" size={60} color="#A259FF" title="Vite" />,
-    <SiVercel key="vercel" size={60} color="#ffffff" title="Vercel" />,
+    <SiVercel key="vercel" size={60} color="text-[var(--foreground)]" title="Vercel" />,
     <SiNetlify key="netlify" size={60} color="#00AD9F" title="Netlify" />,
     <SiRender key="render" size={60} color="#46E3B7" title="Render" />,
 
@@ -75,7 +75,7 @@ export default function TechShowcase() {
     // Code & Formatting
     <SiPrettier key="prettier" size={60} color="#F7B93E" title="Prettier" />,
     <FaGitAlt key="git" size={60} color="#F1502F" title="Git" />,
-    <FaGithub key="github" size={60} color="#ffffff" title="GitHub" />,
+    <FaGithub key="github" size={60} color="text-[var(--foreground)]" title="GitHub" />,
 
     // Web & SEO
     <MdSecurity key="https" size={60} color="#1E90FF" title="HTTPS Security" />,
@@ -103,7 +103,7 @@ export default function TechShowcase() {
               {icons}
             </div>,
           ]}
-          velocity={100}
+          velocity={150}
           className="mx-6 my-0"
           numCopies={12}
         />
@@ -117,7 +117,7 @@ export default function TechShowcase() {
               {icons}
             </div>,
           ]}
-          velocity={-100}
+          velocity={-150}
           className="mx-6 my-0"
           numCopies={12}
         />

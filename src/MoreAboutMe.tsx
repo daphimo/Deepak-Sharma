@@ -11,7 +11,7 @@ const MoreAboutMe: React.FC = () => {
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
           Crafting Experiences, Not Just Designs
         </h2>
-        <p className="text-[var(--muted-foreground)] text-lg max-w-2xl leading-relaxed transition-colors duration-500">
+        <p className="text-[var(--foreground)] text-lg max-w-2xl leading-relaxed transition-colors duration-500">
           This is where I bring ideas to life. From sleek interfaces to 
           meaningful digital experiences, I combine creativity, strategy, 
           and technology to deliver work that resonates. Each project I take 

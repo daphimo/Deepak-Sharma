@@ -15,14 +15,13 @@ export type ProjectCardData = {
 };
 
 const defaultTagColors = [
-  "text-pink-400",
-  "text-yellow-400",
-  "text-green-400",
-  "text-blue-400",
-  "text-purple-400",
-  "text-orange-400",
-  "text-teal-400",
-  "text-red-400",
+  "text-pink-600",
+  "text-amber-600",
+  "text-emerald-600",
+  "text-sky-600",
+  "text-purple-600",
+  "text-orange-600",
+  "text-red-600",
 ];
 
 type ProjectCardProps = {
@@ -31,21 +30,34 @@ type ProjectCardProps = {
   className?: string;
 };
 
-export function ProjectCard({ project, tagColors = defaultTagColors, className = "" }: ProjectCardProps) {
-  const cover = project.image || project.desktop_image || "/files/fallback_desktop.png";
+export function ProjectCard({
+  project,
+  tagColors = defaultTagColors,
+  className = "",
+}: ProjectCardProps) {
+  const cover =
+    project.image || project.desktop_image || "/files/fallback_desktop.png";
   const description = project.subcategory || project.category || "";
   const tags = project.tags || [];
 
   return (
     <div
-      className={`relative flex flex-col bg-white/10 backdrop-blur-md border border-white/20 shadow-md rounded-2xl overflow-hidden ${className}`}
+      className={`relative flex flex-col bg-[var(--card)] backdrop-blur-md border border-white/20 shadow-md rounded-2xl overflow-hidden ${className}`}
     >
       <Link to={`/projects/${project.slug}`} className="w-full">
-        <img src={cover} alt={project.name} className="w-full h-full object-contain" loading="lazy" />
+        <img
+          src={cover}
+          alt={project.name}
+          className="w-full h-full object-contain"
+          loading="lazy"
+        />
       </Link>
 
       <div className="flex items-center justify-between w-full px-5 mt-4">
-        <Link to={`/projects/${project.slug}`} className="text-2xl font-semibold text-white hover:text-indigo-400 transition-colors">
+        <Link
+          to={`/projects/${project.slug}`}
+          className="text-2xl font-semibold text-white hover:text-indigo-400 transition-colors"
+        >
           {project.name}
         </Link>
         {project.project_url && (
@@ -61,12 +73,19 @@ export function ProjectCard({ project, tagColors = defaultTagColors, className =
         )}
       </div>
 
-      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">{description}</p>
+      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
+        {description}
+      </p>
 
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2 px-5 py-4">
-          {tags.map((t: string, i: number) => (
-            <span key={t + i} className={`${tagColors[i % tagColors.length]} text-xs font-semibold uppercase tracking-wide`}>
+          {tags.slice(0, 3).map((t: string, i: number) => (
+            <span
+              key={t + i}
+              className={`${
+                tagColors[i % tagColors.length]
+              } text-xs font-semibold uppercase tracking-wide`}
+            >
               #{t}
             </span>
           ))}

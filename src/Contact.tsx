@@ -53,13 +53,13 @@ const Contact: FC = () => {
 
       {/* Contact content container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 transition-colors duration-500 text-[var(--foreground)]">
-        <div className="w-full p-6 rounded-2xl shadow-lg backdrop-blur-md border transition-colors duration-500 bg-white/75 border-black/10 dark:bg-white/10 dark:border-white/20">
+        <div className="w-full p-6 rounded-2xl shadow-lg backdrop-blur-md border transition-colors duration-500 bg-white/75 border-black/10 dark:bg-[var(--card)] dark:border-white/20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Side */}
             <div className="flex flex-col space-y-5 justify-center">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold">Get in Touch</h2>
-                <p className="mt-1 text-sm md:text-base text-[var(--muted-foreground)]">
+                <p className="mt-1 text-sm md:text-base text-[var(--foreground)]">
                   I'd love to hear from you. Whether you have a question or just
                   want to say hi, feel free to drop a message!
                   {/* <a className="!cursor-text" href="/downloads" aria-label="Download Center" target="_blank"> feel free to drop a message!</a> */}
@@ -71,7 +71,7 @@ const Contact: FC = () => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:items-center flex-wrap sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
                   <a
                     href="mailto:deepakrajeshsharma987654321@gmail.com"
-                    className="flex items-center space-x-2 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-sm break-all"
+                    className="flex items-center space-x-2 text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-sm break-all"
                   >
                     <FiMail className="text-lg" />
                     <span>deepakrajeshsharma987654321@gmail.com</span>
@@ -79,7 +79,7 @@ const Contact: FC = () => {
 
                   <a
                     href="tel:+919427011442"
-                    className="flex items-center space-x-2 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-sm"
+                    className="flex items-center space-x-2 text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-sm"
                   >
                     <FiPhone className="text-lg" />
                     <span>+91 94270 11442</span>
@@ -92,7 +92,7 @@ const Contact: FC = () => {
                   href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-xl"
+                  className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
                   <FaLinkedin />
                 </a>
@@ -100,7 +100,7 @@ const Contact: FC = () => {
                   href="https://github.com/daphimo"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors text-xl"
+                  className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
                   <FaGithub />
                 </a>
@@ -115,21 +115,21 @@ const Contact: FC = () => {
                   name="name"
                   placeholder="Your Name"
                   required
-                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
+                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--foreground)] dark:bg-white/5 dark:border-white/15"
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Your Email"
                   required
-                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
+                  className="w-full px-4 py-2 rounded-full bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--foreground)] dark:bg-white/5 dark:border-white/15"
                 />
                 <textarea
                   name="message"
                   rows={4}
                   placeholder="Your Message..."
                   required
-                  className="w-full px-4 py-2 rounded-2xl bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--muted-foreground)] dark:bg-white/5 dark:border-white/15"
+                  className="w-full px-4 py-2 rounded-2xl bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--foreground)] dark:bg-white/5 dark:border-white/15"
                 ></textarea>
                 <Magnet padding={50} disabled={false} magnetStrength={5}>
                   <button
@@ -141,14 +141,14 @@ const Contact: FC = () => {
                   </button>
                 </Magnet>
                 {status && (
-                  <p className="text-sm mt-2 text-[var(--muted-foreground)]">{status}</p>
+                  <p className="text-sm mt-2 text-[var(--foreground)]">{status}</p>
                 )}
               </form>
             </div>
           </div>
         </div>
 
-        <div className="mt-15 pb-10 text-[var(--muted-foreground)] text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start transition-colors duration-500">
+        <div className="mt-15 pb-10 text-[var(--foreground)] text-sm grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2 items-start transition-colors duration-500">
           {/* Left */}
           <div className="text-left">
             © {new Date().getFullYear()} Deepak Sharma. All rights reserved.
