@@ -266,10 +266,14 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Problems</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{
-                      __html: serializeRichContent(project.problems),
-                    }}
-                  />
+                  >
+                    <div
+                      className="ql-editor"
+                      dangerouslySetInnerHTML={{
+                        __html: serializeRichContent(project.problems),
+                      }}
+                    />
+                  </div>
                 </section>
               )}
 
@@ -278,10 +282,14 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Solutions</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{
-                      __html: serializeRichContent(project.solutions),
-                    }}
-                  />
+                  >
+                    <div
+                      className="ql-editor"
+                      dangerouslySetInnerHTML={{
+                        __html: serializeRichContent(project.solutions),
+                      }}
+                    />
+                  </div>
                 </section>
               )}
 
@@ -290,10 +298,14 @@ export default function SupabaseProjectDetail() {
                   <h3 className="text-xl font-semibold mb-3">Results</h3>
                   <div
                     className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                    dangerouslySetInnerHTML={{
-                      __html: serializeRichContent(project.results),
-                    }}
-                  />
+                  >
+                    <div
+                      className="ql-editor"
+                      dangerouslySetInnerHTML={{
+                        __html: serializeRichContent(project.results),
+                      }}
+                    />
+                  </div>
                 </section>
               )}
             </div>

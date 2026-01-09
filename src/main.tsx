@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import "./index.css";
 import "./App.css";
+import "quill/dist/quill.snow.css";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import ScrollToTop from "./assets/components/ScrollToTop";

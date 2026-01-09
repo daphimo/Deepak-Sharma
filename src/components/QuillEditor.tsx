@@ -1,6 +1,5 @@
 import { useEffect, useRef, type ChangeEvent } from "react";
 import Quill from "quill";
-import "quill/dist/quill.snow.css";
 
 const safeRegisterAttributor = (path: string) => {
   try {
