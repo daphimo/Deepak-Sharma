@@ -98,6 +98,7 @@ const Contact: FC = () => {
                 <a
                   href="https://www.linkedin.com/in/deepak-sharma-97954a211/"
                   target="_blank"
+                  aria-label="Linkedin"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
@@ -106,6 +107,7 @@ const Contact: FC = () => {
                 <a
                   href="https://github.com/daphimo"
                   target="_blank"
+                  aria-label="Github"
                   rel="noopener noreferrer"
                   className="text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-xl"
                 >
@@ -148,7 +150,9 @@ const Contact: FC = () => {
                   </button>
                 </Magnet>
                 {status && (
-                  <p className="text-sm mt-2 text-[var(--foreground)]">{status}</p>
+                  <p className="text-sm mt-2 text-[var(--foreground)]">
+                    {status}
+                  </p>
                 )}
               </form>
             </div>

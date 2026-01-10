@@ -40,7 +40,7 @@ export default function Header(): React.ReactElement {
         <div className="flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full gap-4 rounded-full bg-[color-mix(in_oklch,var(--card),transparent_70%)] border border-[color-mix(in_oklch,var(--foreground),transparent_80%)] backdrop-blur-xl shadow-lg px-5 py-3 transition-colors duration-500">
             {/* Logo with Shuffle */}
-            <a href="/" className="flex-shrink-0 justify-self-start mb-[-8px]">
+            <a href="/" aria-label="Home" title="Home" className="flex-shrink-0 justify-self-start mb-[-8px]">
               {enableHoverEffects ? (
                 <Suspense
                   fallback={

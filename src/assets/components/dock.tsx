@@ -101,6 +101,8 @@ export default function Dock() {
             {dockItems.map((item) => (
               <button
                 key={item.id}
+                type="button"
+                aria-label={item.id}
                 onClick={() => handleNavClick(item.href)}
                 className="cursor-pointer !text-[#00BCFF] transition-colors duration-200"
               >
