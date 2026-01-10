@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { ReactNode, HTMLAttributes } from 'react';
+import { useIsTouchDevice } from '../hooks/use-is-touch-device';
 
 interface MagnetProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -26,9 +27,12 @@ const Magnet: React.FC<MagnetProps> = ({
   const [isActive, setIsActive] = useState<boolean>(false);
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const magnetRef = useRef<HTMLDivElement>(null);
+  const isTouchDevice = useIsTouchDevice();
+  const isDisabled = disabled || isTouchDevice;
 
   useEffect(() => {
-    if (disabled) {
+    if (isDisabled) {
+      setIsActive(false);
       setPosition({ x: 0, y: 0 });
       return;
     }
@@ -58,7 +62,7 @@ const Magnet: React.FC<MagnetProps> = ({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [padding, disabled, magnetStrength]);
+  }, [padding, isDisabled, magnetStrength]);
 
   const transitionStyle = isActive ? activeTransition : inactiveTransition;
 

@@ -1,16 +1,19 @@
 // src/components/Contact.tsx
 import type { FC } from "react";
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
-import Ballpit from "./components/Ballpit";
 import Magnet from "./assets/components/Magnet";
+import { useIsTouchDevice } from "./hooks/use-is-touch-device";
+
+const Ballpit = lazy(() => import("./components/Ballpit"));
 
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const isTouchDevice = useIsTouchDevice();
 
   const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,12 +46,16 @@ const Contact: FC = () => {
     <section className="relative w-full mb-20 text-[var(--foreground)] transition-colors duration-500">
       {/* Ballpit full background */}
       <div className="absolute inset-0 -z-10 bottom-0" id="BallpitContainer">
-        <Ballpit
-          hoverIntensity={1}
-          rotateOnHover={true}
-          hue={0}
-          forceHoverState={true}
-        />
+        {!isTouchDevice ? (
+          <Suspense fallback={null}>
+            <Ballpit
+              hoverIntensity={1}
+              rotateOnHover={true}
+              hue={0}
+              forceHoverState={true}
+            />
+          </Suspense>
+        ) : null}
       </div>
 
       {/* Contact content container */}

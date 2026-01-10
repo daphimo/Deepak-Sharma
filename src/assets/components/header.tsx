@@ -1,8 +1,10 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { useNavigate } from "react-router-dom";
-import Shuffle from "./Shuffle.tsx";
-import ScrambledText from "./Scramble.tsx";
 import DayNightToggle from "../../components/DayNightToggle";
+import { useIsTouchDevice } from "../../hooks/use-is-touch-device";
+
+const Shuffle = lazy(() => import("./Shuffle"));
+const ScrambledText = lazy(() => import("./Scramble"));
 
 const menuItems = [
   { label: "Home", href: "/" },
@@ -14,6 +16,8 @@ const menuItems = [
 
 export default function Header(): React.ReactElement {
   const navigate = useNavigate();
+  const isTouchDevice = useIsTouchDevice();
+  const enableHoverEffects = !isTouchDevice;
 
   const handleNavClick = (href: string) => {
     if (href.startsWith("/#")) {
@@ -37,17 +41,31 @@ export default function Header(): React.ReactElement {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full gap-4 rounded-full bg-[color-mix(in_oklch,var(--card),transparent_70%)] border border-[color-mix(in_oklch,var(--foreground),transparent_80%)] backdrop-blur-xl shadow-lg px-5 py-3 transition-colors duration-500">
             {/* Logo with Shuffle */}
             <a href="/" className="flex-shrink-0 justify-self-start mb-[-8px]">
-              <Shuffle
-                text="Deepak Sharma"
-                shuffleDirection="right"
-                duration={0.35}
-                className="text-m font-bold tracking-wide text-[var(--foreground)]"
-                colorFrom="var(--primary)"
-                colorTo="var(--foreground)"
-                triggerOnHover={true}
-                triggerOnce={true}
-                shuffleTimes={9}
-              />
+              {enableHoverEffects ? (
+                <Suspense
+                  fallback={
+                    <span className="text-m font-bold tracking-wide text-[var(--foreground)]">
+                      Deepak Sharma
+                    </span>
+                  }
+                >
+                  <Shuffle
+                    text="Deepak Sharma"
+                    shuffleDirection="right"
+                    duration={0.35}
+                    className="text-m font-bold tracking-wide text-[var(--foreground)]"
+                    colorFrom="var(--primary)"
+                    colorTo="var(--foreground)"
+                    triggerOnHover={true}
+                    triggerOnce={true}
+                    shuffleTimes={9}
+                  />
+                </Suspense>
+              ) : (
+                <span className="text-m font-bold tracking-wide text-[var(--foreground)]">
+                  Deepak Sharma
+                </span>
+              )}
             </a>
 
             {/* Nav Items with Scramble */}
@@ -59,16 +77,22 @@ export default function Header(): React.ReactElement {
                   onClick={() => handleNavClick(item.href)}
                   className="cursor-pointer text-[var(--foreground)] hover:text-[var(--primary)] transition-colors"
                 >
-                  <ScrambledText
-                    radius={100}
-                    duration={0.6}
-                    speed={0.5}
-                    scrambleChars={
-                      "!@#$%^&*()Yoimiya_+<>?/!@#$%^-=[]{Yoimiya}|;:',.<>?/!@#$%^&*(Yoimiya)-=[]<>?/!@#$%^"
-                    }
-                  >
-                    {item.label}
-                  </ScrambledText>
+                  {enableHoverEffects ? (
+                    <Suspense fallback={<span>{item.label}</span>}>
+                      <ScrambledText
+                        radius={100}
+                        duration={0.6}
+                        speed={0.5}
+                        scrambleChars={
+                          "!@#$%^&*()Yoimiya_+<>?/!@#$%^-=[]{Yoimiya}|;:',.<>?/!@#$%^&*(Yoimiya)-=[]<>?/!@#$%^"
+                        }
+                      >
+                        {item.label}
+                      </ScrambledText>
+                    </Suspense>
+                  ) : (
+                    <span>{item.label}</span>
+                  )}
                 </span>
               ))}
               </div>

@@ -1,16 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { gsap } from "gsap";
-
-export interface BentoCardProps {
-  color?: string;
-  title?: string;
-  description?: string;
-  label?: string;
-  textAutoHide?: boolean;
-  disableAnimations?: boolean;
-  id?: number;
-  image?: string;
-}
+import { magicBentoCardData } from "./magic-bento-data";
+import { useIsTouchDevice } from "../hooks/use-is-touch-device";
 
 export interface BentoProps {
   textAutoHide?: boolean;
@@ -30,106 +21,6 @@ const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
 const DEFAULT_GLOW_COLOR_DARK = "132, 0, 255";
 const DEFAULT_GLOW_COLOR_LIGHT = "0, 112, 243";
-const MOBILE_BREAKPOINT = 768;
-
-const cardData: BentoCardProps[] = [
-  {
-    id: 1,
-    title: "Store Setup & Customization",
-    description:
-      "Theme setup, customization, and styling (Dawn, custom themes, etc.). Conversion-focused store layouts",
-    label: "Store Setup",
-    image: "/files/store.webp",
-  },
-  {
-    id: 2,
-    title: "Custom Theme Development",
-    description:
-      "Build pixel-perfect custom themes from Figma/PSD. Reusable Shopify sections and blocks.",
-    label: "Theme Dev",
-    image: "/files/theme.webp",
-  },
-  {
-    id: 3,
-    title: "Performance Optimization",
-    description:
-      "Minify assets, lazy loading, Core Web Vitals improvements. Speed audits and performance fixes.",
-    label: "Optimization",
-    image: "/files/performance.webp",
-  },
-  {
-    id: 4,
-    title: "Responsive Web Applications",
-    description:
-      "Mobile-first, cross-browser apps with React / Next.js / Vue. Progressive Web Apps (PWAs) for offline-first experiences.",
-    label: "Web Apps",
-    image: "/files/responsive.webp",
-  },
-  {
-    id: 5,
-    title: "SEO-friendly Development",
-    description:
-      "Schema markup, meta tags, OpenGraph for social sharing. Optimized site structure for organic ranking.",
-    label: "SEO",
-    image: "/files/seo.webp",
-  },
-  {
-    id: 6,
-    title: "UI/UX Design & Prototyping",
-    description:
-      "Craft intuitive user interfaces and engaging experiences. Wireframes, Figma prototypes, and interactive design systems.",
-    label: "Design",
-    image: "/files/uiux.webp",
-  },
-  {
-    id: 7,
-    title: "Store Migration & Replatforming",
-    description:
-      "Seamlessly move your store to Shopify with zero data loss. Product, customer, and order migrations with SEO preservation and custom integration handling.",
-    label: "Migration",
-    image: "/files/migration.webp",
-  },
-  {
-    id: 8,
-    title: "E-commerce Features & App Integration",
-    description:
-      "Custom Shopify apps, subscriptions, product bundles, dynamic pricing, and automated workflows.",
-    label: "E-commerce Apps",
-    image: "/files/apps.webp",
-  },
-  {
-    id: 9,
-    title: "Web Security & Data Protection",
-    description:
-      "SSL, secure authentication, GDPR compliance, and protection against common web vulnerabilities.",
-    label: "Security",
-    image: "/files/security.webp",
-  },
-  {
-    id: 10,
-    title: "Analytics & Conversion Optimization",
-    description:
-      "Google Analytics, GTM setup, event tracking, A/B testing, and conversion rate improvements.",
-    label: "Analytics",
-    image: "/files/analytics.webp",
-  },
-  {
-    id: 11,
-    title: "Progressive Web Apps (PWA)",
-    description:
-      "Installable web apps with offline functionality, push notifications, and fast mobile-first experiences.",
-    label: "PWA",
-    image: "/files/pwa.webp",
-  },
-  {
-    id: 12,
-    title: "Web Maintenance & Support",
-    description:
-      "Regular updates, bug fixes, backups, performance monitoring, and version control.",
-    label: "Support",
-    image: "/files/maintenance.webp",
-  },
-];
 
 const useIsDarkTheme = () => {
   const getTheme = () => {
@@ -227,7 +118,7 @@ const ParticleCard: React.FC<{
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement[]>([]);
-  const timeoutsRef = useRef<number[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const isHoveredRef = useRef(false);
   const memoizedParticles = useRef<HTMLDivElement[]>([]);
   const particlesInitialized = useRef(false);
@@ -305,8 +196,6 @@ const ParticleCard: React.FC<{
           yoyo: true,
         });
       }, index * 100);
-
-      const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
       timeoutsRef.current.push(timeoutId);
     });
   }, [initializeParticles]);
@@ -628,22 +517,6 @@ const BentoCardGrid: React.FC<{
   </div>
 );
 
-const useMobileDetection = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () =>
-      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  return isMobile;
-};
-
 const MagicBento: React.FC<BentoProps> = ({
   textAutoHide = true,
   enableStars = true,
@@ -658,8 +531,8 @@ const MagicBento: React.FC<BentoProps> = ({
   enableMagnetism = true,
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
-  const isMobile = useMobileDetection();
-  const shouldDisableAnimations = disableAnimations || isMobile;
+  const isTouchDevice = useIsTouchDevice();
+  const shouldDisableAnimations = disableAnimations || isTouchDevice;
   const isDark = useIsDarkTheme();
   const resolvedGlowColor =
     glowColor ?? (isDark ? DEFAULT_GLOW_COLOR_DARK : DEFAULT_GLOW_COLOR_LIGHT);
@@ -679,7 +552,7 @@ const MagicBento: React.FC<BentoProps> = ({
       )}
 
       <BentoCardGrid gridRef={gridRef}>
-        {cardData.map((card, index) => {
+        {magicBentoCardData.map((card, index) => {
           const baseClassName = `card card-hover-incase ${
             textAutoHide ? "card--text-autohide" : ""
           } ${enableBorderGlow ? "card--border-glow" : ""}`;
@@ -695,7 +568,7 @@ const MagicBento: React.FC<BentoProps> = ({
           if (enableStars) {
             return (
               <ParticleCard
-                key={index}
+                key={card.id ?? index}
                 {...cardProps}
                 disableAnimations={shouldDisableAnimations}
                 particleCount={particleCount}
@@ -728,7 +601,7 @@ const MagicBento: React.FC<BentoProps> = ({
 
           return (
             <div
-              key={index}
+              key={card.id ?? index}
               {...cardProps}
               ref={(el) => {
                 if (!el) return;

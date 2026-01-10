@@ -1,8 +1,13 @@
 "use client";
-import React from "react";
-import MagicBento from "./components/MagicBento.tsx";
+import React, { Suspense, lazy } from "react";
+import MagicBentoStatic from "./components/MagicBentoStatic";
+import { useIsTouchDevice } from "./hooks/use-is-touch-device";
+
+const MagicBento = lazy(() => import("./components/MagicBento"));
 
 const MoreAboutMe: React.FC = () => {
+  const isTouchDevice = useIsTouchDevice();
+
   return (
     <div className="w-full max-w-7xl mx-auto min-h-screen text-[var(--foreground)] flex flex-col justify-start items-start px-4 py-20 transition-colors duration-500">
       
@@ -22,18 +27,24 @@ const MoreAboutMe: React.FC = () => {
 
       {/* MagicBento Section */}
       <div className="w-full flex justify-center items-start">
-        <MagicBento
-          textAutoHide={true}
-          enableStars={true}
-          enableSpotlight={true}
-          enableBorderGlow={true}
-          enableTilt={true}
-          enableMagnetism={true}
-          clickEffect={true}
-          spotlightRadius={300}
-          particleCount={30}
-          glowColor="132, 0, 255"
-        />
+        {isTouchDevice ? (
+          <MagicBentoStatic />
+        ) : (
+          <Suspense fallback={<MagicBentoStatic />}>
+            <MagicBento
+              textAutoHide={true}
+              enableStars={true}
+              enableSpotlight={true}
+              enableBorderGlow={true}
+              enableTilt={true}
+              enableMagnetism={true}
+              clickEffect={true}
+              spotlightRadius={300}
+              particleCount={30}
+              glowColor="132, 0, 255"
+            />
+          </Suspense>
+        )}
       </div>
       
     </div>
