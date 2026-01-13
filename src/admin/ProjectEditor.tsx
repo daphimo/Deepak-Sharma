@@ -159,7 +159,7 @@ export default function ProjectEditor() {
 
           <div className="flex gap-3">
             <button
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/admin/projects")}
               className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" /> Back
