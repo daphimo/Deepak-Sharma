@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiArrowLeft, FiClock, FiTag, FiUser } from "react-icons/fi";
+import { FiArrowLeft, FiClock, FiCalendar, FiTag, FiUser } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import Prism from "prismjs";
@@ -19,6 +19,8 @@ type Blog = {
   author?: string | null;
   category?: string | null;
   subcategory?: string | null;
+  status?: string | null;
+  date?: string | null;
   reading_time?: string | null;
   seo_title?: string | null;
   seo_description?: string | null;
@@ -186,13 +188,12 @@ export default function BlogDetail() {
     }
   }, [blog]);
 
-  useEffect(() => {
-    if (prismReady) {
-      Prism.highlightAll();
-    }
-  }, [blog, prismReady]);
-
   const contentHtml = useMemo(() => serializeRichContent(blog?.content), [blog?.content]);
+
+  useEffect(() => {
+    if (!prismReady) return;
+    Prism.highlightAll();
+  }, [contentHtml, prismReady]);
 
   if (loading) {
     return (
@@ -225,33 +226,30 @@ export default function BlogDetail() {
         >
           <FiArrowLeft /> Back to blogs
         </Link>
-        <div className="text-xs uppercase tracking-wide text-[var(--foreground)]">
-          {blog.category}
-          {blog.subcategory ? ` > ${blog.subcategory}` : ""}
-        </div>
+       
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-[70%] space-y-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl overflow-hidden p-6">
+        <div className="w-full md:w-[70%] space-y-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl p-6">
           {blog.image && <img src={blog.image} alt={blog.title} className="w-full h-80 object-cover rounded-2xl" />}
 
           <div className="space-y-3">
             <h1 className="text-3xl md:text-4xl font-bold">{blog.title}</h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-[var(--foreground)]">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-[var(--foreground)]">
               {blog.author && (
                 <span className="inline-flex items-center gap-1">
                   <FiUser /> {blog.author}
                 </span>
               )}
               <span className="inline-flex items-center gap-1">
-                <FiClock />
+                <FiCalendar />
                 {new Date(blog.created_at).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "short",
                   day: "numeric",
                 })}
               </span>
-              {blog.reading_time && <span className="inline-flex items-center gap-1">{blog.reading_time}</span>}
+              {blog.reading_time && <span className="inline-flex items-center gap-1"><FiClock /> {blog.reading_time} Min Reading Time</span>}
             </div>
           </div>
 
@@ -259,7 +257,7 @@ export default function BlogDetail() {
             {parsedTags.length > 0 && (
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-sm text-[var(--foreground)] flex items-center gap-2 uppercase tracking-wide">
-                  <FiTag /> Tags
+                  <FiTag /> Tags:
                 </span>
                 {parsedTags.map((tag, index) => {
                   const color = tagColors[index % tagColors.length];
@@ -299,7 +297,43 @@ export default function BlogDetail() {
           </div>
         </div>
 
-        <div className="mt-8 md:mt-0 md:w-[30%] flex-shrink-0">
+        <div className="mt-8 md:mt-0 md:w-[30%] flex-shrink-0 space-y-6 sticky top-28 self-start">
+          <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-3xl shadow-lg p-5">
+            <h3 className="text-lg font-semibold mb-4">Post details</h3>
+            <div className="space-y-3 text-sm">
+              {blog.category && (
+                <div className="flex justify-between gap-3">
+                  <span className="text-[var(--foreground)]">Category</span>
+                  <span className="font-semibold">{blog.category}</span>
+                </div>
+              )}
+              {blog.subcategory && (
+                <div className="flex justify-between gap-3">
+                  <span className="text-[var(--foreground)]">Subcategory</span>
+                  <span className="font-semibold">{blog.subcategory}</span>
+                </div>
+              )}
+              {blog.status && (
+                <div className="flex justify-between gap-3">
+                  <span className="text-[var(--foreground)]">Type</span>
+                  <span className="font-semibold">{blog.status}</span>
+                </div>
+              )}
+              {blog.date && (
+                <div className="flex justify-between gap-3">
+                  <span className="text-[var(--foreground)]">Published Date</span>
+                  <span className="font-semibold">
+                    {new Date(blog.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-3xl shadow-lg p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">You may also like</h3>
@@ -308,7 +342,7 @@ export default function BlogDetail() {
               </Link>
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-2">
               {related.map((item) => (
                 <BlogMiniCard key={item.id} blog={item} />
               ))}
