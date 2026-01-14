@@ -212,7 +212,7 @@ export default function SupabaseProjectDetail() {
         )}
       </div>
 
-      <div className="mt-8 space-y-6 p-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl overflow-hidden">
+      <div className="mt-8 space-y-6 p-6 relative bg-[var(--card)] backdrop-blur-md shadow-md rounded-2xl">
         {heroImage && (
           <img
             src={heroImage}
@@ -310,7 +310,7 @@ export default function SupabaseProjectDetail() {
               )}
             </div>
 
-            <aside className="space-y-4">
+            <aside className="space-y-4 lg:sticky lg:top-28 self-start">
               <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-5 flex flex-col gap-3 text-sm shadow-sm">
                 <div className="flex justify-between">
                   <span className="text-[var(--foreground)]">Category</span>
@@ -386,7 +386,7 @@ export default function SupabaseProjectDetail() {
                 View all
               </Link>
             </div>
-            <div className="grid gap-3">
+            <div className="grid gap-3 grid-cols-1 lg:grid-cols-2">
               {related.map((proj) => (
                 <ProjectMiniCard key={proj.id} project={proj} />
               ))}

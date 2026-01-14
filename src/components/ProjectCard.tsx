@@ -42,7 +42,7 @@ export function ProjectCard({
 
   return (
     <div
-      className={`relative flex flex-col bg-[var(--card)] backdrop-blur-md border border-white/20 shadow-md rounded-2xl overflow-hidden ${className}`}
+      className={`relative flex flex-col h-full bg-[var(--card)] backdrop-blur-md border border-white/20 shadow-md rounded-2xl overflow-hidden ${className}`}
     >
       <Link to={`/projects/${project.slug}`} className="w-full">
         <img
@@ -53,44 +53,50 @@ export function ProjectCard({
         />
       </Link>
 
-      <div className="flex items-center justify-between w-full px-5 mt-4">
-        <Link
-          to={`/projects/${project.slug}`}
-          className="text-2xl font-semibold text-white hover:text-indigo-400 transition-colors"
-        >
-          {project.name}
-        </Link>
-        {project.project_url && (
-          <a
-            href={project.project_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-300 hover:text-indigo-400 transition-colors"
-            aria-label={`Visit ${project.name}`}
-          >
-            <FiExternalLink size={22} />
-          </a>
-        )}
-      </div>
-
-      <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
-        {description}
-      </p>
-
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 px-5 py-4">
-          {tags.slice(0, 3).map((t: string, i: number) => (
-            <span
-              key={t + i}
-              className={`${
-                tagColors[i % tagColors.length]
-              } text-xs font-semibold uppercase tracking-wide`}
+      <div className="flex flex-col justify-between flex-1">
+        <div>
+          <div className="flex items-center justify-between w-full px-5 mt-4">
+            <Link
+              to={`/projects/${project.slug}`}
+              className="text-2xl font-semibold text-white hover:text-indigo-400 transition-colors"
             >
-              #{t}
-            </span>
-          ))}
+              {project.name}
+            </Link>
+            {project.project_url && (
+              <a
+                href={project.project_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-indigo-400 transition-colors"
+                aria-label={`Visit ${project.name}`}
+              >
+                <FiExternalLink size={22} />
+              </a>
+            )}
+          </div>
+
+          <p className="text-gray-300 text-sm px-5 mt-2 line-clamp-2">
+            {description}
+          </p>
         </div>
-      )}
+
+        <div>
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 px-5 py-4">
+              {tags.slice(0, 3).map((t: string, i: number) => (
+                <span
+                  key={t + i}
+                  className={`${
+                    tagColors[i % tagColors.length]
+                  } text-xs font-semibold uppercase tracking-wide`}
+                >
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
