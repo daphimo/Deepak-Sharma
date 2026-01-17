@@ -387,7 +387,7 @@ export default function SupabaseProjectDetail() {
               </Link>
             </div>
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-2">
-              {related.map((proj) => (
+              {related.slice(0, 4).map((proj) => (
                 <ProjectMiniCard key={proj.id} project={proj} />
               ))}
             </div>

@@ -42,8 +42,8 @@ export default function Infinite() {
         <p className="text-center text-gray-400">No projects found.</p>
       ) : (
         <div className="flex flex-wrap justify-center gap-10">
-          {projects.map((project) => (
-            <div key={project.id} className="w-full md:w-[calc(30%-1.25rem)] h-full max-w-[400px]">
+          {projects.slice(0, 3).map((project) => (
+            <div key={project.id} className="w-full md:w-[calc(30%-1.25rem)] max-w-[400px]">
               <ProjectCard project={project} />
             </div>
           ))}

@@ -343,7 +343,7 @@ export default function BlogDetail() {
             </div>
 
             <div className="grid gap-3 grid-cols-1 lg:grid-cols-2">
-              {related.map((item) => (
+               {related.slice(0, 3).map((item) => (
                 <BlogMiniCard key={item.id} blog={item} />
               ))}
             </div>
