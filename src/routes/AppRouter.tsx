@@ -9,7 +9,7 @@ const ViewAllProjects = lazy(() => import("../ViewProjects.tsx"));
 const Download = lazy(() => import("../Download.tsx"));
 const Blogs = lazy(() => import("../BlogsPage.tsx"));
 const BlogDetail = lazy(() => import("../blogs/BlogDetail.tsx"));
-const SupabaseProjectDetail = lazy(() => import("../projects/SupabaseProjectDetail.tsx"));
+const SupabaseProjectDetail = lazy(() => import("../projects/ProjectDetail.tsx"));
 // Admin routes are handled separately in AdminRoutes
 
 const AppRouter = () => {

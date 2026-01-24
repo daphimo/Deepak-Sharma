@@ -23,6 +23,7 @@ type Project = {
   tags?: string[] | null;
   date?: string;
   designer?: string;
+  type?: string;
   location?: string;
   status?: string;
 };
@@ -164,7 +165,7 @@ export default function SupabaseProjectDetail() {
     if (project) {
       updateMeta(
         project.seo_title || project.name,
-        project.seo_description || undefined
+        project.seo_description || undefined,
       );
     }
   }, [project]);
@@ -231,11 +232,18 @@ export default function SupabaseProjectDetail() {
           <div className="text-sm flex flex-wrap gap-3 text-[var(--foreground)]">
             {project.date && (
               <span>
-                Delivered: {new Date(project.date).toLocaleDateString()}
+                Delivered:{" "}
+                {new Date(project.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
               </span>
             )}
+
             {project.location && <span>Location: {project.location}</span>}
             {project.designer && <span>Designer: {project.designer}</span>}
+            {project.type && <span>Project Type: {project.type}</span>}
           </div>
         </div>
 
@@ -264,9 +272,7 @@ export default function SupabaseProjectDetail() {
               {project.problems && (
                 <section className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-6 shadow-sm">
                   <h3 className="text-xl font-semibold mb-3">Problems</h3>
-                  <div
-                    className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                  >
+                  <div className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]">
                     <div
                       className="ql-editor"
                       dangerouslySetInnerHTML={{
@@ -280,9 +286,7 @@ export default function SupabaseProjectDetail() {
               {project.solutions && (
                 <section className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-6 shadow-sm">
                   <h3 className="text-xl font-semibold mb-3">Solutions</h3>
-                  <div
-                    className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                  >
+                  <div className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]">
                     <div
                       className="ql-editor"
                       dangerouslySetInnerHTML={{
@@ -296,9 +300,7 @@ export default function SupabaseProjectDetail() {
               {project.results && (
                 <section className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-6 shadow-sm">
                   <h3 className="text-xl font-semibold mb-3">Results</h3>
-                  <div
-                    className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]"
-                  >
+                  <div className="richtext prose prose-lg max-w-none leading-relaxed dark:prose-invert prose-a:underline prose-ul:list-disc prose-ol:list-decimal text-[var(--foreground)]">
                     <div
                       className="ql-editor"
                       dangerouslySetInnerHTML={{
@@ -313,40 +315,52 @@ export default function SupabaseProjectDetail() {
             <aside className="space-y-4 lg:sticky lg:top-28 self-start">
               <div className="bg-[var(--card)] border border-[color:var(--border)] rounded-2xl p-5 flex flex-col gap-3 text-sm shadow-sm">
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Category</span>
-                  <span className="font-semibold">
+                  <span className="text-[var(--foreground)] font-semibold">Category:</span>
+                  <span>
                     {project.category || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Subcategory</span>
-                  <span className="font-semibold">
+                  <span className="text-[var(--foreground)] font-semibold">Subcategory:</span>
+                  <span>
                     {project.subcategory || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Status</span>
-                  <span className="font-semibold">
+                  <span className="text-[var(--foreground)] font-semibold">Status:</span>
+                  <span>
                     {project.status || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Date</span>
-                  <span className="font-semibold">
-                    {project.date
-                      ? new Date(project.date).toLocaleDateString()
-                      : "N/A"}
+                  <span className="text-[var(--foreground)] font-semibold">Date:</span>
+                  <span>
+                    {project.date && (
+                      <span>
+                        {new Date(project.date).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "2-digit",
+                          year: "numeric",
+                        })}
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Designer</span>
-                  <span className="font-semibold">
+                  <span className="text-[var(--foreground)] font-semibold">Designer:</span>
+                  <span>
                     {project.designer || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--foreground)]">Location</span>
-                  <span className="font-semibold">
+                  <span className="text-[var(--foreground)] font-semibold">Project Type:</span>
+                  <span>
+                    {project.type || "N/A"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--foreground)] font-semibold">Location:</span>
+                  <span>
                     {project.location || "N/A"}
                   </span>
                 </div>

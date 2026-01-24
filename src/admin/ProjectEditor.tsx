@@ -28,6 +28,7 @@ export default function ProjectEditor() {
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
   const [status, setStatus] = useState("");
+  const [type, setType] = useState("");
   const [date, setDate] = useState("");
   const [designer, setDesigner] = useState("");
   const [location, setLocation] = useState("");
@@ -72,6 +73,7 @@ export default function ProjectEditor() {
         setCategory((data as any).category || "");
         setSubcategory((data as any).subcategory || "");
         setStatus((data as any).status || "");
+        setType((data as any).type || "");
         setDate((data as any).date || "");
         setDesigner((data as any).designer || "");
         setLocation((data as any).location || "");
@@ -103,6 +105,7 @@ export default function ProjectEditor() {
       category,
       subcategory,
       status,
+      type,
       date,
       designer,
       location,
@@ -261,6 +264,18 @@ export default function ProjectEditor() {
               className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block  font-medium mb-1">
+              Type
+            </label>
+            <input
+              type="text"
+              placeholder="Status"
+              className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
             />
           </div>
           <div>
