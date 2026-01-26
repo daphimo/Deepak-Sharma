@@ -96,28 +96,27 @@ export default function AdminLayout() {
           })}
         </nav>
 
-       <div className="p-4 border-t border-gray-200">
-  <a
-    href="/"
-    className={`w-full mb-3 flex items-center rounded-lg bg-black transition cursor-pointer text-sm font-semibold text-white
+        <div className="p-4 border-t border-gray-200">
+          <a
+            href="/"
+            className={`w-full mb-3 flex items-center rounded-lg bg-black transition cursor-pointer text-sm font-semibold text-white
       ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
     `}
-  >
-    <Home className="h-4 w-4 flex-shrink-0" />
-    {!collapsed && "Live Site"}
-  </a>
+          >
+            <Home className="h-4 w-4 flex-shrink-0" />
+            {!collapsed && "Live Site"}
+          </a>
 
-  <button
-    onClick={handleLogout}
-    className={`w-full flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer text-sm font-semibold text-gray-800
+          <button
+            onClick={handleLogout}
+            className={`w-full flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer text-sm font-semibold text-gray-800
       ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
     `}
-  >
-    <LogOut className="h-4 w-4 flex-shrink-0" />
-    {!collapsed && "Logout"}
-  </button>
-</div>
-
+          >
+            <LogOut className="h-4 w-4 flex-shrink-0" />
+            {!collapsed && "Logout"}
+          </button>
+        </div>
       </aside>
 
       <main ref={mainRef} className="flex-1 overflow-y-auto bg-[#f3f4f6]">
