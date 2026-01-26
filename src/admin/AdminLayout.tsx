@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, FileText, FolderGit2, FilePenLine, LogOut, Menu } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  FolderGit2,
+  FilePenLine,
+  LogOut,
+  Menu,
+  Home,
+} from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useRequireAuth } from "./useRequireAuth";
 
@@ -19,7 +27,9 @@ export default function AdminLayout() {
   const mainRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
-    supabase.auth.signOut().finally(() => navigate("/login", { replace: true }));
+    supabase.auth
+      .signOut()
+      .finally(() => navigate("/login", { replace: true }));
   };
 
   useEffect(() => {
@@ -30,7 +40,7 @@ export default function AdminLayout() {
 
   if (checkingAuth) {
     return (
-    <div className="min-h-screen bg-white text-black flex items-center justify-center">
+      <div className="min-h-screen bg-white text-black flex items-center justify-center">
         <div className="px-4 py-3 rounded-xl bg-white border border-gray-200 shadow-lg">
           Checking session...
         </div>
@@ -45,8 +55,16 @@ export default function AdminLayout() {
           collapsed ? "w-16" : "w-64"
         }`}
       >
-        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-          {!collapsed && <span className="font-semibold tracking-wide text-black">Admin</span>}
+        <div
+          className={`flex items-center  px-4 py-4 border-b border-gray-200 ${
+            collapsed ? "justify-center" : "justify-between"
+          }`}
+        >
+          {!collapsed && (
+            <span className="font-semibold tracking-wide text-black">
+              Admin
+            </span>
+          )}
           <button
             onClick={() => setCollapsed((p) => !p)}
             className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer"
@@ -65,8 +83,11 @@ export default function AdminLayout() {
                 key={item.path}
                 onClick={() => navigate(item.path)}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition cursor-pointer ${
-                  active ? "bg-sky-50 text-sky-700" : "text-gray-800 hover:bg-gray-100"
-                }`}
+                  active
+                    ? "bg-sky-50 text-sky-700"
+                    : "text-gray-800 hover:bg-gray-100"
+                }
+                    ${collapsed ? "justify-center" : "justify-start"}`}
               >
                 <Icon className="h-5 w-5" />
                 {!collapsed && <span>{item.label}</span>}
@@ -76,11 +97,23 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-gray-200">
+          <a
+            href="/"
+            className={`w-full mb-3 flex items-center rounded-lg bg-black transition cursor-pointer text-sm font-semibold text-white
+      ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
+    `}
+          >
+            <Home className="h-4 w-4 flex-shrink-0" />
+            {!collapsed && "Live Site"}
+          </a>
+
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition px-4 py-2 cursor-pointer text-sm font-semibold text-gray-800"
+            className={`w-full flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer text-sm font-semibold text-gray-800
+      ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
+    `}
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4 flex-shrink-0" />
             {!collapsed && "Logout"}
           </button>
         </div>
