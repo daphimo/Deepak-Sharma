@@ -272,7 +272,7 @@ export default function ProjectEditor() {
             </label>
             <input
               type="text"
-              placeholder="Status"
+              placeholder="Type"
               className="border border-gray-300 rounded-lg p-3 w-full text-gray-800"
               value={type}
               onChange={(e) => setType(e.target.value)}
