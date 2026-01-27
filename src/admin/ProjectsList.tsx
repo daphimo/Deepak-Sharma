@@ -195,26 +195,31 @@ export default function ProjectsList() {
 
         if (!name && !derivedSlug) return null;
 
+        const fallbackName = name || `Project ${index + 1}`;
+        const fallbackSeoTitle = getValue(row, "seo_title") || fallbackName;
+        const fallbackSeoDescription =
+          getValue(row, "seo_description") || fallbackSeoTitle;
+
         return {
-          name: name || `Project ${index + 1}`,
+          name: fallbackName,
           slug: derivedSlug || `project-${Date.now()}-${index}`,
-          project_url: getValue(row, "project_url") || null,
-          image: getValue(row, "image") || null,
-          mobile_image: getValue(row, "mobile_image") || null,
-          desktop_image: getValue(row, "desktop_image") || null,
-          category: getValue(row, "category") || null,
-          subcategory: getValue(row, "subcategory") || null,
-          status: getValue(row, "status") || null,
-          type: getValue(row, "type") || null,
-          date: getValue(row, "date") || null,
-          designer: getValue(row, "designer") || null,
-          location: getValue(row, "location") || null,
-          seo_title: getValue(row, "seo_title") || null,
-          seo_description: getValue(row, "seo_description") || null,
-          tags: tagsArray && tagsArray.length ? tagsArray : null,
-          problems: getValue(row, "problems") || null,
-          solutions: getValue(row, "solutions") || null,
-          results: getValue(row, "results") || null,
+          project_url: getValue(row, "project_url") || "",
+          image: getValue(row, "image") || "",
+          mobile_image: getValue(row, "mobile_image") || "",
+          desktop_image: getValue(row, "desktop_image") || "",
+          category: getValue(row, "category") || "",
+          subcategory: getValue(row, "subcategory") || "",
+          status: getValue(row, "status") || "",
+          type: getValue(row, "type") || "",
+          date: getValue(row, "date") || "",
+          designer: getValue(row, "designer") || "",
+          location: getValue(row, "location") || "",
+          seo_title: fallbackSeoTitle,
+          seo_description: fallbackSeoDescription,
+          tags: tagsArray && tagsArray.length ? tagsArray : [],
+          problems: getValue(row, "problems") || "",
+          solutions: getValue(row, "solutions") || "",
+          results: getValue(row, "results") || "",
         };
       })
       .filter(Boolean);
@@ -224,7 +229,31 @@ export default function ProjectsList() {
       return;
     }
 
-    const { error } = await supabase.from("project").insert(payload as any[]);
+    const payloadWithSlug = payload.filter((item) => item && item.slug) as Array<{
+      slug: string;
+    }>;
+    const slugs = payloadWithSlug.map((item) => item.slug);
+
+    const { data: existingRows, error: existingError } = await supabase
+      .from("project")
+      .select("slug")
+      .in("slug", slugs);
+
+    if (existingError) {
+      console.error(existingError);
+      showPopup("error", "Could not check existing projects.");
+      return;
+    }
+
+    const existingSlugs = new Set((existingRows ?? []).map((row) => row.slug));
+    const newPayload = payloadWithSlug.filter((item) => !existingSlugs.has(item.slug));
+
+    if (!newPayload.length) {
+      showPopup("success", "All rows already exist (duplicate slugs).");
+      return;
+    }
+
+    const { error } = await supabase.from("project").insert(newPayload as any[]);
 
     if (error) {
       console.error(error);

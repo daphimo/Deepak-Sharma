@@ -159,20 +159,9 @@ export default function ProjectEditor() {
               </>
             )}
           </h1>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate("/admin/projects")}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          </div>
         </div>
 
-        <label className="block  font-medium mb-1">
-          Project Name
-        </label>
+        <label className="block  font-medium mb-1">Project Name</label>
         <input
           type="text"
           placeholder="Enter project name..."
@@ -193,9 +182,7 @@ export default function ProjectEditor() {
           onChange={(e) => setSlug(e.target.value)}
         />
 
-        <label className="block  font-medium mb-1">
-          Project URL
-        </label>
+        <label className="block  font-medium mb-1">Project URL</label>
         <input
           type="text"
           placeholder="Enter live/demo/project URL..."
@@ -228,9 +215,7 @@ export default function ProjectEditor() {
 
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block  font-medium mb-1">
-              Category
-            </label>
+            <label className="block  font-medium mb-1">Category</label>
             <input
               type="text"
               placeholder="Category"
@@ -240,9 +225,7 @@ export default function ProjectEditor() {
             />
           </div>
           <div>
-            <label className="block  font-medium mb-1">
-              Subcategory
-            </label>
+            <label className="block  font-medium mb-1">Subcategory</label>
             <input
               type="text"
               placeholder="Subcategory"
@@ -255,9 +238,7 @@ export default function ProjectEditor() {
 
         <div className="grid md:grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block  font-medium mb-1">
-              Status
-            </label>
+            <label className="block  font-medium mb-1">Status</label>
             <input
               type="text"
               placeholder="Status"
@@ -267,9 +248,7 @@ export default function ProjectEditor() {
             />
           </div>
           <div>
-            <label className="block  font-medium mb-1">
-              Type
-            </label>
+            <label className="block  font-medium mb-1">Type</label>
             <input
               type="text"
               placeholder="Type"
@@ -288,9 +267,7 @@ export default function ProjectEditor() {
             />
           </div>
           <div>
-            <label className="block  font-medium mb-1">
-              Designer
-            </label>
+            <label className="block  font-medium mb-1">Designer</label>
             <input
               type="text"
               placeholder="Designer"
@@ -303,9 +280,7 @@ export default function ProjectEditor() {
 
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block  font-medium mb-1">
-              Location
-            </label>
+            <label className="block  font-medium mb-1">Location</label>
             <input
               type="text"
               placeholder="Location"
@@ -330,7 +305,7 @@ export default function ProjectEditor() {
                   value
                     .split(",")
                     .map((t) => t.trim())
-                    .filter(Boolean)
+                    .filter(Boolean),
                 );
               }}
             />
@@ -339,9 +314,7 @@ export default function ProjectEditor() {
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block  font-medium mb-1">
-              SEO Title
-            </label>
+            <label className="block  font-medium mb-1">SEO Title</label>
             <input
               type="text"
               placeholder="SEO Title"
@@ -351,9 +324,7 @@ export default function ProjectEditor() {
             />
           </div>
           <div>
-            <label className="block  font-medium mb-1">
-              SEO Description
-            </label>
+            <label className="block  font-medium mb-1">SEO Description</label>
             <input
               type="text"
               placeholder="SEO Description"
@@ -385,10 +356,10 @@ export default function ProjectEditor() {
           />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md w-max gap-4 fixed bottom-0 right-10 mx-4 mb-4">
           <button
             onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
           >
             {projectId ? (
               <>
@@ -400,6 +371,15 @@ export default function ProjectEditor() {
               </>
             )}
           </button>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/admin/projects")}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          </div>
         </div>
       </div>
     </div>
