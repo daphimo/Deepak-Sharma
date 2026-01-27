@@ -37,9 +37,10 @@ export default function BlogEditor() {
 
   const checkingAuth = useRequireAuth();
 
-  const [popup, setPopup] = useState<{ type: "success" | "error"; message: string } | null>(
-    null
-  );
+  const [popup, setPopup] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const showPopup = (type: "success" | "error", message: string) => {
     setPopup({ type, message });
@@ -139,23 +140,16 @@ export default function BlogEditor() {
               </>
             ) : (
               <>
-                <Rocket className="w-6 h-6 text-blue-600" /> Create a New Blog Post
+                <Rocket className="w-6 h-6 text-blue-600" /> Create a New Blog
+                Post
               </>
             )}
           </h1>
-
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate("/admin/blogs")}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back
-            </button>
-          
-          </div>
         </div>
 
-        <label className="block text-gray-700 font-medium mb-1">Blog Title</label>
+        <label className="block text-gray-700 font-medium mb-1">
+          Blog Title
+        </label>
         <input
           type="text"
           placeholder="Enter blog title..."
@@ -178,7 +172,9 @@ export default function BlogEditor() {
 
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Author</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Author
+            </label>
             <input
               type="text"
               placeholder="Author name"
@@ -188,7 +184,9 @@ export default function BlogEditor() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Category</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Category
+            </label>
             <input
               type="text"
               placeholder="Category"
@@ -201,7 +199,9 @@ export default function BlogEditor() {
 
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Subcategory</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Subcategory
+            </label>
             <input
               type="text"
               placeholder="Subcategory"
@@ -211,7 +211,9 @@ export default function BlogEditor() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Status</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Status
+            </label>
             <input
               type="text"
               placeholder="Status"
@@ -233,7 +235,9 @@ export default function BlogEditor() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Reading Time</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Reading Time
+            </label>
             <input
               type="text"
               placeholder="e.g. 5 min"
@@ -243,7 +247,9 @@ export default function BlogEditor() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Tags (comma separated)</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Tags (comma separated)
+            </label>
             <input
               type="text"
               placeholder="tag1, tag2"
@@ -256,7 +262,7 @@ export default function BlogEditor() {
                   next
                     .split(",")
                     .map((t) => t.trim())
-                    .filter(Boolean)
+                    .filter(Boolean),
                 );
               }}
             />
@@ -265,7 +271,9 @@ export default function BlogEditor() {
 
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">SEO Title</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              SEO Title
+            </label>
             <input
               type="text"
               placeholder="SEO Title"
@@ -275,7 +283,9 @@ export default function BlogEditor() {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-1">SEO Description</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              SEO Description
+            </label>
             <input
               type="text"
               placeholder="SEO Description"
@@ -294,7 +304,9 @@ export default function BlogEditor() {
           className="mb-4"
         />
 
-        <label className="block text-gray-700 font-medium mb-1">YouTube Embed Code</label>
+        <label className="block text-gray-700 font-medium mb-1">
+          YouTube Embed Code
+        </label>
         <textarea
           placeholder="Paste video embed HTML..."
           className="border border-gray-300 rounded-lg p-3 w-full mb-4 text-gray-800 h-24"
@@ -302,7 +314,9 @@ export default function BlogEditor() {
           onChange={(e) => setVideo(e.target.value)}
         />
 
-        <label className="block text-gray-700 font-medium mb-2">Blog Content</label>
+        <label className="block text-gray-700 font-medium mb-2">
+          Blog Content
+        </label>
         <div className="mb-6 rounded-lg border border-gray-200 bg-white p-3">
           <QuillEditor
             value={content}
@@ -312,10 +326,10 @@ export default function BlogEditor() {
           />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md w-max gap-4 fixed bottom-0 right-10 mx-4 mb-4">
           <button
             onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
           >
             {blogId ? (
               <>
@@ -327,13 +341,27 @@ export default function BlogEditor() {
               </>
             )}
           </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/admin/blogs")}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium shadow-md cursor-pointer transition flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function Popup({ type, message }: { type: "success" | "error"; message: string }) {
+function Popup({
+  type,
+  message,
+}: {
+  type: "success" | "error";
+  message: string;
+}) {
   const Icon = type === "success" ? CheckCircle2 : XCircle;
   return (
     <div
