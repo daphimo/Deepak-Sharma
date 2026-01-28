@@ -1,11 +1,13 @@
 // src/components/Contact.tsx
 import type { FC } from "react";
-import { lazy, Suspense, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
 import Magnet from "./assets/components/Magnet";
 import { useIsTouchDevice } from "./hooks/use-is-touch-device";
+import { supabase } from "./lib/supabaseClient";
+import type { Tables } from "./types/database.types";
 
 const Ballpit = lazy(() => import("./components/Ballpit"));
 
@@ -14,6 +16,26 @@ const Contact: FC = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const isTouchDevice = useIsTouchDevice();
+  const [contactInfo, setContactInfo] = useState<Pick<Tables<"Contents">, "Email" | "Phone"> | null>(null);
+
+  const defaultEmail = "deepakrajeshsharma987654321@gmail.com";
+  const defaultPhone = "+91 94270 11442";
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      const { data, error } = await supabase
+        .from("Contents")
+        .select("Email, Phone")
+        .limit(1)
+        .maybeSingle();
+
+      if (!error && data) {
+        setContactInfo({ Email: data.Email, Phone: data.Phone });
+      }
+    };
+
+    fetchContactInfo();
+  }, []);
 
   const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,19 +99,19 @@ const Contact: FC = () => {
                 <h3 className="text-lg font-semibold">Contact Details</h3>
                 <div className="flex flex-col sm:flex-row gap-2 sm:items-center flex-wrap sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
                   <a
-                    href="mailto:deepakrajeshsharma987654321@gmail.com"
+                    href={`mailto:${contactInfo?.Email || defaultEmail}`}
                     className="flex items-center space-x-2 text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-sm break-all"
                   >
                     <FiMail className="text-lg" />
-                    <span>deepakrajeshsharma987654321@gmail.com</span>
+                    <span>{contactInfo?.Email || defaultEmail}</span>
                   </a>
 
                   <a
-                    href="tel:+919427011442"
+                    href={`tel:${(contactInfo?.Phone || defaultPhone).replace(/\s/g, "")}`}
                     className="flex items-center space-x-2 text-[var(--foreground)] hover:text-[var(--primary)] transition-colors text-sm"
                   >
                     <FiPhone className="text-lg" />
-                    <span>+91 94270 11442</span>
+                    <span>{contactInfo?.Phone || defaultPhone}</span>
                   </a>
                 </div>
               </div>
@@ -189,7 +211,7 @@ const Contact: FC = () => {
               LinkedIn
             </a>
             <a
-              href="mailto:deepakrajeshsharma987654321@gmail.com"
+              href={`mailto:${contactInfo?.Email || defaultEmail}`}
               aria-label="Email"
               className="hover:text-[var(--primary)] transition-colors"
             >
