@@ -6,8 +6,9 @@ import type { ProjectCardData } from "./components/ProjectCard";
 export default function Infinite() {
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [filters, setFilters] = useState<string[]>(["All"]);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, top: 0, height: 0 });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const tabContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [projects, setProjects] = useState<ProjectCardData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,10 +36,15 @@ export default function Infinite() {
 
   useEffect(() => {
     const activeTab = tabRefs.current[filters.indexOf(selectedFilter)];
-    if (activeTab) {
+    const container = tabContainerRef.current;
+    if (activeTab && container) {
+      const containerRect = container.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
       setIndicatorStyle({
-        left: activeTab.offsetLeft,
-        width: activeTab.offsetWidth,
+        left: tabRect.left - containerRect.left,
+        width: tabRect.width,
+        top: tabRect.top - containerRect.top,
+        height: tabRect.height,
       });
     }
   }, [selectedFilter, filters]);
@@ -58,12 +64,17 @@ export default function Infinite() {
       </div>
 
       {/* Desktop Filter Tabs */}
-      <div className="hidden md:flex relative w-fit border border-white/20 rounded-full backdrop-blur-md bg-white/5 mb-12">
+      <div
+        ref={tabContainerRef}
+        className="hidden md:flex justify-center overflow-hidden relative flex-wrap w-fit border border-white/20 rounded-full backdrop-blur-md bg-white/5 mb-12"
+      >
         <div
-          className="absolute top-0 h-full bg-white/20 backdrop-blur-xl rounded-full transition-all duration-500"
+          className="absolute bg-white/20 backdrop-blur-xl rounded-full transition-all duration-500"
           style={{
             left: `${indicatorStyle.left}px`,
             width: `${indicatorStyle.width}px`,
+            top: `${indicatorStyle.top}px`,
+            height: `${indicatorStyle.height}px`,
           }}
         />
         {filters.map((filter, index) => (
