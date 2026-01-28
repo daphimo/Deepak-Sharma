@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -32,11 +32,17 @@ export default function AdminLayout() {
       .finally(() => navigate("/login", { replace: true }));
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
       mainRef.current.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      requestAnimationFrame(() => {
+        mainRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
-  }, [location.pathname]);
+  }, [location.key, location.pathname, location.search]);
 
   if (checkingAuth) {
     return (
@@ -119,7 +125,11 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <main ref={mainRef} className="flex-1 overflow-y-auto bg-[#f3f4f6]">
+      <main
+        id="admin-scroll"
+        ref={mainRef}
+        className="flex-1 overflow-y-auto bg-[#f3f4f6]"
+      >
         <div className="max-w-6xl mx-auto p-6 text-black">
           <Outlet />
         </div>

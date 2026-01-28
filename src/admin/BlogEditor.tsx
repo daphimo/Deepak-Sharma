@@ -48,6 +48,15 @@ export default function BlogEditor() {
   };
 
   useEffect(() => {
+    const container = document.getElementById("admin-scroll");
+    if (container) {
+      container.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  }, [blogId]);
+
+  useEffect(() => {
     const fetchBlog = async () => {
       if (!blogId) return;
       const { data, error } = await supabase

@@ -53,6 +53,15 @@ export default function ProjectEditor() {
   };
 
   useEffect(() => {
+    const container = document.getElementById("admin-scroll");
+    if (container) {
+      container.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  }, [projectId]);
+
+  useEffect(() => {
     const fetchProject = async () => {
       if (!projectId) return;
       const { data, error } = await supabase
