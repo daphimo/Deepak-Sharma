@@ -41,6 +41,8 @@ export default defineConfig({
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        // Keep desktop-only WebGL code lazy; precaching it would download it on mobile.
+        globIgnores: ["**/GlobeBackgroundDesktop-*.js", "**/three-*.js"],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/api\.codenirmata\.com\/.*$/,

@@ -114,7 +114,7 @@ export function QuillEditor({
     const range = editor.getSelection(true);
     const index = range?.index ?? editor.getLength();
     editor.insertEmbed(index, "image", src, "user");
-    editor.setSelection(index + 1);
+    editor.setSelection(index + 1, 0, "silent");
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {

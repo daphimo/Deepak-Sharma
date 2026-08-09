@@ -119,6 +119,24 @@
   }
 }
 
+/* Skip layout/paint work for below-the-fold sections until they approach view. */
+#aboutme,
+#projects,
+#contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+@media (max-width: 767px) {
+  .backdrop-blur-xl {
+    --tw-backdrop-blur: blur(10px);
+  }
+
+  .backdrop-blur-md {
+    --tw-backdrop-blur: blur(8px);
+  }
+}
+
 /* Theme polish */
 html.light {
   color-scheme: light;

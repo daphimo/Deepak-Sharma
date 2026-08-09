@@ -47,7 +47,11 @@ export default function DarkInteractiveBackground() {
 
   useEffect(() => {
     updatePaletteFromTheme();
-    const observer = new MutationObserver(updatePaletteFromTheme);
+    const handleThemeChange = () => {
+      updatePaletteFromTheme();
+      window.dispatchEvent(new Event("portfolio-theme-change"));
+    };
+    const observer = new MutationObserver(handleThemeChange);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -64,10 +68,11 @@ export default function DarkInteractiveBackground() {
     const canvas = canvasRef.current!;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
-    let dpr = Math.max(1, window.devicePixelRatio || 1);
+    let dpr = Math.min(window.innerWidth < 768 ? 1.25 : 2, Math.max(1, window.devicePixelRatio || 1));
+    let framePending = false;
 
     function resize() {
-      dpr = Math.max(1, window.devicePixelRatio || 1);
+      dpr = Math.min(window.innerWidth < 768 ? 1.25 : 2, Math.max(1, window.devicePixelRatio || 1));
       const w = window.innerWidth;
       const h = window.innerHeight;
       canvas.width = Math.floor(w * dpr);
@@ -125,10 +130,16 @@ export default function DarkInteractiveBackground() {
       ctx.fillRect(0, 0, w, h);
     }
 
-    function loop() {
+    function draw() {
       drawGrid();
       drawPointerGlow();
-      rafRef.current = requestAnimationFrame(loop);
+      framePending = false;
+    }
+
+    function scheduleDraw() {
+      if (framePending || document.hidden) return;
+      framePending = true;
+      rafRef.current = requestAnimationFrame(draw);
     }
 
     function hexToRgba(hex: string, alpha = 1) {
@@ -144,23 +155,38 @@ export default function DarkInteractiveBackground() {
       pointerRef.current.active = true;
       pointerRef.current.x = e.clientX;
       pointerRef.current.y = e.clientY;
+      scheduleDraw();
     }
     function onPointerLeave() {
       pointerRef.current.active = false;
+      scheduleDraw();
+    }
+
+    function onResize() {
+      resize();
+      scheduleDraw();
+    }
+
+    function onVisibilityChange() {
+      if (!document.hidden) scheduleDraw();
     }
 
     resize();
-    window.addEventListener("resize", resize);
-    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("portfolio-theme-change", scheduleDraw);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
-    rafRef.current = requestAnimationFrame(loop);
+    scheduleDraw();
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("portfolio-theme-change", scheduleDraw);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 

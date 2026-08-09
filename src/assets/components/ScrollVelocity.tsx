@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useRef, useLayoutEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -57,8 +57,9 @@ function useElementWidth<T extends HTMLElement>(
       }
     }
     updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
+    const observer = new ResizeObserver(updateWidth);
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, [ref]);
 
   return width;
@@ -93,6 +94,8 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
     scrollerStyle,
   }: VelocityTextProps) {
     const baseX = useMotionValue(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
     const scrollOptions = scrollContainerRef
       ? { container: scrollContainerRef }
       : {};
@@ -125,8 +128,23 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
 
     const directionFactor = useRef<number>(1);
     const lastTime = useRef<number>(0);
+    const lastMobileFrame = useRef<number>(0);
+
+    useEffect(() => {
+      const element = containerRef.current;
+      if (!element) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => setIsVisible(entry.isIntersecting),
+        { rootMargin: "150px 0px" }
+      );
+      observer.observe(element);
+      return () => observer.disconnect();
+    }, []);
 
     useAnimationFrame((t, delta) => {
+      if (!isVisible || document.hidden) return;
+      if (window.innerWidth < 768 && t - lastMobileFrame.current < 32) return;
+      lastMobileFrame.current = t;
       // Use time-based calculations for smoother animation
       const timeScale = t * 0.001; // Convert to seconds
       const timeDelta = lastTime.current === 0 ? delta : t - lastTime.current;
@@ -170,7 +188,8 @@ export const ScrollVelocity: React.FC<ScrollVelocityProps> = ({
 
     return (
       <div
-        className={`${parallaxClassName} relative overflow-hidden`}
+        ref={containerRef}
+        className={`${parallaxClassName ?? ""} relative`}
         style={parallaxStyle}
       >
         <motion.div

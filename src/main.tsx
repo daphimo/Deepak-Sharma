@@ -1,5 +1,5 @@
 // src/index.tsx
-import { StrictMode, lazy, Suspense, useEffect } from "react";
+import { StrictMode, lazy, Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import "./index.css";
@@ -33,26 +33,29 @@ const scrollToSection = (id: string, offset = 0) => {
 // Hook for smooth scrolling within page sections
 const useSmoothScroll = () => {
   useEffect(() => {
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const targetId = (link as HTMLAnchorElement)
-          .getAttribute("href")!
-          .substring(1);
-        scrollToSection(targetId, 120);
-      });
-    });
-    return () => {
-      links.forEach((link) => {
-        link.removeEventListener("click", () => {});
-      });
+    const handleClick = (event: MouseEvent) => {
+      const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!link) return;
+      event.preventDefault();
+      scrollToSection(link.hash.substring(1), 120);
     };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
   }, []);
 };
 
 const MainLayout = () => {
   useSmoothScroll();
+  const [showMobileDock, setShowMobileDock] = useState(() =>
+    window.matchMedia("(max-width: 767px)").matches
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const update = (event: MediaQueryListEvent) => setShowMobileDock(event.matches);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
 
   return (
     <>
@@ -64,7 +67,7 @@ const MainLayout = () => {
         <Header />
         <PageLoader />
         <AppRouter />
-        <Dock />
+        {showMobileDock ? <Dock /> : null}
         <StylishBackToTop />
         <div id="contact">
           <Contact />

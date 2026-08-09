@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import myImage from "/files/my_profile.png";
 import { supabase } from "./lib/supabaseClient";
+// import GlobeBackground from "./components/GlobeBackground";
 
 type CounterProps = {
   end: number;
@@ -18,6 +19,8 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
   const hasAnimatedRef = useRef(false); // <-- useRef to persist across renders
 
   useEffect(() => {
+    let frameId = 0;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimatedRef.current) {
@@ -25,12 +28,12 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
           const duration = 500;
           const increment = end / (duration / 16);
 
-          const timeout = setTimeout(() => {
+          timeoutId = setTimeout(() => {
             const step = () => {
               start += increment;
               if (start < end) {
                 setCount(Math.ceil(start));
-                requestAnimationFrame(step);
+                frameId = requestAnimationFrame(step);
               } else {
                 setCount(end);
               }
@@ -39,7 +42,7 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
           }, delay);
 
           hasAnimatedRef.current = true; // mark as animated
-          return () => clearTimeout(timeout);
+          observer.disconnect();
         }
       },
       { threshold: 0.5 }
@@ -48,7 +51,9 @@ const Counter: React.FC<CounterProps & { suffix?: string }> = ({
     if (ref.current) observer.observe(ref.current);
 
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+      if (frameId) cancelAnimationFrame(frameId);
     };
   }, [end, delay]);
 
@@ -130,7 +135,9 @@ const App = () => {
   }, []);
 
   return (
-    <main className="min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-28 text-[var(--foreground)] transition-colors duration-500">
+    <div className="relative">
+      {/* <GlobeBackground /> */}
+      <main className="relative z-10 min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-28 text-[var(--foreground)] transition-colors duration-500">
       {/* Hero Intro */}
       <section className="text-center mb-4">
         <h1 className="text-4xl md:text-6xl uppercase leading-tight">
@@ -181,7 +188,8 @@ const App = () => {
           ))}
         </div>
       </section>
-    </main>
+      </main>
+    </div>
   );
 };
 

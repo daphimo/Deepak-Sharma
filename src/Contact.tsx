@@ -1,21 +1,16 @@
 // src/components/Contact.tsx
 import type { FC } from "react";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FiMail, FiPhone } from "react-icons/fi";
 import emailjs from "@emailjs/browser";
-import Magnet from "./assets/components/Magnet";
-import { useIsTouchDevice } from "./hooks/use-is-touch-device";
 import { supabase } from "./lib/supabaseClient";
 import type { Tables } from "./types/database.types";
-
-const Ballpit = lazy(() => import("./components/Ballpit"));
 
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
-  const isTouchDevice = useIsTouchDevice();
   const [contactInfo, setContactInfo] = useState<Pick<Tables<"Contents">, "Email" | "Phone"> | null>(null);
 
   const defaultEmail = "deepakrajeshsharma987654321@gmail.com";
@@ -66,19 +61,10 @@ const Contact: FC = () => {
 
   return (
     <section className="relative w-full mb-20 text-[var(--foreground)] transition-colors duration-500">
-      {/* Ballpit full background */}
-      <div className="absolute inset-0 -z-10 bottom-0" id="BallpitContainer">
-        {!isTouchDevice ? (
-          <Suspense fallback={null}>
-            <Ballpit
-              hoverIntensity={1}
-              rotateOnHover={true}
-              hue={0}
-              forceHoverState={true}
-            />
-          </Suspense>
-        ) : null}
-      </div>
+      <div
+        className="absolute inset-0 -z-10 bottom-0 bg-[radial-gradient(circle_at_50%_35%,color-mix(in_oklch,var(--primary),transparent_88%),transparent_62%)]"
+        aria-hidden="true"
+      />
 
       {/* Contact content container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 transition-colors duration-500 text-[var(--foreground)]">
@@ -162,15 +148,13 @@ const Contact: FC = () => {
                   required
                   className="w-full px-4 py-2 rounded-2xl bg-white/70 border border-black/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm placeholder:text-[var(--foreground)] dark:bg-white/5 dark:border-white/15"
                 ></textarea>
-                <Magnet padding={50} disabled={false} magnetStrength={5}>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex cursor-pointer font-bold items-center gap-2 text-sm bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-                  >
-                    {loading ? "Sending..." : "Send"}
-                  </button>
-                </Magnet>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex cursor-pointer font-bold items-center gap-2 text-sm bg-[var(--primary)] text-[var(--primary-foreground)] px-4 py-2 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                >
+                  {loading ? "Sending..." : "Send"}
+                </button>
                 {status && (
                   <p className="text-sm mt-2 text-[var(--foreground)]">
                     {status}

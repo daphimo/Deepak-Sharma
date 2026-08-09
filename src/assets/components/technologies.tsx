@@ -94,34 +94,43 @@ export default function TechShowcase() {
   ];
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <section
+      className="relative z-0 w-full flex flex-col py-8 md:py-12"
+      aria-label="Technologies"
+    >
       {/* First strip - tilted, scrolls right */}
-      <div className="-rotate-6">
-        <ScrollVelocity
-          texts={[
-            <div key="row1" className="flex gap-16 items-center">
-              {icons}
-            </div>,
-          ]}
-          velocity={150}
-          className="mx-6 my-0"
-          numCopies={12}
-        />
+      <div className="py-2">
+        <div className="-rotate-6">
+          <ScrollVelocity
+            texts={[
+              <div key="row1" className="flex min-h-[60px] gap-16 items-center">
+                {icons}
+              </div>,
+            ]}
+            velocity={150}
+            className="mx-6 my-0"
+            numCopies={3}
+            scrollerClassName="items-center leading-none"
+          />
+        </div>
       </div>
 
       {/* Second strip - same tilt (parallel), scrolls left */}
-      <div className="-rotate-6">
-        <ScrollVelocity
-          texts={[
-            <div key="row2" className="flex gap-16 items-center">
-              {icons}
-            </div>,
-          ]}
-          velocity={-150}
-          className="mx-6 my-0"
-          numCopies={12}
-        />
+      <div className="py-2">
+        <div className="-rotate-6">
+          <ScrollVelocity
+            texts={[
+              <div key="row2" className="flex min-h-[60px] gap-16 items-center">
+                {icons}
+              </div>,
+            ]}
+            velocity={-150}
+            className="mx-6 my-0"
+            numCopies={3}
+            scrollerClassName="items-center leading-none"
+          />
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
