@@ -52,7 +52,8 @@ const Contact: FC = () => {
           setStatus("Message sent successfully ✅");
           formRef.current?.reset();
         },
-        () => {
+        (error) => {
+          console.error("EmailJS failed to send the contact form:", error);
           setLoading(false);
           setStatus("Failed to send ❌ Please try again.");
         }
