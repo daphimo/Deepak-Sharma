@@ -7,11 +7,43 @@ import emailjs from "@emailjs/browser";
 import { supabase } from "./lib/supabaseClient";
 import type { Tables } from "./types/database.types";
 
+type DownloadItem = {
+  name: string;
+  file: string;
+  storagePath?: string;
+};
+
+const isAvailableDownload = (value: unknown): value is DownloadItem => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+
+  const item = value as Record<string, unknown>;
+  return (
+    typeof item.name === "string" &&
+    item.name.trim().length > 0 &&
+    typeof item.file === "string" &&
+    item.file.trim().length > 0
+  );
+};
+
+const getDownloadName = (name: string, fileUrl: string) => {
+  if (/\.[a-z0-9]+$/i.test(name)) return name;
+
+  try {
+    const storedName = decodeURIComponent(new URL(fileUrl).pathname.split("/").pop() || "");
+    const extension = storedName.match(/(\.[a-z0-9]+)$/i)?.[1];
+    return extension ? `${name}${extension}` : name;
+  } catch {
+    return name;
+  }
+};
+
 const Contact: FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
-  const [contactInfo, setContactInfo] = useState<Pick<Tables<"Contents">, "Email" | "Phone"> | null>(null);
+  const [contactInfo, setContactInfo] = useState<
+    Pick<Tables<"Contents">, "Email" | "Phone" | "Downloads"> | null
+  >(null);
 
   const defaultEmail = "deepakrajeshsharma987654321@gmail.com";
   const defaultPhone = "+91 94270 11442";
@@ -20,17 +52,49 @@ const Contact: FC = () => {
     const fetchContactInfo = async () => {
       const { data, error } = await supabase
         .from("Contents")
-        .select("Email, Phone")
+        .select("Email, Phone, Downloads")
         .limit(1)
         .maybeSingle();
 
       if (!error && data) {
-        setContactInfo({ Email: data.Email, Phone: data.Phone });
+        setContactInfo({
+          Email: data.Email,
+          Phone: data.Phone,
+          Downloads: data.Downloads,
+        });
       }
     };
 
     fetchContactInfo();
   }, []);
+
+  const downloads = Array.isArray(contactInfo?.Downloads)
+    ? contactInfo.Downloads.filter(isAvailableDownload)
+    : [];
+
+  const handleDownload = async (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    file: DownloadItem
+  ) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(file.file);
+      if (!response.ok) throw new Error(`Download failed: ${response.status}`);
+
+      const objectUrl = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = getDownloadName(file.name, file.file);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error("Unable to download the Supabase file:", error);
+      window.open(file.file, "_blank", "noopener,noreferrer");
+    }
+  };
 
   const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,15 +125,10 @@ const Contact: FC = () => {
   };
 
   return (
-    <section className="relative w-full mb-20 text-[var(--foreground)] transition-colors duration-500">
-      <div
-        className="absolute inset-0 -z-10 bottom-0 bg-[radial-gradient(circle_at_50%_35%,color-mix(in_oklch,var(--primary),transparent_88%),transparent_62%)]"
-        aria-hidden="true"
-      />
-
+    <section className="relative w-full mb-2 text-[var(--foreground)] transition-colors duration-500">
       {/* Contact content container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 transition-colors duration-500 text-[var(--foreground)]">
-        <div className="w-full p-6 rounded-2xl shadow-lg backdrop-blur-md border transition-colors duration-500 bg-white/75 border-black/10 dark:bg-[var(--card)] dark:border-white/20">
+        <div className="w-full p-6 rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.06)] backdrop-blur-xl backdrop-saturate-150 transition-colors duration-500 bg-white/15 border-white/35 dark:bg-white/[0.025] dark:border-white/10 dark:shadow-[0_8px_32px_rgba(0,0,0,0.18)]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Side */}
             <div className="flex flex-col space-y-5 justify-center">
@@ -102,6 +161,23 @@ const Contact: FC = () => {
                   </a>
                 </div>
               </div>
+
+              {downloads.length > 0 && (
+                <div className="flex flex-wrap gap-x-6 gap-y-2 uppercase">
+                  {downloads.map((file, index) => (
+                    <a
+                      key={file.storagePath || file.file || index}
+                      href={file.file}
+                      download={getDownloadName(file.name, file.file)}
+                      onClick={(event) => handleDownload(event, file)}
+                      rel="noreferrer"
+                      className="relative inline-block text-sm font-medium text-[var(--foreground)] transition-colors hover:text-[var(--primary)] after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:bg-[var(--primary)] after:transition-transform after:duration-300 hover:after:origin-left hover:after:scale-x-100"
+                    >
+                      Get {file.name}
+                    </a>
+                  ))}
+                </div>
+              )}
 
               <div className="flex space-x-4 pt-2">
                 <a

@@ -1,0 +1,154 @@
+.scroll-progress {
+  --scroll-accent: 0, 112, 243;
+  --scroll-track: color-mix(in oklch, var(--foreground), transparent 88%);
+  --scroll-surface: color-mix(in oklch, var(--card), transparent 18%);
+  --scroll-border: color-mix(in oklch, var(--foreground), transparent 82%);
+  --scroll-shadow: rgba(0, 112, 243, 0.18);
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 45;
+  width: 0;
+  height: 100dvh;
+  pointer-events: none;
+  color: var(--foreground);
+  transition: color 300ms ease;
+}
+
+.dark .scroll-progress {
+  --scroll-accent: 132, 0, 255;
+  --scroll-track: color-mix(in oklch, var(--foreground), transparent 91%);
+  --scroll-surface: color-mix(in oklch, var(--card), transparent 12%);
+  --scroll-border: rgba(132, 0, 255, 0.3);
+  --scroll-shadow: rgba(132, 0, 255, 0.28);
+}
+
+.scroll-progress__track {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  width: 2px;
+  height: 100%;
+  overflow: hidden;
+  background: var(--scroll-track);
+  transition: background-color 300ms ease;
+}
+
+.scroll-progress__fill {
+  width: 100%;
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top;
+  will-change: transform;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--scroll-accent), 0.45),
+    rgba(var(--scroll-accent), 1) 55%,
+    color-mix(in srgb, rgb(var(--scroll-accent)) 68%, white)
+  );
+  box-shadow: 0 0 8px rgba(var(--scroll-accent), 0.72);
+}
+
+.scroll-progress__button {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 1.8rem;
+  min-height: 3.8rem;
+  padding: 0.48rem 0.3rem;
+  transform: translateY(-50%);
+  border: 1px solid var(--scroll-border);
+  border-radius: var(--radius);
+  background: var(--scroll-surface);
+  box-shadow: 0 5px 20px var(--scroll-shadow);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  color: var(--foreground);
+  cursor: pointer;
+  pointer-events: auto;
+  overflow: hidden;
+  transition:
+    color 300ms ease,
+    background-color 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 200ms ease;
+}
+
+.scroll-progress__button:hover,
+.scroll-progress__button:focus-visible {
+  color: rgb(var(--scroll-accent));
+  border-color: rgba(var(--scroll-accent), 0.48);
+  box-shadow: 0 5px 24px rgba(var(--scroll-accent), 0.34);
+}
+
+.scroll-progress__button:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.scroll-progress__percentage,
+.scroll-progress__chevron {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.scroll-progress__percentage {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-align: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.scroll-progress__chevron {
+  margin: auto;
+  opacity: 0;
+  transform: translateY(7px);
+}
+
+.scroll-progress__button:hover .scroll-progress__percentage,
+.scroll-progress__button:focus-visible .scroll-progress__percentage {
+  opacity: 0;
+  transform: rotate(180deg) translateY(7px);
+}
+
+.scroll-progress__button:hover .scroll-progress__chevron,
+.scroll-progress__button:focus-visible .scroll-progress__chevron {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 767px) {
+  .scroll-progress__track {
+    right: 1px;
+    width: 1px;
+  }
+
+  .scroll-progress__button {
+    right: 8px;
+    width: 1.55rem;
+    min-height: 3.3rem;
+    padding: 0.38rem 0.22rem;
+  }
+
+  .scroll-progress__percentage {
+    font-size: 0.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress,
+  .scroll-progress__track,
+  .scroll-progress__button,
+  .scroll-progress__percentage,
+  .scroll-progress__chevron {
+    transition: none;
+  }
+}

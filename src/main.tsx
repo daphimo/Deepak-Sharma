@@ -9,10 +9,11 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import ScrollToTop from "./assets/components/ScrollToTop";
 import PageLoader from "./assets/components/PageLoader";
+import ScrollProgress from "./components/ScrollProgress/ScrollProgress";
 const Space = lazy(() => import("./backgrounds/Space"));
 const Header = lazy(() => import("./assets/components/header"));
 const Dock = lazy(() => import("./assets/components/dock"));
-const StylishBackToTop = lazy(() => import("./assets/components/backtotop"));
+// const StylishBackToTop = lazy(() => import("./assets/components/backtotop"));
 const AppRouter = lazy(() => import("./routes/AppRouter.tsx"));
 const Contact = lazy(() => import("./Contact"));
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
@@ -68,7 +69,7 @@ const MainLayout = () => {
         <PageLoader />
         <AppRouter />
         {showMobileDock ? <Dock /> : null}
-        <StylishBackToTop />
+        {/* <StylishBackToTop /> — replaced by the ScrollProgress back-to-top control. */}
         <div id="contact">
           <Contact />
         </div>
@@ -89,15 +90,18 @@ const Root = () => {
     }
   }, [isAdminRoute]);
 
-  if (isAdminRoute) {
-    return (
-      <Suspense fallback={<PageLoader />}>
-        <AdminRoutes />
-      </Suspense>
-    );
-  }
-
-  return <MainLayout />;
+  return (
+    <>
+      <ScrollProgress />
+      {isAdminRoute ? (
+        <Suspense fallback={<PageLoader />}>
+          <AdminRoutes />
+        </Suspense>
+      ) : (
+        <MainLayout />
+      )}
+    </>
+  );
 };
 
 createRoot(document.getElementById("root")!).render(
