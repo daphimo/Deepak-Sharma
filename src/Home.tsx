@@ -11,6 +11,9 @@ const Home = () => {
       <div id="intro">
         <App />
       </div>
+      <div id="projects">
+        <Projects />
+      </div>
       <div id="aboutme">
         <AboutMe />
         <Tech />
@@ -18,9 +21,7 @@ const Home = () => {
       {/* <div id="metrics">
         <Graphs />
       </div> */}
-      <div id="projects">
-        <Projects />
-      </div>
+
       {/* FeaturedBlogs is intentionally kept in the codebase, but not mounted. */}
     </main>
   );
