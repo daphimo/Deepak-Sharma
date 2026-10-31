@@ -3,7 +3,6 @@ import App from "./App.tsx";
 import AboutMe from "./MoreAboutMe";
 import Tech from "./assets/components/technologies";
 import Projects from "./Projects";
-// import Graphs from "./Graphs";
 
 const Home = () => {
   return (
@@ -18,11 +17,6 @@ const Home = () => {
         <AboutMe />
         <Tech />
       </div>
-      {/* <div id="metrics">
-        <Graphs />
-      </div> */}
-
-      {/* FeaturedBlogs is intentionally kept in the codebase, but not mounted. */}
     </main>
   );
 };

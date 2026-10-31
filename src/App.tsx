@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import myImage from "/files/my_profile.png";
 import { supabase } from "./lib/supabaseClient";
-// import GlobeBackground from "./components/GlobeBackground";
 
 type CounterProps = {
   end: number;
@@ -136,7 +135,6 @@ const App = () => {
 
   return (
     <div className="relative">
-      {/* <GlobeBackground /> */}
       <main className="relative z-10 min-h-screen max-w-7xl mx-auto flex flex-col items-center px-4 pb-20 pt-28 text-[var(--foreground)] transition-colors duration-500">
       {/* Hero Intro */}
       <section className="text-center mb-4">

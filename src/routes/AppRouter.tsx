@@ -10,6 +10,7 @@ const Download = lazy(() => import("../Download.tsx"));
 const Blogs = lazy(() => import("../BlogsPage.tsx"));
 const BlogDetail = lazy(() => import("../blogs/BlogDetail.tsx"));
 const SupabaseProjectDetail = lazy(() => import("../projects/ProjectDetail.tsx"));
+const NewUpdatesApp = lazy(() => import("../new-updates/NewUpdatesApp.jsx"));
 // Admin routes are handled separately in AdminRoutes
 
 const AppRouter = () => {
@@ -27,6 +28,9 @@ const AppRouter = () => {
 
         {/* Project detail */}
         <Route path="/projects/:slug" element={<SupabaseProjectDetail />} />
+
+        {/* Isolated updated portfolio */}
+        <Route path="/new-updates/*" element={<NewUpdatesApp />} />
       </Routes>
     </Suspense>
   );

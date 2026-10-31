@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import "./index.css";
 import "./App.css";
-import "quill/dist/quill.snow.css";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import ScrollToTop from "./assets/components/ScrollToTop";
@@ -83,6 +82,7 @@ const Root = () => {
   const location = useLocation();
   const isAdminRoute =
     location.pathname.startsWith("/admin") || location.pathname.startsWith("/login");
+  const isNewUpdatesRoute = location.pathname.startsWith("/new-updates");
 
   useEffect(() => {
     if (isAdminRoute) {
@@ -92,10 +92,14 @@ const Root = () => {
 
   return (
     <>
-      <ScrollProgress />
+      {!isNewUpdatesRoute && <ScrollProgress />}
       {isAdminRoute ? (
         <Suspense fallback={<PageLoader />}>
           <AdminRoutes />
+        </Suspense>
+      ) : isNewUpdatesRoute ? (
+        <Suspense fallback={<PageLoader />}>
+          <AppRouter />
         </Suspense>
       ) : (
         <MainLayout />

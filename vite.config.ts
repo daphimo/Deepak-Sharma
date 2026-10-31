@@ -7,8 +7,8 @@ import path from "path";
 export default defineConfig({
   resolve: {
     alias: {
+      "@new": path.resolve(__dirname, "src/new-updates"),
       "@": path.resolve(__dirname, "src"),
-      "styled-components": path.resolve(__dirname, "node_modules/styled-components"),
     },
   },
   plugins: [
@@ -90,9 +90,9 @@ export default defineConfig({
         manualChunks: {
           react: ["react", "react-dom", "react-router-dom"],
           supabase: ["@supabase/supabase-js"],
-          editor: ["react-quill", "quill", "prismjs"],
-          three: ["three", "@react-three/fiber", "@react-three/drei", "@react-three/postprocessing"],
-          motion: ["framer-motion", "motion", "gsap", "@gsap/react", "@studio-freight/lenis"],
+          editor: ["quill", "prismjs"],
+          three: ["three", "@react-three/fiber", "@react-three/drei"],
+          motion: ["framer-motion", "motion", "gsap", "@gsap/react"],
         },
       },
     },
