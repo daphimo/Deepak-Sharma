@@ -381,7 +381,7 @@ function DownloadsField({
                   </div>
                   <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/70">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 transition-all duration-150"
+                      className="h-full rounded-full bg-gradient-to-r from-blue-600 via-sky-400 to-blue-500 transition-all duration-150"
                       style={{
                         width: `${Math.min(
                           Math.max(progress || 10, 10),

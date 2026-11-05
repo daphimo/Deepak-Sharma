@@ -310,7 +310,7 @@ export default function BlogsList() {
           </button>
           <button
             onClick={() => importInputRef.current?.click()}
-            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-2 rounded-lg flex items-center gap-2 cursor-pointer text-sm"
+            className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded-lg flex items-center gap-2 cursor-pointer text-sm"
           >
             <Upload className="w-4 h-4" /> Import CSV
           </button>

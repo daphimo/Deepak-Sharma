@@ -32,14 +32,14 @@ export default function Dashboard() {
       title: "Projects",
       value: projectCount === null ? "…" : projectCount,
       icon: FolderGit2,
-      color: "from-emerald-500 to-teal-500",
+      color: "from-blue-600 to-sky-400",
       href: "/admin/projects",
     },
     {
       title: "Content",
       value: "Edit",
       icon: Shield,
-      color: "from-amber-500 to-orange-500",
+      color: "from-blue-700 to-blue-500",
       href: "/admin/content",
     },
   ];

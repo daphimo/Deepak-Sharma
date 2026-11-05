@@ -1,139 +1,69 @@
-import {  useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard,
-  FileText,
-  FolderGit2,
-  FilePenLine,
-  LogOut,
-  Menu,
-  Home,
-} from "lucide-react";
+import { ChevronRight, ExternalLink, FilePenLine, FileText, FolderGit2, LayoutDashboard, LogOut, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useRequireAuth } from "./useRequireAuth";
+import "./admin.css";
 
 const navItems = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Overview", path: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Blogs", path: "/admin/blogs", icon: FileText },
   { label: "Projects", path: "/admin/projects", icon: FolderGit2 },
-  { label: "Content", path: "/admin/content", icon: FilePenLine },
+  { label: "Site content", path: "/admin/content", icon: FilePenLine },
 ];
+const pageNames: Record<string, string> = { "/admin/dashboard": "Overview", "/admin/blogs": "Blogs", "/admin/blogs/blog-editor": "Blog editor", "/admin/projects": "Projects", "/admin/projects/project-editor": "Project editor", "/admin/content": "Site content" };
 
 export default function AdminLayout() {
   const checkingAuth = useRequireAuth();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [email, setEmail] = useState("Administrator");
   const navigate = useNavigate();
   const location = useLocation();
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const title = pageNames[location.pathname] || "Admin";
 
-  const handleLogout = () => {
-    supabase.auth
-      .signOut()
-      .finally(() => navigate("/login", { replace: true }));
-  };
+  useEffect(() => { supabase.auth.getUser().then(({ data }) => { if (data.user?.email) setEmail(data.user.email); }); }, []);
+  const goTo = (path: string) => { navigate(path); setMobileOpen(false); };
+  const handleLogout = () => { supabase.auth.signOut().finally(() => navigate("/login", { replace: true })); };
+  useLayoutEffect(() => { mainRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" }); }, [location.key, location.pathname, location.search]);
 
-  useLayoutEffect(() => {
-    if (mainRef.current) {
-      mainRef.current.scrollTop = 0;
-      mainRef.current.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      requestAnimationFrame(() => {
-        mainRef.current?.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      });
-    } else {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    }
-  }, [location.key, location.pathname, location.search]);
-
-  if (checkingAuth) {
-    return (
-      <div className="min-h-screen bg-white text-black flex items-center justify-center">
-        <div className="px-4 py-3 rounded-xl bg-white border border-gray-200 shadow-lg">
-          Checking session...
-        </div>
-      </div>
-    );
-  }
+  if (checkingAuth) return <div className="admin-login dashboard-shell"><div className="admin-loading-card"><span className="admin-spinner" />Checking session</div></div>;
 
   return (
-    <div className="h-[100vh] bg-white text-black flex">
-      <aside
-        className={`flex flex-col border-r border-gray-200 bg-white transition-all duration-300 ${
-          collapsed ? "w-16" : "w-64"
-        }`}
-      >
-        <div
-          className={`flex items-center  px-4 py-4 border-b border-gray-200 ${
-            collapsed ? "justify-center" : "justify-between"
-          }`}
-        >
-          {!collapsed && (
-            <span className="font-semibold tracking-wide text-black">
-              Admin
-            </span>
-          )}
-          <button
-            onClick={() => setCollapsed((p) => !p)}
-            className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer"
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+    <div className={`dashboard-shell ${collapsed ? "is-collapsed" : ""}`}>
+      {mobileOpen && <button className="admin-backdrop" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
+      <aside className={`admin-sidebar ${mobileOpen ? "is-open" : ""}`}>
+        <div className="admin-brand">
+          <div className="admin-brand-mark">DS</div>
+          {!collapsed && <div className="admin-brand-copy"><strong>Deepak Sharma</strong><span>Portfolio Admin</span></div>}
+          <button className="admin-icon-button admin-mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X /></button>
         </div>
-
-        <nav className="flex-1 py-4 space-y-1">
+        <nav className="admin-nav" aria-label="Admin navigation">
+          {!collapsed && <p className="admin-nav-label">Workspace</p>}
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = location.pathname === item.path;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition cursor-pointer ${
-                  active
-                    ? "bg-sky-50 text-sky-700"
-                    : "text-gray-800 hover:bg-gray-100"
-                }
-                    ${collapsed ? "justify-center" : "justify-start"}`}
-              >
-                <Icon className="h-5 w-5" />
-                {!collapsed && <span>{item.label}</span>}
-              </button>
-            );
+            const active = location.pathname === item.path || (item.path !== "/admin/dashboard" && location.pathname.startsWith(item.path + "/"));
+            return <button key={item.path} onClick={() => goTo(item.path)} className={`admin-nav-item ${active ? "is-active" : ""}`} title={collapsed ? item.label : undefined}><Icon />{!collapsed && <span>{item.label}</span>}</button>;
           })}
         </nav>
-
-        <div className="p-4 border-t border-gray-200">
-          <a
-            href="/"
-            className={`w-full mb-3 flex items-center rounded-lg bg-black transition cursor-pointer text-sm font-semibold text-white
-      ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
-    `}
-          >
-            <Home className="h-4 w-4 flex-shrink-0" />
-            {!collapsed && "Live Site"}
-          </a>
-
-          <button
-            onClick={handleLogout}
-            className={`w-full flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition cursor-pointer text-sm font-semibold text-gray-800
-      ${collapsed ? "justify-center p-3" : "justify-start gap-2 px-4 py-2"}
-    `}
-          >
-            <LogOut className="h-4 w-4 flex-shrink-0" />
-            {!collapsed && "Logout"}
-          </button>
+        <div className="admin-sidebar-footer">
+          <a href="/" className="admin-nav-item" title={collapsed ? "View live site" : undefined}><ExternalLink />{!collapsed && <span>View live site</span>}</a>
+          <button onClick={handleLogout} className="admin-nav-item admin-logout" title={collapsed ? "Sign out" : undefined}><LogOut />{!collapsed && <span>Sign out</span>}</button>
+          {!collapsed && <div className="admin-profile"><div className="admin-avatar">{email.slice(0, 1).toUpperCase()}</div><div><strong>{email.split("@")[0]}</strong><span>{email}</span></div></div>}
         </div>
       </aside>
-
-      <main
-        id="admin-scroll"
-        ref={mainRef}
-        className="flex-1 overflow-y-auto bg-[#f3f4f6]"
-      >
-        <div className="max-w-6xl mx-auto p-6 text-black">
-          <Outlet />
-        </div>
-      </main>
+      <section className="admin-workspace">
+        <header className="admin-topbar">
+          <div className="admin-topbar-left">
+            <button className="admin-icon-button admin-mobile-menu" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu /></button>
+            <button className="admin-icon-button admin-collapse" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>{collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}</button>
+            <div><div className="admin-breadcrumb"><span>Admin</span><ChevronRight /><span>{title}</span></div><h1>{title}</h1></div>
+          </div>
+          <div className="admin-top-profile"><div className="admin-avatar">{email.slice(0, 1).toUpperCase()}</div><div><strong>{email.split("@")[0]}</strong><span>Administrator</span></div></div>
+        </header>
+        <main id="admin-scroll" ref={mainRef} className="admin-main"><div className="admin-content"><Outlet /></div></main>
+      </section>
     </div>
   );
 }

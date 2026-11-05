@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { LogIn, Lock } from "lucide-react";
+import "./admin.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,8 +38,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white px-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg p-8 shadow-2xl">
+    <div className="dashboard-shell admin-login">
+      <div className="admin-login-card">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-12 w-12 rounded-full bg-sky-500/10 flex items-center justify-center">
             <Lock className="h-6 w-6 text-sky-300" />
