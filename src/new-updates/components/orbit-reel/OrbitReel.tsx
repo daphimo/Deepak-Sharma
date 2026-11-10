@@ -61,8 +61,8 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
   const [active, setActiveState] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [flipCycle, setFlipCycle] = useState(0);
-  const [flipOrigin, setFlipOrigin] = useState(0);
+  const [componentVisible, setComponentVisible] = useState(true);
+  const [documentVisible, setDocumentVisible] = useState(!document.hidden);
   const rootRef = useRef<HTMLDivElement>(null);
   const cameraRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,14 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
   const viewRef = useRef<OrbitReelView>(defaultView);
   const rotationRef = useRef(0), velocityRef = useRef(0), targetRotationRef = useRef<number | null>(defaultView === "arc" ? 0 : null);
   const frameRef = useRef(0), lastTimeRef = useRef(0);
-  const dragRef = useRef({ id: -1, startX: 0, startY: 0, lastAngle: 0, lastTime: 0, moved: false });
+  const lastAppliedRotationRef = useRef(Number.NaN);
+  const ensureAnimationRef = useRef<() => void>(() => undefined);
+  const cardInnerRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const waveAnimationsRef = useRef<Animation[]>([]);
+  const waveRunningRef = useRef(false);
+  const waveReleaseTimerRef = useRef(0);
+  const dragRef = useRef({ id: -1, startX: 0, startY: 0, centerX: 0, centerY: 0, lastAngle: 0, lastTime: 0, moved: false });
+  const canAnimate = componentVisible && documentVisible;
 
   const setActive = useCallback((index: number) => {
     const nextIndex = wrap(index, safeCount);
@@ -78,20 +85,37 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
     activeRef.current = nextIndex; setActiveState(nextIndex); onActiveChange?.(nextIndex);
   }, [onActiveChange, safeCount]);
   const rotationForIndex = useCallback((index: number, current = rotationRef.current) => nearestEquivalent(-wrap(index, safeCount) * angleStep, current), [angleStep, safeCount]);
-  const goTo = useCallback((index: number) => { const nextIndex = wrap(index, safeCount); setActive(nextIndex); velocityRef.current = 0; targetRotationRef.current = rotationForIndex(nextIndex) }, [rotationForIndex, safeCount, setActive]);
+  const goTo = useCallback((index: number) => { const nextIndex = wrap(index, safeCount); setActive(nextIndex); velocityRef.current = 0; targetRotationRef.current = rotationForIndex(nextIndex); ensureAnimationRef.current() }, [rotationForIndex, safeCount, setActive]);
   const previous = useCallback(() => goTo(activeRef.current - 1), [goTo]);
   const next = useCallback(() => goTo(activeRef.current + 1), [goTo]);
   const setView = useCallback((nextView: OrbitReelView) => {
     if (nextView === viewRef.current) return;
     viewRef.current = nextView; setViewState(nextView); velocityRef.current = 0;
     targetRotationRef.current = nextView === "arc" ? rotationForIndex(activeRef.current) : null;
-    onViewChange?.(nextView);
+    onViewChange?.(nextView); ensureAnimationRef.current();
   }, [onViewChange, rotationForIndex]);
   useImperativeHandle(ref, () => ({ next, previous, goTo, setView }), [goTo, next, previous, setView]);
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => setComponentVisible(entry.isIntersecting), { threshold: .01 });
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const update = () => setDocumentVisible(!document.hidden);
+    document.addEventListener("visibilitychange", update);
+    return () => document.removeEventListener("visibilitychange", update);
+  }, []);
+
+  useEffect(() => {
     const updateActiveFromRotation = () => setActive(wrap(Math.round(-rotationRef.current / angleStep), safeCount));
+    let running = false;
+    let disposed = false;
     const tick = (time: number) => {
+      if (disposed) return;
       const delta = lastTimeRef.current ? Math.min(.05, (time - lastTimeRef.current) / 1000) : 0; lastTimeRef.current = time;
       const target = targetRotationRef.current;
       if (target !== null) {
@@ -106,21 +130,61 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
         }
         velocityRef.current *= Math.pow(.045, delta);
       }
-      if (stageRef.current) stageRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
+      if (stageRef.current && (!Number.isFinite(lastAppliedRotationRef.current) || Math.abs(rotationRef.current - lastAppliedRotationRef.current) > .0001)) {
+        stageRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
+        lastAppliedRotationRef.current = rotationRef.current;
+      }
+      const continuousRing = viewRef.current === "ring" && !paused && !reducedMotion && !(pauseOnHover && hovered);
+      const shouldContinue = canAnimate && (continuousRing || dragging || targetRotationRef.current !== null || Math.abs(velocityRef.current) > .01);
+      if (shouldContinue) frameRef.current = requestAnimationFrame(tick);
+      else running = false;
+    };
+    const ensureAnimation = () => {
+      if (disposed || running || !canAnimate) return;
+      running = true;
+      lastTimeRef.current = 0;
       frameRef.current = requestAnimationFrame(tick);
     };
-    frameRef.current = requestAnimationFrame(tick); return () => cancelAnimationFrame(frameRef.current);
-  }, [angleStep, dragging, hovered, pauseOnHover, paused, reducedMotion, safeCount, setActive, spin]);
+    ensureAnimationRef.current = ensureAnimation;
+    ensureAnimation();
+    return () => {
+      disposed = true;
+      running = false;
+      cancelAnimationFrame(frameRef.current);
+      ensureAnimationRef.current = () => undefined;
+    };
+  }, [angleStep, canAnimate, dragging, hovered, pauseOnHover, paused, reducedMotion, safeCount, setActive, spin]);
 
   useEffect(() => {
-    if (!flipWave || paused || reducedMotion || view !== "ring") return;
-    const timer = window.setInterval(() => { setFlipOrigin(wrap(Math.round(-rotationRef.current / angleStep), safeCount)); setFlipCycle(cycle => cycle + 1) }, Math.max(2.8, interval) * 1000);
-    return () => window.clearInterval(timer);
-  }, [angleStep, flipWave, interval, paused, reducedMotion, safeCount, view]);
+    if (!flipWave || paused || reducedMotion || view !== "ring" || !canAnimate) return;
+    const runWave = () => {
+      if (waveRunningRef.current) return;
+      waveRunningRef.current = true;
+      waveAnimationsRef.current.forEach(animation => animation.cancel());
+      const origin = wrap(Math.round(-rotationRef.current / angleStep), safeCount);
+      let longestDelay = 0;
+      waveAnimationsRef.current = cardInnerRefs.current.flatMap((element, index) => {
+        if (!element) return [];
+        const delay = Math.abs(shortest(index - origin, safeCount)) * 72;
+        longestDelay = Math.max(longestDelay, delay);
+        return [element.animate([{ transform: "rotateY(0deg)" }, { transform: "rotateY(360deg)" }], { duration: 1250, delay, easing: "cubic-bezier(.4,0,.15,1)" })];
+      });
+      window.clearTimeout(waveReleaseTimerRef.current);
+      waveReleaseTimerRef.current = window.setTimeout(() => { waveRunningRef.current = false }, longestDelay + 1300);
+    };
+    const timer = window.setInterval(runWave, Math.max(2.8, interval) * 1000);
+    return () => {
+      window.clearInterval(timer);
+      window.clearTimeout(waveReleaseTimerRef.current);
+      waveAnimationsRef.current.forEach(animation => animation.cancel());
+      waveAnimationsRef.current = [];
+      waveRunningRef.current = false;
+    };
+  }, [angleStep, canAnimate, flipWave, interval, paused, reducedMotion, safeCount, view]);
   useEffect(() => {
-    if (!autoplay || paused || reducedMotion || view !== "arc" || (pauseOnHover && hovered) || dragging) return;
+    if (!autoplay || paused || reducedMotion || view !== "arc" || (pauseOnHover && hovered) || dragging || !canAnimate) return;
     const timer = window.setInterval(next, Math.max(1.8, interval) * 1000); return () => window.clearInterval(timer);
-  }, [autoplay, dragging, hovered, interval, next, pauseOnHover, paused, reducedMotion, view]);
+  }, [autoplay, canAnimate, dragging, hovered, interval, next, pauseOnHover, paused, reducedMotion, view]);
   useEffect(() => {
     const handleKey = (event: globalThis.KeyboardEvent) => {
       if (!rootRef.current?.contains(document.activeElement)) return;
@@ -134,19 +198,20 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
     const element = rootRef.current; if (!element || !wheel) return;
     const handleWheel = (event: globalThis.WheelEvent) => {
       if (paused) return; event.preventDefault(); const delta = Math.max(-120, Math.min(120, event.deltaY)); targetRotationRef.current = null;
-      if (viewRef.current === "ring") velocityRef.current += delta * .28;
+      if (viewRef.current === "ring") { velocityRef.current += delta * .28; ensureAnimationRef.current() }
       else if (Math.abs(delta) >= 4) delta > 0 ? next() : previous();
     };
     element.addEventListener("wheel", handleWheel, { passive: false }); return () => element.removeEventListener("wheel", handleWheel);
   }, [next, paused, previous, wheel]);
 
-  const pointerAngle = (event: ReactPointerEvent) => {
-    const rect = cameraRef.current?.getBoundingClientRect() ?? rootRef.current?.getBoundingClientRect(); if (!rect) return 0;
-    return Math.atan2(event.clientY - (rect.top + rect.height / 2), event.clientX - (rect.left + rect.width / 2)) * 180 / Math.PI;
-  };
+  const pointerAngle = (event: ReactPointerEvent) => Math.atan2(event.clientY - dragRef.current.centerY, event.clientX - dragRef.current.centerX) * 180 / Math.PI;
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!draggable || event.button !== 0) return; targetRotationRef.current = null; velocityRef.current = 0;
-    dragRef.current = { id: event.pointerId, startX: event.clientX, startY: event.clientY, lastAngle: pointerAngle(event), lastTime: performance.now(), moved: false }; setDragging(true);
+    const rect = cameraRef.current?.getBoundingClientRect() ?? rootRef.current?.getBoundingClientRect();
+    const centerX = rect ? rect.left + rect.width / 2 : event.clientX;
+    const centerY = rect ? rect.top + rect.height / 2 : event.clientY;
+    dragRef.current = { id: event.pointerId, startX: event.clientX, startY: event.clientY, centerX, centerY, lastAngle: Math.atan2(event.clientY - centerY, event.clientX - centerX) * 180 / Math.PI, lastTime: performance.now(), moved: false };
+    setDragging(true); ensureAnimationRef.current();
   };
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!dragging || dragRef.current.id !== event.pointerId) return;
@@ -159,11 +224,11 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
   const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (dragRef.current.id !== event.pointerId) return;
     if (viewRef.current === "arc") { const projected = rotationRef.current + velocityRef.current * .16; const target = Math.round(projected / angleStep) * angleStep; targetRotationRef.current = target; setActive(wrap(Math.round(-target / angleStep), safeCount)) }
-    dragRef.current.id = -1; setDragging(false);
+    dragRef.current.id = -1; setDragging(false); ensureAnimationRef.current();
   };
   const selectCard = (index: number) => {
     if (dragRef.current.moved) return; onSelect?.(repeatedItems[index], index);
-    if (viewRef.current === "ring" && zoomOnClick) { setActive(index); targetRotationRef.current = rotationForIndex(index); viewRef.current = "arc"; setViewState("arc"); onViewChange?.("arc") }
+    if (viewRef.current === "ring" && zoomOnClick) { setActive(index); targetRotationRef.current = rotationForIndex(index); viewRef.current = "arc"; setViewState("arc"); onViewChange?.("arc"); ensureAnimationRef.current() }
     else if (viewRef.current === "arc") { if (index === activeRef.current && repeatedItems[index].href) window.location.assign(repeatedItems[index].href!); else goTo(index) }
   };
   const handleCardKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectCard(index) } };
@@ -176,13 +241,13 @@ export const OrbitReel = forwardRef<OrbitReelHandle, OrbitReelProps>(function Or
   return <div ref={rootRef} className={`orbit-reel orbit-reel--${view} ${dragging ? "is-dragging" : ""} ${className}`} style={rootStyle} role="region" aria-label={ariaLabel} tabIndex={0} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
     <div ref={cameraRef} className="orbit-reel__camera"><div className="orbit-reel__spread"><div ref={stageRef} className="orbit-reel__stage" aria-live="polite">
       {repeatedItems.map((item, index) => {
-        const ringAngle = index * angleStep, distance = Math.abs(shortest(index - active, safeCount)), flipDistance = Math.abs(shortest(index - flipOrigin, safeCount));
-        const cardStyle = { "--ring-angle": `${ringAngle}deg`, "--card-tilt": `${tilt ? ringAngle : 0}deg`, "--flip-delay": `${flipDistance * 72}ms`, "--art": item.background ?? "linear-gradient(145deg,#ff174b,#5600e8)" } as CSSProperties;
-        return <div className="orbit-reel__slot" style={cardStyle} key={`${index}-${item.title ?? item.alt}`}><button type="button" className={`orbit-card ${flipCycle ? "orbit-card--wave" : ""}`} onClick={() => selectCard(index)} onKeyDown={event => handleCardKey(event, index)} aria-label={`${item.title ?? item.alt}${view === "ring" ? ", open project reel" : ""}`} aria-current={view === "arc" && index === active ? "true" : undefined}><span className="orbit-card__inner" key={flipCycle}><span className="orbit-card__face orbit-card__front">{item.src ? <img src={item.src} alt={item.alt} loading={distance > 2 ? "lazy" : "eager"} draggable={false} /> : <span className="orbit-card__art" role="img" aria-label={item.alt} />}<span className="orbit-card__number">{String(index % safeItems.length + 1).padStart(2, "0")}</span></span><span className="orbit-card__face orbit-card__back" aria-hidden="true"><span>DS</span></span></span></button></div>;
+        const ringAngle = index * angleStep, distance = Math.abs(shortest(index - active, safeCount));
+        const cardStyle = { "--ring-angle": `${ringAngle}deg`, "--card-tilt": `${tilt ? ringAngle : 0}deg`, "--art": item.background ?? "linear-gradient(145deg,#ff174b,#5600e8)" } as CSSProperties;
+        return <div className="orbit-reel__slot" style={cardStyle} key={`${index}-${item.title ?? item.alt}`}><button type="button" className="orbit-card" onClick={() => selectCard(index)} onKeyDown={event => handleCardKey(event, index)} aria-label={`${item.title ?? item.alt}${view === "ring" ? ", open project reel" : ""}`} aria-current={view === "arc" && index === active ? "true" : undefined}><span ref={element => { cardInnerRefs.current[index] = element }} className="orbit-card__inner"><span className="orbit-card__face orbit-card__front">{item.src ? <img src={item.src} alt={item.alt} loading={distance > 2 ? "lazy" : "eager"} decoding="async" draggable={false} /> : <span className="orbit-card__art" role="img" aria-label={item.alt} />}<span className="orbit-card__number">{String(index % safeItems.length + 1).padStart(2, "0")}</span></span><span className="orbit-card__face orbit-card__back" aria-hidden="true"><span>DS</span></span></span></button></div>;
       })}
     </div></div></div>
     {children && view === "ring" ? <div className="orbit-reel__center">{children}</div> : null}
-    {view === "arc" && captions ? <div className="orbit-reel__caption" key={`${active}-${activeItem.title}`}><strong>{activeItem.title ?? activeItem.alt}</strong>{activeItem.subtitle ? <span>{activeItem.subtitle}</span> : null}{controls ? <div className="orbit-reel__controls"><button type="button" onClick={previous} aria-label="Previous project">←</button><span>{String(active % safeItems.length + 1).padStart(2, "0")} / {String(safeItems.length).padStart(2, "0")}</span><button type="button" onClick={next} aria-label="Next project">→</button></div> : null}</div> : null}
+    {view === "arc" && captions ? <div className="orbit-reel__caption"><div className="orbit-reel__caption-copy" aria-live="polite"><strong>{activeItem.title ?? activeItem.alt}</strong>{activeItem.subtitle ? <span>{activeItem.subtitle}</span> : null}</div>{controls ? <div className="orbit-reel__controls"><button type="button" onClick={previous} aria-label="Previous project">←</button><span>{String(active % safeItems.length + 1).padStart(2, "0")} / {String(safeItems.length).padStart(2, "0")}</span><button type="button" onClick={next} aria-label="Next project">→</button></div> : null}</div> : null}
     <button type="button" className="orbit-reel__mode" onClick={() => setView(view === "ring" ? "arc" : "ring")}>{view === "ring" ? "View projects" : "Return to ring"}</button>
   </div>;
 });
