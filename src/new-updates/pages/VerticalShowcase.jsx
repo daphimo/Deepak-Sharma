@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Keyboard, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide, useSwiperSlide } from 'swiper/react'
+import { Link } from 'react-router-dom'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
@@ -54,6 +55,7 @@ export default function VerticalShowcase() {
           </SwiperSlide>
         ))}
       </Swiper>
+      <Link className="explore-projects-fab" to="/new-updates/projects"><span>Explore</span> Projects <i aria-hidden="true">↗</i></Link>
     </main>
   )
 }

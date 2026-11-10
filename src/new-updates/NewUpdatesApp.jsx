@@ -5,6 +5,7 @@ import './new-updates.css'
 
 const VerticalShowcase = lazy(() => import('./pages/VerticalShowcase'))
 const ScrollMorphDemo = lazy(() => import('./components/ui/scroll-morph-demo'))
+const ProjectsReelPage = lazy(() => import('./pages/ProjectsReelPage'))
 
 function Metadata() {
   const { pathname } = useLocation()
@@ -37,6 +38,7 @@ export default function NewUpdatesApp() {
       <Suspense fallback={<main className="showcase-loading">Loading experience…</main>}>
         <Routes>
           <Route index element={<VerticalShowcase />} />
+          <Route path="projects" element={<ProjectsReelPage />} />
           <Route path="morph" element={<main className="morph-page"><ScrollMorphDemo /></main>} />
           <Route path="*" element={<Navigate to="/new-updates" replace />} />
         </Routes>
